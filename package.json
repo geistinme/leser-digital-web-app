@@ -1,0 +1,47 @@
+{
+  "name": "fullstack-web-app-template",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -n \"APP, TYPECHECK, GRAPHQL\" \"vite\" \"tsc -b --watch\" \"graphql-codegen --config codegen.yml --watch\"",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "generate": "graphql-codegen --config codegen.yml --watch"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.13.6",
+    "@sampled-ui/base": "^0.0.17",
+    "formik": "^2.4.6",
+    "graphql": "^16.10.0",
+    "lucide-react": "^0.487.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router": "^7.5.0",
+    "react-verification-input": "^4.2.2",
+    "yup": "^1.6.1"
+  },
+  "devDependencies": {
+    "@0no-co/graphqlsp": "^1.12.16",
+    "@eslint/js": "^9.23.0",
+    "@graphql-codegen/cli": "^5.0.5",
+    "@graphql-codegen/schema-ast": "^4.1.0",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.2",
+    "@parcel/watcher": "^2.5.1",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react-swc": "^3.8.1",
+    "classnames": "^2.5.1",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.24.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "sass": "^1.86.3",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.29.1",
+    "vite": "^6.2.5"
+  }
+}

@@ -1,0 +1,40 @@
+@use "../../../styles/variables" as *;
+
+.container {
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 6rem);
+  border-top: $border;
+  padding: $padding-lg;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.option {
+  all: unset;
+  cursor: pointer;
+  opacity: $opacity-disabled;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.link {
+  font-size: $font-size-xs;
+  line-height: $line-height-xs;
+  color: $color-secondary;
+  text-decoration: none;
+}
+
+.selected {
+  opacity: initial;
+}
+
+@media (max-width: $breakpoint-sm) {
+  .container {
+    width: calc(100% - 4rem);
+    padding: $padding-md;
+  }
+}

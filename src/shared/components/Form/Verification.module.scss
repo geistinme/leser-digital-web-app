@@ -1,0 +1,15 @@
+@use "../../../styles/variables" as *;
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.character {
+  border: $border;
+  border-radius: $border-radius;
+}
+
+.characterInactive {
+  background-color: $color-primary;
+}

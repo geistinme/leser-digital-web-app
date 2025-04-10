@@ -1,0 +1,56 @@
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1440px;
+
+// Font size
+$font-size-xs: 0.8rem;
+$font-size-sm: 0.9rem;
+$font-size-md: 1rem;
+$font-size-lg: 1.2rem;
+$font-size-xl: 1.5rem;
+
+// Line height
+$line-height-xs: 1rem;
+$line-height-sm: 1.2rem;
+$line-height-md: 1.6rem;
+$line-height-lg: 1.8rem;
+$line-height-xl: 2rem;
+
+// Border
+$border-radius: 0.5rem;
+$border: 1px solid hsl(0, 0%, 80%);
+
+// Spacing
+$padding-xs: 0.25rem 0.5rem;
+$padding-sm: 0.5rem 0.75rem;
+$padding-md: 1rem 2rem;
+$padding-lg: 1.5rem 3rem;
+
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-xxl: 3rem;
+
+// Colors
+$color-primary: hsl(0, 0%, 100%);
+$color-secondary: hsl(0, 0%, 0%);
+$color-tertiary: hsl(0, 0%, 60%);
+$color-primary-dim: hsl(0, 0%, 95%);
+$color-accent: hsl(205, 100%, 50%);
+$color-success: hsl(120, 100%, 40%);
+$color-error: hsl(0, 100%, 50%);
+
+// Shadows
+$shadow-sm: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+$shadow-md: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+// Opacity
+$opacity-dim: 0.8;
+$opacity-disabled: 0.5;
+
+// Transition
+$transition-fast: 0.15s;

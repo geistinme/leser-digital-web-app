@@ -1,0 +1,14 @@
+@use "../../../styles/variables" as *;
+
+.container {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 16rem 1fr;
+}
+
+.leftSide,
+.center {
+  padding: $padding-sm;
+  padding-top: initial;
+  padding-bottom: initial;
+}
