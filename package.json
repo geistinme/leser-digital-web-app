@@ -1,5 +1,5 @@
 {
-  "name": "fullstack-web-app-template",
+  "name": "leser-digital-web-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,11 +8,12 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate": "graphql-codegen --config codegen.yml --watch"
+    "generate": "graphql-codegen --config codegen.yml --watch",
+    "svgr": "svgr --typescript --out-dir src/icons src/icons/*.svg"
   },
   "dependencies": {
     "@apollo/client": "^3.13.6",
-    "@sampled-ui/base": "^0.0.17",
+    "@sampled-ui/base": "^0.0.18",
     "formik": "^2.4.6",
     "graphql": "^16.10.0",
     "lucide-react": "^0.487.0",
@@ -29,6 +30,7 @@
     "@graphql-codegen/schema-ast": "^4.1.0",
     "@graphql-codegen/typescript-react-apollo": "^4.3.2",
     "@parcel/watcher": "^2.5.1",
+    "@svgr/cli": "^8.1.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react-swc": "^3.8.1",

@@ -7,16 +7,15 @@ import {
   Navigation as NavigationMenu,
   Sidebar as SidebarComponent,
   Spacing,
-  Typography,
 } from "@sampled-ui/base";
 import {
   Bookmark,
   CircleUserRound,
+  Compass,
   LayoutGrid,
   LogOut,
   MoreHorizontal,
-  Rss,
-  Search,
+  Rss
 } from "lucide-react";
 import { Location, useLocation, useNavigate } from "react-router";
 
@@ -24,6 +23,7 @@ import {
   useLoggedInQuery,
   useLogoutMutation,
 } from "../../../../generated/graphql";
+import SvgWordmarkLogo from "../../../icons/WordmarkLogo";
 
 const useGetSelectedNavItem = (
   navItems: {
@@ -53,7 +53,7 @@ export const Sidebar: React.FC = () => {
     onCompleted: () => {
       navigate("/");
       window.location.reload();
-    }
+    },
   });
 
   const items = [
@@ -66,7 +66,7 @@ export const Sidebar: React.FC = () => {
     {
       title: "Entdecken",
       key: "/explore",
-      icon: <Search size={24} />,
+      icon: <Compass size={24} />,
       onClick: () => navigate("/explore"),
     },
     {
@@ -93,10 +93,12 @@ export const Sidebar: React.FC = () => {
 
   return (
     <SidebarComponent style={{ width: "20rem", height: "100%" }}>
-      <Spacing gap="lg" style={{ padding: "2rem 1.5rem" }}>
-        <Flex align="center" gap="sm">
-          <img src="./react-logo.svg" style={{ width: "2rem" }} />
-          <Typography.Heading level={4}>React App</Typography.Heading>
+      <Spacing
+        gap="lg"
+        style={{ padding: "3rem 1.5rem", paddingBottom: "2rem", width: "calc(100% - 3rem)" }}
+      >
+        <Flex align="center" gap="sm" style={{ width: "100%" }}>
+          <SvgWordmarkLogo width="70%" height="100%" viewBox="0 0 586 160"/>
         </Flex>
       </Spacing>
       <Flex

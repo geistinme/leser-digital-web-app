@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Card, Layout } from "@sampled-ui/base";
+import { Card, Header, Layout } from "@sampled-ui/base";
 import { Outlet, useNavigate } from "react-router";
 
 import { useLoggedInQuery } from "../../../../generated/graphql";
+import SvgWordmarkLogo from "../../../icons/WordmarkLogo";
 import { useIsMobile } from "../../hooks/isMobile";
 
 export const Auth: React.FC = () => {
@@ -16,6 +17,9 @@ export const Auth: React.FC = () => {
 
   return (
     <Layout style={{ height: "100vh" }}>
+      <Header>
+        <SvgWordmarkLogo width="100%" height="calc(100% - 2rem)" viewBox="0 0 586 160" style={{marginTop: "0.25rem"}}/>
+      </Header>
       <Card
         style={{
           border: isMobile ? "initial" : undefined,
