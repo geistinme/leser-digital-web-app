@@ -1,10 +1,10 @@
 import React from "react";
 
 import { Flex, Spacing, Typography } from "@sampled-ui/base";
+import moment from "moment";
 
 import { FeedArticleFragment } from "../../../../generated/graphql";
 
-import moment from "moment";
 import styles from "./ArticleShowcase.module.scss";
 
 interface ArticleShowcaseProps {
@@ -32,11 +32,7 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({ article }) => {
           <Flex gap="sm" justify="between" style={{ width: "100%" }}>
             <img src={article.source.logo} className={styles.sourceLogo} />
             {article.premium ? (
-              <Typography.Text
-                size="sm"
-                variant="warning"
-                bold
-              >
+              <Typography.Text size="sm" variant="warning" bold>
                 Premium
               </Typography.Text>
             ) : null}
@@ -49,7 +45,12 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({ article }) => {
               {article.description}
             </Typography.Paragraph>
           ) : null}
-          <Typography.Text size="sm" disabled>
+          <Typography.Text
+            title={new Date(article.uploadedAt).toLocaleString()}
+            size="xs"
+            bold
+            disabled
+          >
             {moment(article.uploadedAt).fromNow()}
           </Typography.Text>
         </Flex>

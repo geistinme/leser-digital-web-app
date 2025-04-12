@@ -24,7 +24,7 @@ export const Auth: React.FC = () => {
         style={{
           border: isMobile ? "initial" : undefined,
           width: isMobile ? "calc(100% - 4rem - 2px)" : "100%",
-          maxWidth: isMobile ? "initial" : "20rem",
+          maxWidth: isMobile ? "initial" : "24rem",
           position: "absolute",
           top: "50%",
           left: "50%",
