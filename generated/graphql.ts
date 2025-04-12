@@ -18,10 +18,42 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type Article = {
+  __typename?: 'Article';
+  categories: Array<Scalars['String']['output']>;
+  content?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  editors: Array<Editor>;
+  id: Scalars['Int']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  premium: Scalars['Boolean']['output'];
+  source: Source;
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  uploadedAt: Scalars['DateTime']['output'];
+  url: Scalars['String']['output'];
+};
+
+export type ArticleQueryFilter = {
+  editor?: InputMaybe<Scalars['String']['input']>;
+  source?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type CreateUserInput = {
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type Editor = {
+  __typename?: 'Editor';
+  articles: Array<Article>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  source: Source;
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type Mutation = {
@@ -65,14 +97,33 @@ export type MutationVerifyArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  articles?: Maybe<Array<Article>>;
   loggedIn: User;
   users?: Maybe<Array<Maybe<User>>>;
+};
+
+
+export type QueryArticlesArgs = {
+  filter?: InputMaybe<ArticleQueryFilter>;
 };
 
 export enum Role {
   Admin = 'ADMIN',
   User = 'USER'
 }
+
+export type Source = {
+  __typename?: 'Source';
+  articles: Array<Article>;
+  createdAt: Scalars['DateTime']['output'];
+  editors: Array<Editor>;
+  feedUrl: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  key: Scalars['String']['output'];
+  logo: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
 
 export type User = {
   __typename?: 'User';
@@ -97,12 +148,19 @@ export type VerificationCode = {
 export type LoggedInQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LoggedInQuery = { __typename?: 'Query', loggedIn: { __typename?: 'User', id: number, email: string, verified: boolean } };
+export type LoggedInQuery = { __typename?: 'Query', loggedIn: { __typename?: 'User', id: number, email: string, name: string, verified: boolean } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout?: { __typename?: 'User', id: number, name: string } | null };
+
+export type ArticlesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: number, title: string, content?: string | null, description?: string | null, image?: string | null, categories: Array<string>, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', name: string, logo: string } }> | null };
+
+export type FeedArticleFragment = { __typename?: 'Article', id: number, title: string, content?: string | null, description?: string | null, image?: string | null, categories: Array<string>, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', name: string, logo: string } };
 
 export type SendResetLinkMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -146,12 +204,29 @@ export type ResendCodeMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type ResendCodeMutation = { __typename?: 'Mutation', resendVerificationCode?: boolean | null };
 
-
+export const FeedArticleFragmentDoc = gql`
+    fragment FeedArticle on Article {
+  id
+  title
+  content
+  description
+  image
+  categories
+  url
+  premium
+  uploadedAt
+  source {
+    name
+    logo
+  }
+}
+    `;
 export const LoggedInDocument = gql`
     query loggedIn {
   loggedIn {
     id
     email
+    name
     verified
   }
 }
@@ -221,6 +296,45 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const ArticlesDocument = gql`
+    query articles {
+  articles {
+    ...FeedArticle
+  }
+}
+    ${FeedArticleFragmentDoc}`;
+
+/**
+ * __useArticlesQuery__
+ *
+ * To run a query within a React component, call `useArticlesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useArticlesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useArticlesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useArticlesQuery(baseOptions?: Apollo.QueryHookOptions<ArticlesQuery, ArticlesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ArticlesQuery, ArticlesQueryVariables>(ArticlesDocument, options);
+      }
+export function useArticlesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticlesQuery, ArticlesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ArticlesQuery, ArticlesQueryVariables>(ArticlesDocument, options);
+        }
+export function useArticlesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ArticlesQuery, ArticlesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ArticlesQuery, ArticlesQueryVariables>(ArticlesDocument, options);
+        }
+export type ArticlesQueryHookResult = ReturnType<typeof useArticlesQuery>;
+export type ArticlesLazyQueryHookResult = ReturnType<typeof useArticlesLazyQuery>;
+export type ArticlesSuspenseQueryHookResult = ReturnType<typeof useArticlesSuspenseQuery>;
+export type ArticlesQueryResult = Apollo.QueryResult<ArticlesQuery, ArticlesQueryVariables>;
 export const SendResetLinkDocument = gql`
     mutation sendResetLink($email: String!) {
   sendResetLink(email: $email)

@@ -1,9 +1,11 @@
 import React from "react";
 
+import { Spacing } from "@sampled-ui/base";
+
 export const AccountPage: React.FC = () => {
   return (
-    <div>
+    <Spacing gap="xl">
       <p>Desktop Account Page</p>
-    </div>
+    </Spacing>
   );
 };

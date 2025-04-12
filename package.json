@@ -9,14 +9,15 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "generate": "graphql-codegen --config codegen.yml --watch",
-    "svgr": "svgr --typescript --out-dir src/icons src/icons/*.svg"
+    "svgr": "svgr --typescript --out-dir src/icons src/icons/**/*.svg"
   },
   "dependencies": {
     "@apollo/client": "^3.13.6",
-    "@sampled-ui/base": "^0.0.18",
+    "@sampled-ui/base": "^0.0.23",
     "formik": "^2.4.6",
     "graphql": "^16.10.0",
     "lucide-react": "^0.487.0",
+    "moment": "^2.30.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^7.5.0",

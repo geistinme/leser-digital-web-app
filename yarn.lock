@@ -1603,10 +1603,10 @@
   resolved "https://registry.yarnpkg.com/@rtsao/scc/-/scc-1.1.0.tgz#927dd2fae9bc3361403ac2c7a00c32ddce9ad7e8"
   integrity sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==
 
-"@sampled-ui/base@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@sampled-ui/base/-/base-0.0.18.tgz#16897112bc6022c4b2b0babbd5887aed01a3ce6f"
-  integrity sha512-IxtDEpAn8lgO9ooXbXu/ABMBuxRESzgokYMu4nCApXrP78GQZs298l+ilck62UUH4YDLVIx1chq3FCeUdh3Dbg==
+"@sampled-ui/base@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@sampled-ui/base/-/base-0.0.23.tgz#fc9e98e24044ace31c2ba181655f70e815eb24a4"
+  integrity sha512-K/Ft4vBrUIkyN570WOWLenllBMJfTOHPwUIm8nQOZIbcTnQ4yRPgqwYoL1rpTGt1eQVAR3Sv7jfiqG7Ef4uenQ==
   dependencies:
     classnames "^2.5.1"
 
@@ -4181,6 +4181,11 @@ minimist@^1.2.0, minimist@^1.2.6:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
+
+moment@^2.30.1:
+  version "2.30.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.30.1.tgz#f8c91c07b7a786e30c59926df530b4eac96974ae"
+  integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
 
 ms@^2.1.1, ms@^2.1.3:
   version "2.1.3"

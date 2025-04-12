@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 
 import {
-  Button,
+  Card,
   Flex,
   Menu,
   Navigation as NavigationMenu,
@@ -14,8 +14,7 @@ import {
   Compass,
   LayoutGrid,
   LogOut,
-  MoreHorizontal,
-  Rss
+  Rss,
 } from "lucide-react";
 import { Location, useLocation, useNavigate } from "react-router";
 
@@ -95,10 +94,14 @@ export const Sidebar: React.FC = () => {
     <SidebarComponent style={{ width: "20rem", height: "100%" }}>
       <Spacing
         gap="lg"
-        style={{ padding: "3rem 1.5rem", paddingBottom: "2rem", width: "calc(100% - 3rem)" }}
+        style={{
+          padding: "2.5rem 1.5rem",
+          paddingBottom: "2rem",
+          width: "calc(100% - 3rem)",
+        }}
       >
         <Flex align="center" gap="sm" style={{ width: "100%" }}>
-          <SvgWordmarkLogo width="70%" height="100%" viewBox="0 0 586 160"/>
+          <SvgWordmarkLogo width="70%" height="100%" viewBox="0 0 586 160" />
         </Flex>
       </Spacing>
       <Flex
@@ -123,17 +126,7 @@ export const Sidebar: React.FC = () => {
                 },
               ]}
             >
-              <Button
-                variant="secondary"
-                size="md"
-                style={{
-                  width: "calc(100% - 1.5rem)",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <MoreHorizontal />
-              </Button>
+              <Card>{data.loggedIn.name}</Card>
             </Menu>
           </Spacing>
         ) : null}

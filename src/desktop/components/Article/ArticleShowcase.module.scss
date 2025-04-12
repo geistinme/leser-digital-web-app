@@ -1,0 +1,42 @@
+@use "../../../styles/variables.scss" as *;
+
+.article {
+  cursor: pointer;
+  max-width: 30rem;
+  border-radius: $border-radius-sm;
+  border: $border;
+  border-color: hsl(0, 0%, 90%);
+  padding-bottom: $spacing-md;
+  overflow: hidden;
+  transition: box-shadow $transition-fast;
+}
+
+.article:hover {
+  box-shadow: $shadow-md;
+}
+
+.article:last-child {
+  margin: initial;
+}
+
+.image {
+  height: 20rem;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  box-sizing: border-box;
+}
+
+.content {
+  padding: $spacing-xs $spacing-md;
+}
+
+.sourceLogo {
+  max-height: 1rem;
+  filter: grayscale(1) brightness(1.5);
+}
+
+.description {
+  margin: initial;
+}

@@ -2,6 +2,7 @@ query loggedIn {
   loggedIn {
     id
     email
+    name
     verified
   }
 }

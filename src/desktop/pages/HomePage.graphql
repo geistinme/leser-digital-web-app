@@ -1,0 +1,21 @@
+query articles {
+  articles {
+    ...FeedArticle
+  }
+}
+
+fragment FeedArticle on Article {
+  id
+  title
+  content
+  description
+  image
+  categories
+  url
+  premium
+  uploadedAt
+  source {
+    name
+    logo
+  }
+}
