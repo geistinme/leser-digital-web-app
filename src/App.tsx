@@ -2,10 +2,10 @@ import React from "react";
 
 import DesktopApp from "./desktop/App";
 import MobileApp from "./mobile/App";
-import { useIsMobile } from "./shared/hooks/isMobile";
+import { useIsDevice } from "./shared/hooks/isDevice";
 
 const App: React.FC = () => {
-  const { isMobile } = useIsMobile();
+  const { isMobile } = useIsDevice();
   return isMobile ? <MobileApp /> : <DesktopApp />;
 };
 

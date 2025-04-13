@@ -5,10 +5,10 @@ import { Outlet, useNavigate } from "react-router";
 
 import { useLoggedInQuery } from "../../../../generated/graphql";
 import SvgWordmarkLogo from "../../../icons/WordmarkLogo";
-import { useIsMobile } from "../../hooks/isMobile";
+import { useIsDevice } from "../../hooks/isDevice";
 
 export const Auth: React.FC = () => {
-  const { isMobile } = useIsMobile();
+  const { isMobile } = useIsDevice();
   const navigate = useNavigate();
   const { data } = useLoggedInQuery();
   if (data?.loggedIn && data.loggedIn.verified) {

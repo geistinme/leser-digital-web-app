@@ -12,9 +12,9 @@ import {
   Bookmark,
   CircleUserRound,
   Compass,
-  LayoutGrid,
+  GalleryVertical,
   LogOut,
-  Rss,
+  Rss
 } from "lucide-react";
 import { Location, useLocation, useNavigate } from "react-router";
 
@@ -59,7 +59,7 @@ export const Sidebar: React.FC = () => {
     {
       title: "Startseite",
       key: "/",
-      icon: <LayoutGrid size={24} />,
+      icon: <GalleryVertical size={24} />,
       onClick: () => navigate("/"),
     },
     {
@@ -91,7 +91,9 @@ export const Sidebar: React.FC = () => {
   const selected = useGetSelectedNavItem(items, location);
 
   return (
-    <SidebarComponent style={{ width: "20rem", height: "100%" }}>
+    <SidebarComponent
+      style={{ width: "18rem", height: "100%" }}
+    >
       <Spacing
         gap="lg"
         style={{

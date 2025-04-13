@@ -23,7 +23,7 @@ const ArticleFeed: React.FC<ArticleFeedProps> = ({ articles }) => {
       style={{ width: "fit-content", margin: "auto" }}
     >
       {articles.map((article) => {
-        return <ArticleShowcase article={article} />;
+        return <ArticleShowcase key={article.id} article={article} />;
       })}
     </Flex>
   );

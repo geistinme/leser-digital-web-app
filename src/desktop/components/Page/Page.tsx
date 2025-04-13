@@ -4,6 +4,7 @@ import { Layout } from "@sampled-ui/base";
 import { Outlet, useNavigate } from "react-router";
 
 import { useLoggedInQuery } from "../../../../generated/graphql";
+import { breakpoints } from "../../../shared/hooks/isDevice";
 import { Sidebar } from "../Sidebar";
 
 export const Page: React.FC = () => {
@@ -16,7 +17,13 @@ export const Page: React.FC = () => {
   return (
     <Layout style={{ height: "100vh" }}>
       <Sidebar />
-      <Layout>
+      <Layout
+        style={{
+          maxWidth: breakpoints.desktop,
+          margin: "auto",
+          height: "100%",
+        }}
+      >
         <Outlet />
       </Layout>
     </Layout>

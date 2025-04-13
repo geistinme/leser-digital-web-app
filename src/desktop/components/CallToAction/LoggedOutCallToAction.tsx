@@ -1,17 +1,24 @@
-import React from "react";
+import React, { useMemo, useRef } from "react";
 
 import { Button, Card, Flex, Typography } from "@sampled-ui/base";
 
 interface LoggedOutCallToActionProps {}
 
 const LoggedOutCallToAction: React.FC<LoggedOutCallToActionProps> = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const width = useMemo(() => {
+    return ref.current?.getBoundingClientRect().width;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ref.current]);
+
   return (
-    <Card style={{ maxWidth: "18rem" }}>
-      <Flex
-        direction="column"
-        gap="md"
-        align="start"
-      >
+    <Card
+      style={
+        width ? { position: "fixed", width, maxWidth: "18rem" } : undefined
+      }
+      ref={ref}
+    >
+      <Flex direction="column" gap="md" align="start">
         <Typography.Heading level={5}>Einfach, mehr, lesen.</Typography.Heading>
         <Typography.Paragraph>
           Verpasse nichts mehr von den Nachrichten die dich interessieren. Ob
