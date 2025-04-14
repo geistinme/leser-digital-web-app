@@ -5,41 +5,57 @@ import moment from "moment";
 
 import { FeedArticleFragment } from "../../../../generated/graphql";
 
+import ArticleMenu from "./ArticleMenu";
 import styles from "./ArticleShowcase.module.scss";
 
 interface ArticleShowcaseProps {
   article: FeedArticleFragment;
+  loggedIn: boolean;
 }
 
-const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({ article }) => {
+const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
+  article,
+  loggedIn,
+}) => {
   return (
-    <a
-      href={article.url}
-      target="_blank"
-      style={{ all: "unset" }}
+    <Flex
+      direction="column"
+      align="start"
+      gap="sm"
+      key={article.id}
+      className={styles.article}
     >
-      <Flex
-        direction="column"
-        align="start"
-        gap="md"
-        key={article.id}
-        className={styles.article}
+      <a
+        href={article.url}
+        target="_blank"
+        style={{ all: "unset", height: "20rem", width: "100%" }}
       >
         <div
           style={{ backgroundImage: `url(${article.image})` }}
           className={styles.image}
         />
-        <Spacing gap="sm" className={styles.content}>
-          <Flex direction="column" align="start" gap="sm">
-            <Flex gap="sm" justify="between" style={{ width: "100%" }}>
+      </a>
+      <Spacing gap="sm" className={styles.content}>
+        <Flex direction="column" align="start" gap="sm">
+          <Flex gap="sm" justify="between" style={{ width: "100%" }}>
+            <Flex gap="sm">
               <img src={article.source.logo} className={styles.sourceLogo} />
               {article.premium ? (
-                <Typography.Text size="sm" variant="warning" bold>
+                <Typography.Text size="xs" variant="warning" bold>
                   Premium
                 </Typography.Text>
               ) : null}
             </Flex>
-            <Typography.Text bold size="md">
+            {loggedIn ? (
+              <ArticleMenu
+                activity={article.activity}
+                id={article.id}
+                url={article.url}
+              />
+            ) : null}
+          </Flex>
+          <a href={article.url} target="_blank" style={{ all: "unset" }}>
+            <Typography.Text bold size="md" className={styles.title}>
               {article.title}
             </Typography.Text>
             {article.description ? (
@@ -47,18 +63,18 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({ article }) => {
                 {article.description}
               </Typography.Paragraph>
             ) : null}
-            <Typography.Text
-              title={new Date(article.uploadedAt).toLocaleString()}
-              size="xs"
-              bold
-              disabled
-            >
-              {moment(article.uploadedAt).fromNow()}
-            </Typography.Text>
-          </Flex>
-        </Spacing>
-      </Flex>
-    </a>
+          </a>
+          <Typography.Text
+            title={new Date(article.uploadedAt).toLocaleString()}
+            size="xs"
+            bold
+            disabled
+          >
+            {moment(article.uploadedAt).fromNow()}
+          </Typography.Text>
+        </Flex>
+      </Spacing>
+    </Flex>
   );
 };
 

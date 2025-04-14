@@ -2,6 +2,8 @@ import React, { useMemo, useRef } from "react";
 
 import { Button, Card, Flex, Typography } from "@sampled-ui/base";
 
+import { useAuthRedirect } from "../../../shared/components/PrivatePage/hooks";
+
 interface LoggedOutCallToActionProps {}
 
 const LoggedOutCallToAction: React.FC<LoggedOutCallToActionProps> = () => {
@@ -10,6 +12,12 @@ const LoggedOutCallToAction: React.FC<LoggedOutCallToActionProps> = () => {
     return ref.current?.getBoundingClientRect().width;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref.current]);
+
+  const redirect = useAuthRedirect();
+
+  const handleClick = () => {
+    redirect();
+  };
 
   return (
     <Card
@@ -25,7 +33,7 @@ const LoggedOutCallToAction: React.FC<LoggedOutCallToActionProps> = () => {
           Politik, Technologie, Kultur oder Finanzen, du entscheidest was du
           lesen möchtest.
         </Typography.Paragraph>
-        <Button>Jetzt anmelden</Button>
+        <Button onClick={handleClick}>Jetzt anmelden</Button>
         <Typography.Text size="xs" disabled>
           {new Date().getFullYear()} Leser Digital
         </Typography.Text>

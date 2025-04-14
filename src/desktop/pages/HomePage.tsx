@@ -1,6 +1,13 @@
-import React, { useMemo } from "react";
+import React from "react";
 
-import { Column, Row, Spacing, Typography } from "@sampled-ui/base";
+import {
+  Column,
+  Divider,
+  Flex,
+  Row,
+  Spacing,
+  Typography,
+} from "@sampled-ui/base";
 
 import { useArticlesQuery, useLoggedInQuery } from "../../../generated/graphql";
 import { useIsDevice } from "../../shared/hooks/isDevice";
@@ -12,17 +19,40 @@ export const HomePage: React.FC = () => {
   const { data: loggedInData } = useLoggedInQuery();
   const { isTablet, isDesktop } = useIsDevice();
 
-  const paddingLeft = useMemo(() => {
-    if (isDesktop) {
-      return undefined;
-    }
-  }, [isDesktop]);
-
   return (
-    <Spacing gap="xl" style={{ paddingLeft }}>
+    <Spacing gap="xl">
       <Row columns={isTablet ? 12 : 24}>
         <Column span={isTablet ? 12 : 16}>
-          <ArticleFeed articles={articlesData?.articles} />
+          <Flex
+            direction="column"
+            align="stretch"
+            style={{ marginRight: "2rem", maxWidth: "40rem", margin: "auto" }}
+          >
+            <Flex gap="md" style={{ padding: "0 0.5rem" }}>
+              <Typography.Text bold size="md" variant="primary">
+                Alles
+              </Typography.Text>
+              <Typography.Text bold size="md" variant="secondary">
+                News
+              </Typography.Text>
+              <Typography.Text bold size="md" variant="secondary">
+                Politik
+              </Typography.Text>
+              <Typography.Text bold size="md" variant="secondary">
+                Technologie
+              </Typography.Text>
+              <Typography.Text bold size="md" variant="secondary">
+                Finanzen
+              </Typography.Text>
+            </Flex>
+            <Divider
+              style={{
+                marginBottom: "2rem",
+                width: isDesktop ? "calc(100% - 2rem)" : "100%",
+              }}
+            />
+            <ArticleFeed articles={articlesData?.articles} />
+          </Flex>
         </Column>
         {isTablet ? null : (
           <Column span={8}>

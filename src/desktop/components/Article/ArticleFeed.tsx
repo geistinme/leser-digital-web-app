@@ -2,7 +2,10 @@ import React from "react";
 
 import { Flex } from "@sampled-ui/base";
 
-import { FeedArticleFragment } from "../../../../generated/graphql";
+import {
+  FeedArticleFragment,
+  useLoggedInQuery,
+} from "../../../../generated/graphql";
 
 import ArticleShowcase from "./ArticleShowcase";
 
@@ -11,6 +14,7 @@ interface ArticleFeedProps {
 }
 
 const ArticleFeed: React.FC<ArticleFeedProps> = ({ articles }) => {
+  const { data: loggedInData } = useLoggedInQuery();
   if (!articles || articles.length === 0) {
     return <div>No articles available</div>;
   }
@@ -19,11 +23,16 @@ const ArticleFeed: React.FC<ArticleFeedProps> = ({ articles }) => {
     <Flex
       direction="column"
       align="stretch"
-      gap="xl"
       style={{ width: "fit-content", margin: "auto" }}
     >
       {articles.map((article) => {
-        return <ArticleShowcase key={article.id} article={article} />;
+        return (
+          <ArticleShowcase
+            key={article.id}
+            article={article}
+            loggedIn={!!loggedInData?.loggedIn}
+          />
+        );
       })}
     </Flex>
   );

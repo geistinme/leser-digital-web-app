@@ -1,26 +1,15 @@
 @use "../../../styles/variables.scss" as *;
 
 .article {
-  cursor: pointer;
   width: 100%;
   max-width: 30rem;
-  border-radius: $border-radius-sm;
-  border: $border;
-  border-color: hsl(0, 0%, 90%);
   padding-bottom: $spacing-md;
-  overflow: hidden;
-  transition: box-shadow $transition-fast;
-}
-
-.article:hover {
-  box-shadow: $shadow-md;
-}
-
-.article:last-child {
-  margin: initial;
+  transition-property: box-shadow;
+  transition-duration: $transition-fast;
 }
 
 .image {
+  cursor: pointer;
   height: 20rem;
   width: 100%;
   background-repeat: no-repeat;
@@ -30,7 +19,8 @@
 }
 
 .content {
-  padding: $spacing-xs $spacing-md;
+  width: calc(100% - 1rem);
+  padding: $spacing-xs $spacing-sm;
 }
 
 .sourceLogo {
@@ -38,6 +28,23 @@
   filter: grayscale(1) brightness(1.5);
 }
 
+.action {
+  cursor: pointer;
+}
+
+.more {
+  cursor: pointer;
+}
+
+.title {
+  cursor: pointer;
+}
+
+.title:hover {
+  text-decoration: underline;
+}
+
 .description {
+  cursor: pointer;
   margin: initial;
 }

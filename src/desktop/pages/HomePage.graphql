@@ -4,6 +4,20 @@ query articles {
   }
 }
 
+mutation createArticleActivity($data: ArticleActivityInput!) {
+  createArticleActivity(data: $data) {
+    id
+    type
+  }
+}
+
+mutation deleteArticleActivity($id: Int!) {
+  deleteArticleActivity(id: $id) {
+    id
+    type
+  }
+}
+
 fragment FeedArticle on Article {
   id
   title
@@ -17,5 +31,9 @@ fragment FeedArticle on Article {
   source {
     name
     logo
+  }
+  activity {
+    id
+    type
   }
 }

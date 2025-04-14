@@ -1,20 +1,18 @@
 import React, { useMemo } from "react";
 
 import {
-  Card,
   Flex,
-  Menu,
   Navigation as NavigationMenu,
   Sidebar as SidebarComponent,
   Spacing,
+  Typography,
 } from "@sampled-ui/base";
 import {
   Bookmark,
   CircleUserRound,
   Compass,
   GalleryVertical,
-  LogOut,
-  Rss
+  Rss,
 } from "lucide-react";
 import { Location, useLocation, useNavigate } from "react-router";
 
@@ -23,6 +21,7 @@ import {
   useLogoutMutation,
 } from "../../../../generated/graphql";
 import SvgWordmarkLogo from "../../../icons/WordmarkLogo";
+import { useIsDevice } from "../../../shared/hooks/isDevice";
 
 const useGetSelectedNavItem = (
   navItems: {
@@ -46,6 +45,8 @@ const useGetSelectedNavItem = (
 export const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isExtraLargeDesktop } = useIsDevice();
+
   const { data } = useLoggedInQuery();
   const [logout] = useLogoutMutation({
     refetchQueries: ["loggedIn"],
@@ -92,7 +93,7 @@ export const Sidebar: React.FC = () => {
 
   return (
     <SidebarComponent
-      style={{ width: "18rem", height: "100%" }}
+      style={{ width: isExtraLargeDesktop ? "16rem" : "18rem", height: "100%" }}
     >
       <Spacing
         gap="lg"
@@ -119,17 +120,9 @@ export const Sidebar: React.FC = () => {
         />
         {data?.loggedIn ? (
           <Spacing gap="lg">
-            <Menu
-              items={[
-                {
-                  title: "Logout",
-                  onClick: () => logout(),
-                  icon: <LogOut size={16} />,
-                },
-              ]}
-            >
-              <Card>{data.loggedIn.name}</Card>
-            </Menu>
+            <Typography.Text variant="danger" onClick={() => logout()} bold>
+              Logout
+            </Typography.Text>
           </Spacing>
         ) : null}
       </Flex>

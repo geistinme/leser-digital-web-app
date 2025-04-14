@@ -20,6 +20,7 @@ export type Scalars = {
 
 export type Article = {
   __typename?: 'Article';
+  activity?: Maybe<ArticleActivity>;
   categories: Array<Scalars['String']['output']>;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
@@ -34,6 +35,26 @@ export type Article = {
   uploadedAt: Scalars['DateTime']['output'];
   url: Scalars['String']['output'];
 };
+
+export type ArticleActivity = {
+  __typename?: 'ArticleActivity';
+  article: Article;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['Int']['output'];
+  type: ArticleActivityType;
+  updatedAt: Scalars['DateTime']['output'];
+  user: User;
+};
+
+export type ArticleActivityInput = {
+  articleId: Scalars['Int']['input'];
+  type: ArticleActivityType;
+};
+
+export enum ArticleActivityType {
+  SaveArticle = 'SAVE_ARTICLE',
+  ViewArticle = 'VIEW_ARTICLE'
+}
 
 export type ArticleQueryFilter = {
   editor?: InputMaybe<Scalars['String']['input']>;
@@ -58,6 +79,8 @@ export type Editor = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createArticleActivity?: Maybe<ArticleActivity>;
+  deleteArticleActivity?: Maybe<ArticleActivity>;
   login?: Maybe<User>;
   logout?: Maybe<User>;
   refreshToken?: Maybe<User>;
@@ -66,6 +89,16 @@ export type Mutation = {
   resetPassword?: Maybe<Scalars['Boolean']['output']>;
   sendResetLink?: Maybe<Scalars['Boolean']['output']>;
   verify?: Maybe<User>;
+};
+
+
+export type MutationCreateArticleActivityArgs = {
+  data: ArticleActivityInput;
+};
+
+
+export type MutationDeleteArticleActivityArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -97,9 +130,15 @@ export type MutationVerifyArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  articleActivity?: Maybe<ArticleActivity>;
   articles?: Maybe<Array<Article>>;
   loggedIn: User;
   users?: Maybe<Array<Maybe<User>>>;
+};
+
+
+export type QueryArticleActivityArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -158,9 +197,23 @@ export type LogoutMutation = { __typename?: 'Mutation', logout?: { __typename?: 
 export type ArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: number, title: string, content?: string | null, description?: string | null, image?: string | null, categories: Array<string>, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', name: string, logo: string } }> | null };
+export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: number, title: string, content?: string | null, description?: string | null, image?: string | null, categories: Array<string>, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', name: string, logo: string }, activity?: { __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null }> | null };
 
-export type FeedArticleFragment = { __typename?: 'Article', id: number, title: string, content?: string | null, description?: string | null, image?: string | null, categories: Array<string>, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', name: string, logo: string } };
+export type CreateArticleActivityMutationVariables = Exact<{
+  data: ArticleActivityInput;
+}>;
+
+
+export type CreateArticleActivityMutation = { __typename?: 'Mutation', createArticleActivity?: { __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null };
+
+export type DeleteArticleActivityMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type DeleteArticleActivityMutation = { __typename?: 'Mutation', deleteArticleActivity?: { __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null };
+
+export type FeedArticleFragment = { __typename?: 'Article', id: number, title: string, content?: string | null, description?: string | null, image?: string | null, categories: Array<string>, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', name: string, logo: string }, activity?: { __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null };
 
 export type SendResetLinkMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -218,6 +271,10 @@ export const FeedArticleFragmentDoc = gql`
   source {
     name
     logo
+  }
+  activity {
+    id
+    type
   }
 }
     `;
@@ -335,6 +392,74 @@ export type ArticlesQueryHookResult = ReturnType<typeof useArticlesQuery>;
 export type ArticlesLazyQueryHookResult = ReturnType<typeof useArticlesLazyQuery>;
 export type ArticlesSuspenseQueryHookResult = ReturnType<typeof useArticlesSuspenseQuery>;
 export type ArticlesQueryResult = Apollo.QueryResult<ArticlesQuery, ArticlesQueryVariables>;
+export const CreateArticleActivityDocument = gql`
+    mutation createArticleActivity($data: ArticleActivityInput!) {
+  createArticleActivity(data: $data) {
+    id
+    type
+  }
+}
+    `;
+export type CreateArticleActivityMutationFn = Apollo.MutationFunction<CreateArticleActivityMutation, CreateArticleActivityMutationVariables>;
+
+/**
+ * __useCreateArticleActivityMutation__
+ *
+ * To run a mutation, you first call `useCreateArticleActivityMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateArticleActivityMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createArticleActivityMutation, { data, loading, error }] = useCreateArticleActivityMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateArticleActivityMutation(baseOptions?: Apollo.MutationHookOptions<CreateArticleActivityMutation, CreateArticleActivityMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateArticleActivityMutation, CreateArticleActivityMutationVariables>(CreateArticleActivityDocument, options);
+      }
+export type CreateArticleActivityMutationHookResult = ReturnType<typeof useCreateArticleActivityMutation>;
+export type CreateArticleActivityMutationResult = Apollo.MutationResult<CreateArticleActivityMutation>;
+export type CreateArticleActivityMutationOptions = Apollo.BaseMutationOptions<CreateArticleActivityMutation, CreateArticleActivityMutationVariables>;
+export const DeleteArticleActivityDocument = gql`
+    mutation deleteArticleActivity($id: Int!) {
+  deleteArticleActivity(id: $id) {
+    id
+    type
+  }
+}
+    `;
+export type DeleteArticleActivityMutationFn = Apollo.MutationFunction<DeleteArticleActivityMutation, DeleteArticleActivityMutationVariables>;
+
+/**
+ * __useDeleteArticleActivityMutation__
+ *
+ * To run a mutation, you first call `useDeleteArticleActivityMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteArticleActivityMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteArticleActivityMutation, { data, loading, error }] = useDeleteArticleActivityMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteArticleActivityMutation(baseOptions?: Apollo.MutationHookOptions<DeleteArticleActivityMutation, DeleteArticleActivityMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteArticleActivityMutation, DeleteArticleActivityMutationVariables>(DeleteArticleActivityDocument, options);
+      }
+export type DeleteArticleActivityMutationHookResult = ReturnType<typeof useDeleteArticleActivityMutation>;
+export type DeleteArticleActivityMutationResult = Apollo.MutationResult<DeleteArticleActivityMutation>;
+export type DeleteArticleActivityMutationOptions = Apollo.BaseMutationOptions<DeleteArticleActivityMutation, DeleteArticleActivityMutationVariables>;
 export const SendResetLinkDocument = gql`
     mutation sendResetLink($email: String!) {
   sendResetLink(email: $email)
