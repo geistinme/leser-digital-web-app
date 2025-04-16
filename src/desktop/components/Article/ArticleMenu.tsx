@@ -5,7 +5,7 @@ import { Bookmark, Link } from "lucide-react";
 
 import {
   ArticleActivityType,
-  FeedArticleFragment,
+  ArticleFeedFragment,
   useCreateArticleActivityMutation,
   useDeleteArticleActivityMutation,
 } from "../../../../generated/graphql";
@@ -13,7 +13,7 @@ import {
 import styles from "./ArticleShowcase.module.scss";
 
 interface ArticleMenuProps {
-  activity?: FeedArticleFragment["activity"] | null;
+  activity?: ArticleFeedFragment["activity"] | null;
   id: number;
   url: string;
 }

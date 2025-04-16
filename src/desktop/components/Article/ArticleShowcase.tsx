@@ -1,38 +1,60 @@
 import React from "react";
 
 import { Flex, Spacing, Typography } from "@sampled-ui/base";
+import classNames from "classnames";
 import moment from "moment";
 
-import { FeedArticleFragment } from "../../../../generated/graphql";
+import {
+  ArticleActivityType,
+  ArticleFeedFragment,
+  useCreateArticleActivityMutation,
+} from "../../../../generated/graphql";
 
 import ArticleMenu from "./ArticleMenu";
 import styles from "./ArticleShowcase.module.scss";
 
 interface ArticleShowcaseProps {
-  article: FeedArticleFragment;
-  loggedIn: boolean;
+  article: ArticleFeedFragment;
+  compact?: boolean;
+  loggedIn?: boolean;
 }
 
 const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
   article,
+  compact,
   loggedIn,
 }) => {
+  const [createArticleActivity] = useCreateArticleActivityMutation();
   return (
     <Flex
-      direction="column"
+      direction={compact ? "row" : "column"}
       align="start"
       gap="sm"
       key={article.id}
-      className={styles.article}
+      className={classNames(styles.article, { [styles.compact]: compact })}
     >
       <a
         href={article.url}
         target="_blank"
-        style={{ all: "unset", height: "20rem", width: "100%" }}
+        onClick={() => {
+          createArticleActivity({
+            variables: {
+              data: {
+                articleId: article.id,
+                type: ArticleActivityType.ViewArticle,
+              },
+            },
+          });
+        }}
+        style={{
+          all: "unset",
+          height: compact ? "10rem" : "20rem",
+          width: compact ? "10rem" : "100%",
+        }}
       >
         <div
           style={{ backgroundImage: `url(${article.image})` }}
-          className={styles.image}
+          className={classNames(styles.image, { [styles.compact]: compact })}
         />
       </a>
       <Spacing gap="sm" className={styles.content}>
@@ -54,11 +76,25 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
               />
             ) : null}
           </Flex>
-          <a href={article.url} target="_blank" style={{ all: "unset" }}>
+          <a
+            href={article.url}
+            target="_blank"
+            style={{ all: "unset" }}
+            onClick={() => {
+              createArticleActivity({
+                variables: {
+                  data: {
+                    articleId: article.id,
+                    type: ArticleActivityType.ViewArticle,
+                  },
+                },
+              });
+            }}
+          >
             <Typography.Text bold size="md" className={styles.title}>
               {article.title}
             </Typography.Text>
-            {article.description ? (
+            {article.description && !compact ? (
               <Typography.Paragraph className={styles.description}>
                 {article.description}
               </Typography.Paragraph>

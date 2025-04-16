@@ -1,6 +1,6 @@
 query articles {
   articles {
-    ...FeedArticle
+    ...ArticleFeed
   }
 }
 
@@ -18,13 +18,11 @@ mutation deleteArticleActivity($id: Int!) {
   }
 }
 
-fragment FeedArticle on Article {
+fragment ArticleFeed on Article {
   id
   title
-  content
   description
   image
-  categories
   url
   premium
   uploadedAt

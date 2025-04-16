@@ -1,0 +1,29 @@
+query savedArticles {
+  savedArticles {
+    ...ArticleList
+  }
+}
+
+query viewedArticles {
+  viewedArticles {
+    ...ArticleList
+  }
+}
+
+fragment ArticleList on Article {
+  id
+  title
+  description
+  image
+  url
+  premium
+  uploadedAt
+  source {
+    name
+    logo
+  }
+  activity {
+    id
+    type
+  }
+}

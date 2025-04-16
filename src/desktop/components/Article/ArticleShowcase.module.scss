@@ -3,9 +3,14 @@
 .article {
   width: 100%;
   max-width: 30rem;
-  padding-bottom: $spacing-sm;
+  padding-bottom: 0.6rem;
   transition-property: box-shadow;
   transition-duration: $transition-fast;
+}
+
+.article.compact {
+  max-width: 100%;
+  padding: initial;
 }
 
 .image {
@@ -16,6 +21,12 @@
   background-position: center;
   background-size: cover;
   box-sizing: border-box;
+}
+
+.compact.image {
+  width: 10rem;
+  height: 10rem;
+  border-radius: $border-radius-sm;
 }
 
 .content {

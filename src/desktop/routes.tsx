@@ -12,9 +12,10 @@ import {
 import { Page } from "./components/Page";
 import { AboutPage } from "./pages/AboutPage";
 import { AccountPage } from "./pages/AccountPage";
+import CollectionPage from "./pages/Collection/CollectionPage";
 import NotFoundPage from "./pages/Error/404Page";
 import { ExplorePage } from "./pages/ExplorePage";
-import { HomePage } from "./pages/HomePage";
+import { HomePage } from "./pages/Home/HomePage";
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "/", element: <HomePage /> },
       { path: "/about", element: <AboutPage /> },
+      { path: "/collection", element: <Private page={<CollectionPage />} /> },
       { path: "/explore", element: <ExplorePage /> },
       { path: "/me", element: <Private page={<AccountPage />} /> },
     ],

@@ -77,9 +77,9 @@ export const Sidebar: React.FC = () => {
     },
     {
       title: "Gespeichert",
-      key: "/saved",
+      key: "/collection",
       icon: <Bookmark size={24} />,
-      onClick: () => navigate("/saved"),
+      onClick: () => navigate("/collection"),
     },
     {
       title: "Account",

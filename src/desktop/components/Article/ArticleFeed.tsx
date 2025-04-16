@@ -3,14 +3,14 @@ import React from "react";
 import { Flex } from "@sampled-ui/base";
 
 import {
-  FeedArticleFragment,
+  ArticleFeedFragment,
   useLoggedInQuery,
 } from "../../../../generated/graphql";
 
 import ArticleShowcase from "./ArticleShowcase";
 
 interface ArticleFeedProps {
-  articles?: FeedArticleFragment[] | null;
+  articles?: ArticleFeedFragment[] | null;
 }
 
 const ArticleFeed: React.FC<ArticleFeedProps> = ({ articles }) => {

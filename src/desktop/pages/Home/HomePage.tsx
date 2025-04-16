@@ -9,14 +9,17 @@ import {
   Typography,
 } from "@sampled-ui/base";
 
-import { useArticlesQuery, useLoggedInQuery } from "../../../generated/graphql";
-import { useIsDevice } from "../../shared/hooks/isDevice";
-import ArticleFeed from "../components/Article/ArticleFeed";
-import LoggedOutCallToAction from "../components/CallToAction/LoggedOutCallToAction";
+import {
+  useArticlesQuery,
+  useLoggedInQuery,
+} from "../../../../generated/graphql";
+import { useIsDevice } from "../../../shared/hooks/isDevice";
+import ArticleFeed from "../../components/Article/ArticleFeed";
+import LoggedOutCallToAction from "../../components/CallToAction/LoggedOutCallToAction";
 
 export const HomePage: React.FC = () => {
-  const { data: articlesData } = useArticlesQuery();
-  const { data: loggedInData } = useLoggedInQuery();
+  const { data: articlesQueryData } = useArticlesQuery();
+  const { data: loggedInQueryData } = useLoggedInQuery();
   const { isTablet, isDesktop } = useIsDevice();
 
   return (
@@ -51,14 +54,14 @@ export const HomePage: React.FC = () => {
                 width: isDesktop ? "calc(100% - 2rem)" : "100%",
               }}
             />
-            <ArticleFeed articles={articlesData?.articles} />
+            <ArticleFeed articles={articlesQueryData?.articles} />
           </Flex>
         </Column>
         {isTablet ? null : (
           <Column span={8}>
-            {loggedInData ? (
+            {loggedInQueryData ? (
               <Typography.Text bold>
-                {loggedInData?.loggedIn.name}
+                {loggedInQueryData?.loggedIn.name}
               </Typography.Text>
             ) : (
               <LoggedOutCallToAction />
