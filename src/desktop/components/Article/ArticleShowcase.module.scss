@@ -3,7 +3,7 @@
 .article {
   width: 100%;
   max-width: 30rem;
-  padding-bottom: $spacing-md;
+  padding-bottom: $spacing-sm;
   transition-property: box-shadow;
   transition-duration: $transition-fast;
 }
@@ -24,8 +24,15 @@
 }
 
 .sourceLogo {
+  cursor: pointer;
   max-height: 1rem;
   filter: grayscale(1) brightness(1.5);
+  transition-property: filter, box-shadow;
+  transition-duration: $transition-fast;
+}
+
+.sourceLogo:hover {
+  filter: grayscale(0) brightness(1);
 }
 
 .action {
