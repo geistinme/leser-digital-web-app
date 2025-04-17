@@ -11,14 +11,26 @@ export const Auth: React.FC = () => {
   const { isMobile } = useIsDevice();
   const navigate = useNavigate();
   const { data } = useLoggedInQuery();
+
   if (data?.loggedIn && data.loggedIn.verified) {
-    navigate("/");
+    const redirect = localStorage.getItem("redirect");
+    if (redirect) {
+      localStorage.removeItem("redirect");
+      navigate(redirect, { replace: true });
+    } else {
+      navigate("/", { replace: true });
+    }
   }
 
   return (
     <Layout style={{ height: "100vh" }}>
       <Header>
-        <SvgWordmarkLogo width="100%" height="calc(100% - 2rem)" viewBox="0 0 586 160" style={{marginTop: "0.25rem"}}/>
+        <SvgWordmarkLogo
+          width="100%"
+          height="calc(100% - 2rem)"
+          viewBox="0 0 586 160"
+          style={{ marginTop: "0.25rem" }}
+        />
       </Header>
       <Card
         style={{

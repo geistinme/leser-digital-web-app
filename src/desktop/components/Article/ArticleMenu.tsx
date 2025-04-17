@@ -48,7 +48,7 @@ const ArticleMenu: React.FC<ArticleMenuProps> = ({ activity, id, url }) => {
         }),
         fields: {
           activity() {
-            return data.createArticleActivity;
+            return [activity, data.createArticleActivity];
           },
         },
       });
@@ -64,28 +64,39 @@ const ArticleMenu: React.FC<ArticleMenuProps> = ({ activity, id, url }) => {
       toast({
         message: "Fehler beim Un-Speichern des Artikels",
       }),
-      update: (cache, { data }) => {
-        if (!data?.deleteArticleActivity) {
-          return;
-        }
-        cache.modify({
-          id: cache.identify({
-            __typename: "Article",
-            id,
-          }),
-          fields: {
-            activity() {
+    update: (cache, { data }) => {
+      if (!data?.deleteArticleActivity) {
+        return;
+      }
+      cache.modify({
+        id: cache.identify({
+          __typename: "Article",
+          id,
+        }),
+        fields: {
+          activity() {
+            if (activity) {
+              return [
+                activity.filter(
+                  (a) => a?.id !== data.deleteArticleActivity?.id
+                ),
+              ];
+            } else {
               return null;
-            },
+            }
           },
-        });
-      },
+        },
+      });
+    },
   });
   const handleSaveArticle = async () => {
-    if (activity) {
+    const existing = activity?.find(
+      (article) => article?.type === ArticleActivityType.SaveArticle
+    );
+    if (existing) {
       deleteArticleActivity({
         variables: {
-          id: activity.id,
+          id: existing.id,
         },
       });
     } else {
@@ -105,8 +116,20 @@ const ArticleMenu: React.FC<ArticleMenuProps> = ({ activity, id, url }) => {
       <Bookmark
         size={20}
         className={styles.action}
-        fill={activity ? "dodgerblue" : "white"}
-        color={activity ? "dodgerblue" : "black"}
+        fill={
+          activity?.find(
+            (activity) => activity?.type === ArticleActivityType.SaveArticle
+          )
+            ? "dodgerblue"
+            : "white"
+        }
+        color={
+          activity?.find(
+            (activity) => activity?.type === ArticleActivityType.SaveArticle
+          )
+            ? "dodgerblue"
+            : "black"
+        }
         onClick={handleSaveArticle}
       />
       <Link size={20} className={styles.action} onClick={handleCopyLink} />

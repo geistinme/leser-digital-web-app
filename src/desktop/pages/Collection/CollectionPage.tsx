@@ -1,24 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Divider, Flex, Spacing, Tabs } from "@sampled-ui/base";
+import { useLocation, useNavigate } from "react-router";
+
 import {
-  useSavedArticlesQuery,
-  useViewedArticlesQuery,
+  useLoggedInQuery,
+  useSavedArticlesLazyQuery,
+  useViewedArticlesLazyQuery,
 } from "../../../../generated/graphql";
 import ArticleList from "../../components/Article/ArticleList";
 
 interface CollectionPageProps {}
 
 const CollectionPage: React.FC<CollectionPageProps> = () => {
-  const [selected, setSelected] = useState("saved");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [selected, setSelected] = useState(
+    new URLSearchParams(location.search).get("tab") ?? "saved"
+  );
 
-  const { data: savedArticlesQueryData, loading: loadingSavedArticles } =
-    useSavedArticlesQuery();
-  const { data: viewedArticlesQueryData, loading: loadingViewedArticles } =
-    useViewedArticlesQuery();
+  const { data: loggedInQueryData } = useLoggedInQuery();
+  const [
+    savedArticlesQuery,
+    { data: savedArticlesQueryData, loading: loadingSavedArticles },
+  ] = useSavedArticlesLazyQuery({ fetchPolicy: "cache-and-network" });
+  const [
+    viewedArticlesQuery,
+    { data: viewedArticlesQueryData, loading: loadingViewedArticles },
+  ] = useViewedArticlesLazyQuery({ fetchPolicy: "cache-and-network" });
+
+  useEffect(() => {
+    const loggedIn = !!loggedInQueryData?.loggedIn;
+    if (loggedIn) {
+      if (selected === "viewed") {
+        viewedArticlesQuery();
+      } else {
+        savedArticlesQuery();
+      }
+    }
+  }, [loggedInQueryData, savedArticlesQuery, selected, viewedArticlesQuery]);
+
   if (loadingSavedArticles || loadingViewedArticles) {
     return <div>Loading...</div>;
   }
+
   if (
     (!savedArticlesQueryData?.savedArticles && selected === "saved") ||
     (!viewedArticlesQueryData?.viewedArticles && selected === "viewed")
@@ -39,7 +64,10 @@ const CollectionPage: React.FC<CollectionPageProps> = () => {
             { key: "viewed", title: "Angesehen" },
           ]}
           selected={selected}
-          onSelect={(item) => setSelected(item.key)}
+          onSelect={(item) => {
+            setSelected(item.key);
+            navigate(`/collection?tab=${item.key}`, { replace: true });
+          }}
         />
         <Divider
           style={{

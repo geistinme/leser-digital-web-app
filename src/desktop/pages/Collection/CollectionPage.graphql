@@ -10,6 +10,20 @@ query viewedArticles {
   }
 }
 
+mutation createArticleActivity($data: ArticleActivityInput!) {
+  createArticleActivity(data: $data) {
+    id
+    type
+  }
+}
+
+mutation deleteArticleActivity($id: Int!) {
+  deleteArticleActivity(id: $id) {
+    id
+    type
+  }
+}
+
 fragment ArticleList on Article {
   id
   title
