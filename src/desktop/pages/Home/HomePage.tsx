@@ -18,7 +18,8 @@ import ArticleFeed from "../../components/Article/ArticleFeed";
 import LoggedOutCallToAction from "../../components/CallToAction/LoggedOutCallToAction";
 
 export const HomePage: React.FC = () => {
-  const { data: articlesQueryData } = useArticlesQuery();
+  const { data: articlesQueryData, loading: loadingArticles } =
+    useArticlesQuery();
   const { data: loggedInQueryData } = useLoggedInQuery();
   const { isTablet, isDesktop } = useIsDevice();
 
@@ -54,7 +55,10 @@ export const HomePage: React.FC = () => {
                 width: isDesktop ? "calc(100% - 2rem)" : "100%",
               }}
             />
-            <ArticleFeed articles={articlesQueryData?.articles} />
+            <ArticleFeed
+              articles={articlesQueryData?.articles}
+              loading={loadingArticles}
+            />
           </Flex>
         </Column>
         {isTablet ? null : (
