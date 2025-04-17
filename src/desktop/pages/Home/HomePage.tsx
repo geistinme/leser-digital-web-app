@@ -25,7 +25,7 @@ export const HomePage: React.FC = () => {
   return (
     <Spacing gap="xl">
       <Row columns={isTablet ? 12 : 24}>
-        <Column span={isTablet ? 12 : 16}>
+        <Column span={isTablet ? 12 : 18}>
           <Flex
             direction="column"
             align="stretch"
@@ -58,7 +58,7 @@ export const HomePage: React.FC = () => {
           </Flex>
         </Column>
         {isTablet ? null : (
-          <Column span={8}>
+          <Column span={6}>
             {loggedInQueryData ? (
               <Typography.Text bold>
                 {loggedInQueryData?.loggedIn.name}

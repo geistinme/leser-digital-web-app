@@ -13,8 +13,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.13.7",
-    "@sampled-ui/base": "^0.0.40",
-    "apollo-link-token-refresh": "^0.7.0",
+    "@sampled-ui/base": "^0.0.43",
     "formik": "^2.4.6",
     "graphql": "^16.10.0",
     "lucide-react": "^0.488.0",

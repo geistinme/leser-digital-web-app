@@ -1,6 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
-import { Divider, Flex, Spacing, Tabs } from "@sampled-ui/base";
+import {
+  Divider,
+  Flex,
+  Skeleton,
+  Spacing,
+  Tabs,
+  Typography,
+} from "@sampled-ui/base";
 import { useLocation, useNavigate } from "react-router";
 
 import {
@@ -40,16 +47,54 @@ const CollectionPage: React.FC<CollectionPageProps> = () => {
     }
   }, [loggedInQueryData, savedArticlesQuery, selected, viewedArticlesQuery]);
 
-  if (loadingSavedArticles || loadingViewedArticles) {
-    return <div>Loading...</div>;
-  }
+  const loading = useMemo(() => {
+    if (loadingSavedArticles && loadingViewedArticles) {
+      return (
+        <Flex
+          direction="column"
+          style={{ width: "100%" }}
+          align="center"
+          gap="lg"
+        >
+          <Skeleton width="40rem" height="10rem" />
+          <Skeleton width="40rem" height="10rem" />
+          <Skeleton width="40rem" height="10rem" />
+        </Flex>
+      );
+    } else {
+      return null;
+    }
+  }, [loadingSavedArticles, loadingViewedArticles]);
 
-  if (
-    (!savedArticlesQueryData?.savedArticles && selected === "saved") ||
-    (!viewedArticlesQueryData?.viewedArticles && selected === "viewed")
-  ) {
-    return <div>No saved articles available</div>;
-  }
+  const empty = useMemo(() => {
+    if (
+      (!savedArticlesQueryData?.savedArticles ||
+        savedArticlesQueryData?.savedArticles?.length === 0) &&
+      selected === "saved"
+    ) {
+      return (
+        <Typography.Text disabled bold style={{ textAlign: "center" }}>
+          Keine gespeicherten Artikel gefunden
+        </Typography.Text>
+      );
+    } else if (
+      (!viewedArticlesQueryData?.viewedArticles ||
+        viewedArticlesQueryData?.viewedArticles?.length === 0) &&
+      selected === "viewed"
+    ) {
+      return (
+        <Typography.Text disabled bold style={{ textAlign: "center" }}>
+          Keine bisher angesehenen Artikel gefunden
+        </Typography.Text>
+      );
+    } else {
+      return null;
+    }
+  }, [
+    savedArticlesQueryData?.savedArticles,
+    selected,
+    viewedArticlesQueryData?.viewedArticles,
+  ]);
 
   return (
     <Spacing gap="xl">
@@ -74,10 +119,12 @@ const CollectionPage: React.FC<CollectionPageProps> = () => {
             marginBottom: "2rem",
           }}
         />
-        {selected === "saved" ? (
+        {empty}
+        {loading}
+        {selected === "saved" && !(empty || loading) ? (
           <ArticleList articles={savedArticlesQueryData!.savedArticles!} />
         ) : null}
-        {selected === "viewed" ? (
+        {selected === "viewed" && !(empty || loading) ? (
           <ArticleList articles={viewedArticlesQueryData!.viewedArticles!} />
         ) : null}
       </Flex>
