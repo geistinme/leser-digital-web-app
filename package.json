@@ -16,7 +16,7 @@
     "@sampled-ui/base": "^0.0.43",
     "formik": "^2.4.6",
     "graphql": "^16.10.0",
-    "lucide-react": "^0.488.0",
+    "lucide-react": "^0.501.0",
     "moment": "^2.30.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
