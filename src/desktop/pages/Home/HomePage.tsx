@@ -26,6 +26,7 @@ export const HomePage: React.FC = () => {
 
   return (
     <Spacing gap="xl">
+      <title>Startseite</title>
       <Row columns={isTablet ? 12 : 24}>
         <Column span={isTablet ? 12 : 17}>
           <Flex

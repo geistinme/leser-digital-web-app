@@ -34,6 +34,7 @@ fragment ArticleList on Article {
   uploadedAt
   source {
     id
+    key
     name
     logo
   }

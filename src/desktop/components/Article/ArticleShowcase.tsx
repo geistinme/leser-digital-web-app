@@ -9,9 +9,11 @@ import {
   ArticleFeedFragment,
   useCreateArticleActivityMutation,
 } from "../../../../generated/graphql";
+import { useColorScheme } from "../../../shared/hooks/colorScheme";
 
 import ArticleMenu from "./ArticleMenu";
 import styles from "./ArticleShowcase.module.scss";
+import { invertLogo } from "./invertLogo";
 
 interface ArticleShowcaseProps {
   article: ArticleFeedFragment;
@@ -24,6 +26,7 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
   compact,
   loggedIn,
 }) => {
+  const { colorScheme } = useColorScheme();
   const [createArticleActivity] = useCreateArticleActivityMutation();
 
   const header = (
@@ -33,7 +36,12 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
       className={classNames(styles.header, { [styles.compact]: compact })}
     >
       <Flex gap="sm">
-        <img src={article.source.logo} className={styles.sourceLogo} />
+        <img
+          src={article.source.logo}
+          className={classNames(styles.sourceLogo, {
+            [styles.invert]: colorScheme === "dark" && invertLogo(article.source.key),
+          })}
+        />
         {article.premium ? (
           <Typography.Text size="xs" variant="warning" bold>
             Premium

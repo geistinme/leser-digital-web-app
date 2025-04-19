@@ -1608,10 +1608,10 @@
   resolved "https://registry.yarnpkg.com/@rtsao/scc/-/scc-1.1.0.tgz#927dd2fae9bc3361403ac2c7a00c32ddce9ad7e8"
   integrity sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==
 
-"@sampled-ui/base@^0.0.43":
-  version "0.0.43"
-  resolved "https://registry.yarnpkg.com/@sampled-ui/base/-/base-0.0.43.tgz#a04f03c64ef81accb3940c45ff171880b305219c"
-  integrity sha512-NIluu70YaZm/CcdQ6dRhrciOodptdFAYfkKmyg6ntbxOwJQ0aiqxv/v/c7oBdALSde/wz4L17AtwgTQOSBGDDA==
+"@sampled-ui/base@^0.0.44":
+  version "0.0.44"
+  resolved "https://registry.yarnpkg.com/@sampled-ui/base/-/base-0.0.44.tgz#7bee8a4c98318b0e0eaf4c5822ba8c48b18d2ad8"
+  integrity sha512-hO6noUlVBI6x0OOp209xMUMH8W9Au7qdXJSVPWFmyZPB/zItvntjWaRYnHZ6k2FQGbA6Zdhy1XZltqxYyfzYQA==
   dependencies:
     classnames "^2.5.1"
 
@@ -1861,6 +1861,13 @@
   version "19.1.2"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-19.1.2.tgz#bd1fe3b8c28a3a2e942f85314dcfb71f531a242f"
   integrity sha512-XGJkWF41Qq305SKWEILa1O8vzhb3aOo3ogBlSmiqNko/WmRb6QIaweuZCXjKygVDXpzXb5wyxKTSOsmkuqj+Qw==
+
+"@types/react-helmet@^6.1.11":
+  version "6.1.11"
+  resolved "https://registry.yarnpkg.com/@types/react-helmet/-/react-helmet-6.1.11.tgz#8cafcafff38f75361f451563ba7b406b0c5d3907"
+  integrity sha512-0QcdGLddTERotCXo3VFlUSWO3ztraw8nZ6e3zJSgG7apwV5xt+pJUS8ewPBqT4NYB1optGLprNQzFleIY84u/g==
+  dependencies:
+    "@types/react" "*"
 
 "@types/react@*", "@types/react@^19.1.2":
   version "19.1.2"

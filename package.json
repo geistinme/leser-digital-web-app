@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",
-    "@sampled-ui/base": "^0.0.43",
+    "@sampled-ui/base": "^0.0.44",
     "formik": "^2.4.6",
     "graphql": "^16.10.0",
     "lucide-react": "^0.501.0",
@@ -34,6 +34,7 @@
     "@svgr/cli": "^8.1.0",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
+    "@types/react-helmet": "^6.1.11",
     "@vitejs/plugin-react-swc": "^3.9.0",
     "classnames": "^2.5.1",
     "concurrently": "^9.1.2",

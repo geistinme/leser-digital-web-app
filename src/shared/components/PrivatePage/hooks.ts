@@ -21,10 +21,10 @@ export const useAuthRedirect = () => {
   return useCallback(() => {
     if ((!loading && !data?.loggedIn) || error) {
       localStorage.setItem("redirect", location.pathname);
-      navigate("/auth/login", { replace: true });
+      navigate("/auth/login");
     } else if (!loading && !data?.loggedIn?.verified) {
       localStorage.setItem("redirect", location.pathname);
-      navigate("/auth/verify", { replace: true });
+      navigate("/auth/verify");
     }
   }, [data?.loggedIn, error, loading, location.pathname, navigate]);
 };

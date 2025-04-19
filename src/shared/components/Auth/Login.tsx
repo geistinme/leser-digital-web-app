@@ -22,6 +22,7 @@ const Login: React.FC<LoginProps> = ({ onSubmit, error }) => {
 
   return (
     <Flex direction="column" gap="lg" align="stretch" style={{ width: "100%" }}>
+      <title>Login</title>
       <Flex direction="column" align="center" gap="md">
         <Typography.Heading level={4}>Willkommen zurück</Typography.Heading>
         <Typography.Text variant="secondary">

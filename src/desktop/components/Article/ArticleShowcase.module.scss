@@ -19,7 +19,7 @@
 }
 
 .header {
-  width: calc(100% - 1rem);
+  width: 100%;
 }
 
 .header.compact {
@@ -81,4 +81,13 @@
 .description {
   cursor: pointer;
   margin: initial;
+}
+
+@media (prefers-color-scheme: dark) {
+  .invert {
+    filter: grayscale(1) brightness(2) invert(1);
+  }
+  .invert:hover {
+    filter: grayscale(1) brightness(0) invert(1);
+  }
 }

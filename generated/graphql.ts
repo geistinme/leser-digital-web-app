@@ -211,12 +211,12 @@ export type LogoutMutation = { __typename?: 'Mutation', logout?: { __typename?: 
 export type SavedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SavedArticlesQuery = { __typename?: 'Query', savedArticles?: Array<{ __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null }> | null };
+export type SavedArticlesQuery = { __typename?: 'Query', savedArticles?: Array<{ __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null }> | null };
 
 export type ViewedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ViewedArticlesQuery = { __typename?: 'Query', viewedArticles?: Array<{ __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null }> | null };
+export type ViewedArticlesQuery = { __typename?: 'Query', viewedArticles?: Array<{ __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null }> | null };
 
 export type CreateArticleActivityMutationVariables = Exact<{
   data: ArticleActivityInput;
@@ -232,19 +232,19 @@ export type DeleteArticleActivityMutationVariables = Exact<{
 
 export type DeleteArticleActivityMutation = { __typename?: 'Mutation', deleteArticleActivity?: { __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null };
 
-export type ArticleListFragment = { __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null };
+export type ArticleListFragment = { __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null };
 
 export type ArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null }> | null };
+export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null }> | null };
 
 export type RecommendedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type RecommendedArticlesQuery = { __typename?: 'Query', recommendedArticles?: Array<{ __typename?: 'Article', id: number, title: string, url: string, source: { __typename?: 'Source', id: number, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null } | null> | null };
 
-export type ArticleFeedFragment = { __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null };
+export type ArticleFeedFragment = { __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null };
 
 export type RecommendedArticleFragment = { __typename?: 'Article', id: number, title: string, url: string, source: { __typename?: 'Source', id: number, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null };
 
@@ -301,6 +301,7 @@ export const ArticleListFragmentDoc = gql`
   uploadedAt
   source {
     id
+    key
     name
     logo
   }
@@ -323,6 +324,7 @@ export const ArticleFeedFragmentDoc = gql`
     id
     name
     logo
+    key
   }
   activity {
     id

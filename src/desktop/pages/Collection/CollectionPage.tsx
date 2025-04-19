@@ -98,6 +98,7 @@ const CollectionPage: React.FC<CollectionPageProps> = () => {
 
   return (
     <Spacing gap="xl">
+      <title>Gespeichert</title>
       <Flex
         direction="column"
         align="stretch"

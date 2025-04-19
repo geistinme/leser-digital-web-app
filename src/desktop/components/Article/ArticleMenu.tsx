@@ -9,6 +9,7 @@ import {
   useCreateArticleActivityMutation,
   useDeleteArticleActivityMutation,
 } from "../../../../generated/graphql";
+import { useColorScheme } from "../../../shared/hooks/colorScheme";
 
 import styles from "./ArticleShowcase.module.scss";
 
@@ -19,6 +20,7 @@ interface ArticleMenuProps {
 }
 
 const ArticleMenu: React.FC<ArticleMenuProps> = ({ activity, id, url }) => {
+  const { colorScheme } = useColorScheme();
   const { toast } = useToast();
   const handleCopyLink = () => {
     navigator.clipboard.writeText(url);
@@ -121,6 +123,8 @@ const ArticleMenu: React.FC<ArticleMenuProps> = ({ activity, id, url }) => {
             (activity) => activity?.type === ArticleActivityType.SaveArticle
           )
             ? "dodgerblue"
+            : colorScheme === "dark"
+            ? "black"
             : "white"
         }
         color={
@@ -128,7 +132,7 @@ const ArticleMenu: React.FC<ArticleMenuProps> = ({ activity, id, url }) => {
             (activity) => activity?.type === ArticleActivityType.SaveArticle
           )
             ? "dodgerblue"
-            : "black"
+            : undefined
         }
         onClick={handleSaveArticle}
       />

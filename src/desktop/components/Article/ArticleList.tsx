@@ -6,8 +6,8 @@ import {
   ArticleListFragment,
   useLoggedInQuery,
 } from "../../../../generated/graphql";
-
 import { useIsDevice } from "../../../shared/hooks/isDevice";
+
 import ArticleShowcase from "./ArticleShowcase";
 
 interface ArticleListProps {

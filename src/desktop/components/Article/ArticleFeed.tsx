@@ -65,7 +65,7 @@ const ArticleFeed: React.FC<ArticleFeedProps> = ({
     <Flex
       direction="column"
       align="stretch"
-      style={{ width: "fit-content", margin: "auto" }}
+      style={{ width: "100%", maxWidth: "30rem", margin: "auto" }}
     >
       {empty}
       {loading}

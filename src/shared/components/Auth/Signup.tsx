@@ -34,6 +34,7 @@ const Signup: React.FC<SignupProps> = ({ onSubmit }) => {
 
   return (
     <Flex direction="column" gap="lg" align="stretch" style={{ width: "100%" }}>
+      <title>Registrierung</title>
       <Flex direction="column" align="center" gap="md">
         <Typography.Heading level={4}>Neu anmelden</Typography.Heading>
         <Typography.Text variant="secondary">

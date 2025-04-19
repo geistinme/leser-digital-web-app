@@ -1,59 +1,84 @@
 // Breakpoints
-$breakpoint-sm: 576px;
-$breakpoint-md: 768px;
-$breakpoint-lg: 1024px;
-$breakpoint-xl: 1440px;
+$breakpoint-sm: var(--breakpoint-sm);
+$breakpoint-md: var(--breakpoint-md);
+$breakpoint-lg: var(--breakpoint-lg);
+$breakpoint-xl: var(--breakpoint-xl);
+
+// Font
+$font-primary: var(--font-primary);
+$font-mono: var(--font-mono);
 
 // Font size
-$font-size-xs: 0.8rem;
-$font-size-sm: 0.9rem;
-$font-size-md: 1rem;
-$font-size-lg: 1.2rem;
-$font-size-xl: 1.5rem;
+$font-size-xs: var(--font-size-xs);
+$font-size-sm: var(--font-size-sm);
+$font-size-md: var(--font-size-md);
+$font-size-lg: var(--font-size-lg);
+$font-size-xl: var(--font-size-xl);
+
+$heading-size-xs: var(--heading-size-xs);
+$heading-size-sm: var(--heading-size-sm);
+$heading-size-md: var(--heading-size-md);
+$heading-size-lg: var(--heading-size-lg);
+$heading-size-xl: var(--heading-size-xl);
 
 // Line height
-$line-height-xs: 1rem;
-$line-height-sm: 1.2rem;
-$line-height-md: 1.6rem;
-$line-height-lg: 1.8rem;
-$line-height-xl: 2rem;
+$line-height-xs: var(--line-height-xs);
+$line-height-sm: var(--line-height-sm);
+$line-height-md: var(--line-height-md);
+$line-height-lg: var(--line-height-lg);
+$line-height-xl: var(--line-height-xl);
+
+$heading-line-height-xs: var(--heading-line-height-xs);
+$heading-line-height-sm: var(--heading-line-height-sm);
+$heading-line-height-md: var(--heading-line-height-md);
+$heading-line-height-lg: var(--heading-line-height-lg);
+$heading-line-height-xl: var(--heading-line-height-xl);
 
 // Border
-$border-radius-xs: 0.2rem;
-$border-radius-sm: 0.5rem;
-$border-radius-md: 0.8rem;
-$border-radius-lg: 1rem;
-$border: 1px solid hsl(0, 0%, 80%);
+$border-radius-xs: var(--border-radius-xs);
+$border-radius-sm: var(--border-radius-sm);
+$border-radius-md: var(--border-radius-md);
+
+$border: var(--border);
 
 // Spacing
-$padding-xs: 0.25rem 0.5rem;
-$padding-sm: 0.5rem 0.75rem;
-$padding-md: 1rem 2rem;
-$padding-lg: 1.5rem 3rem;
+$spacing-xs: var(--spacing-xs);
+$spacing-sm: var(--spacing-sm);
+$spacing-md: var(--spacing-md);
+$spacing-lg: var(--spacing-lg);
+$spacing-xl: var(--spacing-xl);
+$spacing-xxl: var(--spacing-xxl);
 
-$spacing-xs: 0.25rem;
-$spacing-sm: 0.5rem;
-$spacing-md: 1rem;
-$spacing-lg: 1.5rem;
-$spacing-xl: 2rem;
-$spacing-xxl: 3rem;
+$padding-xs: var(--padding-xs);
+$padding-sm: var(--padding-sm);
+$padding-md: var(--padding-md);
+$padding-lg: var(--padding-lg);
+$padding-xl: var(--padding-xl);
+$padding-xxl: var(--padding-xxl);
 
 // Colors
-$color-primary: hsl(0, 0%, 100%);
-$color-secondary: hsl(0, 0%, 0%);
-$color-tertiary: hsl(0, 0%, 60%);
-$color-primary-dim: hsl(0, 0%, 95%);
-$color-accent: hsl(205, 100%, 50%);
-$color-success: hsl(120, 100%, 40%);
-$color-error: hsl(0, 100%, 50%);
+$color-primary: var(--color-primary);
+$color-secondary: var(--color-secondary);
+$color-tertiary: var(--color-tertiary);
+$color-primary-dim: var(--color-primary-dim);
+$color-accent: var(--color-accent);
+$color-success: var(--color-success);
+$color-error: var(--color-error);
+$color-warning: var(--color-warning);
+
+$color-background: var(--color-background);
+$color-background-dim: var(--color-background-dim);
 
 // Shadows
-$shadow-sm: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-$shadow-md: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+$shadow-sm: var(--shadow-sm);
+$shadow-md: var(--shadow-md);
+
+$shadow-accent-sm: var(--shadow-accent-sm);
 
 // Opacity
-$opacity-dim: 0.8;
-$opacity-disabled: 0.5;
+$opacity-dim: var(--opacity-dim);
+$opacity-disabled: var(--opacity-disabled);
 
 // Transition
-$transition-fast: 0.15s;
+$transition-fast: var(--transition-fast);
+$transition-function: var(--transition-function);
