@@ -21,7 +21,6 @@ import {
   useLogoutMutation,
 } from "../../../../generated/graphql";
 import SvgWordmarkLogo from "../../../icons/WordmarkLogo";
-import { useIsDevice } from "../../../shared/hooks/isDevice";
 
 const useGetSelectedNavItem = (
   navItems: {
@@ -45,7 +44,6 @@ const useGetSelectedNavItem = (
 export const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isExtraLargeDesktop } = useIsDevice();
 
   const { data } = useLoggedInQuery();
   const [logout] = useLogoutMutation({
@@ -92,9 +90,7 @@ export const Sidebar: React.FC = () => {
   const selected = useGetSelectedNavItem(items, location);
 
   return (
-    <SidebarComponent
-      style={{ width: isExtraLargeDesktop ? "16rem" : "18rem", height: "100%" }}
-    >
+    <SidebarComponent style={{ width: "18rem", height: "100%" }}>
       <Spacing
         gap="lg"
         style={{

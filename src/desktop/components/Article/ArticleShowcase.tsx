@@ -25,6 +25,31 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
   loggedIn,
 }) => {
   const [createArticleActivity] = useCreateArticleActivityMutation();
+
+  const header = (
+    <Flex
+      gap="sm"
+      justify="between"
+      className={classNames(styles.header, { [styles.compact]: compact })}
+    >
+      <Flex gap="sm">
+        <img src={article.source.logo} className={styles.sourceLogo} />
+        {article.premium ? (
+          <Typography.Text size="xs" variant="warning" bold>
+            Premium
+          </Typography.Text>
+        ) : null}
+      </Flex>
+      {loggedIn ? (
+        <ArticleMenu
+          activity={article.activity}
+          id={article.id}
+          url={article.url}
+        />
+      ) : null}
+    </Flex>
+  );
+
   return (
     <Flex
       direction={compact ? "row" : "column"}
@@ -59,23 +84,7 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
       </a>
       <Spacing gap="sm" className={styles.content}>
         <Flex direction="column" align="start" gap="sm">
-          <Flex gap="sm" justify="between" style={{ width: "100%" }}>
-            <Flex gap="sm">
-              <img src={article.source.logo} className={styles.sourceLogo} />
-              {article.premium ? (
-                <Typography.Text size="xs" variant="warning" bold>
-                  Premium
-                </Typography.Text>
-              ) : null}
-            </Flex>
-            {loggedIn ? (
-              <ArticleMenu
-                activity={article.activity}
-                id={article.id}
-                url={article.url}
-              />
-            ) : null}
-          </Flex>
+          {header}
           <a
             href={article.url}
             target="_blank"

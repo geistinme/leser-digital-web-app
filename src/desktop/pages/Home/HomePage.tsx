@@ -15,6 +15,7 @@ import {
 } from "../../../../generated/graphql";
 import { useIsDevice } from "../../../shared/hooks/isDevice";
 import ArticleFeed from "../../components/Article/ArticleFeed";
+import ExploreCallToAction from "../../components/CallToAction/ExploreCallToAction";
 import LoggedOutCallToAction from "../../components/CallToAction/LoggedOutCallToAction";
 
 export const HomePage: React.FC = () => {
@@ -26,7 +27,7 @@ export const HomePage: React.FC = () => {
   return (
     <Spacing gap="xl">
       <Row columns={isTablet ? 12 : 24}>
-        <Column span={isTablet ? 12 : 18}>
+        <Column span={isTablet ? 12 : 17}>
           <Flex
             direction="column"
             align="stretch"
@@ -62,11 +63,9 @@ export const HomePage: React.FC = () => {
           </Flex>
         </Column>
         {isTablet ? null : (
-          <Column span={6}>
+          <Column span={7}>
             {loggedInQueryData ? (
-              <Typography.Text bold>
-                {loggedInQueryData?.loggedIn.name}
-              </Typography.Text>
+              <ExploreCallToAction />
             ) : (
               <LoggedOutCallToAction />
             )}

@@ -4,6 +4,12 @@ query articles {
   }
 }
 
+query recommendedArticles {
+  recommendedArticles {
+    ...RecommendedArticle
+  }
+}
+
 fragment ArticleFeed on Article {
   id
   title
@@ -13,8 +19,23 @@ fragment ArticleFeed on Article {
   premium
   uploadedAt
   source {
+    id
     name
     logo
+  }
+  activity {
+    id
+    type
+  }
+}
+
+fragment RecommendedArticle on Article {
+  id
+  title
+  url
+  source {
+    id
+    name
   }
   activity {
     id

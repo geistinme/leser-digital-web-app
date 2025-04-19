@@ -133,6 +133,8 @@ export type Query = {
   articleActivity?: Maybe<ArticleActivity>;
   articles?: Maybe<Array<Article>>;
   loggedIn: User;
+  mostViewedArticles?: Maybe<Array<Maybe<Article>>>;
+  recommendedArticles?: Maybe<Array<Maybe<Article>>>;
   savedArticles?: Maybe<Array<Article>>;
   users?: Maybe<Array<Maybe<User>>>;
   viewedArticles?: Maybe<Array<Article>>;
@@ -209,12 +211,12 @@ export type LogoutMutation = { __typename?: 'Mutation', logout?: { __typename?: 
 export type SavedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SavedArticlesQuery = { __typename?: 'Query', savedArticles?: Array<{ __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null }> | null };
+export type SavedArticlesQuery = { __typename?: 'Query', savedArticles?: Array<{ __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null }> | null };
 
 export type ViewedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ViewedArticlesQuery = { __typename?: 'Query', viewedArticles?: Array<{ __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null }> | null };
+export type ViewedArticlesQuery = { __typename?: 'Query', viewedArticles?: Array<{ __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null }> | null };
 
 export type CreateArticleActivityMutationVariables = Exact<{
   data: ArticleActivityInput;
@@ -230,14 +232,21 @@ export type DeleteArticleActivityMutationVariables = Exact<{
 
 export type DeleteArticleActivityMutation = { __typename?: 'Mutation', deleteArticleActivity?: { __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null };
 
-export type ArticleListFragment = { __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null };
+export type ArticleListFragment = { __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null };
 
 export type ArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null }> | null };
+export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null }> | null };
 
-export type ArticleFeedFragment = { __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null };
+export type RecommendedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RecommendedArticlesQuery = { __typename?: 'Query', recommendedArticles?: Array<{ __typename?: 'Article', id: number, title: string, url: string, source: { __typename?: 'Source', id: number, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null } | null> | null };
+
+export type ArticleFeedFragment = { __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null };
+
+export type RecommendedArticleFragment = { __typename?: 'Article', id: number, title: string, url: string, source: { __typename?: 'Source', id: number, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null };
 
 export type SendResetLinkMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -291,6 +300,7 @@ export const ArticleListFragmentDoc = gql`
   premium
   uploadedAt
   source {
+    id
     name
     logo
   }
@@ -310,8 +320,24 @@ export const ArticleFeedFragmentDoc = gql`
   premium
   uploadedAt
   source {
+    id
     name
     logo
+  }
+  activity {
+    id
+    type
+  }
+}
+    `;
+export const RecommendedArticleFragmentDoc = gql`
+    fragment RecommendedArticle on Article {
+  id
+  title
+  url
+  source {
+    id
+    name
   }
   activity {
     id
@@ -579,6 +605,45 @@ export type ArticlesQueryHookResult = ReturnType<typeof useArticlesQuery>;
 export type ArticlesLazyQueryHookResult = ReturnType<typeof useArticlesLazyQuery>;
 export type ArticlesSuspenseQueryHookResult = ReturnType<typeof useArticlesSuspenseQuery>;
 export type ArticlesQueryResult = Apollo.QueryResult<ArticlesQuery, ArticlesQueryVariables>;
+export const RecommendedArticlesDocument = gql`
+    query recommendedArticles {
+  recommendedArticles {
+    ...RecommendedArticle
+  }
+}
+    ${RecommendedArticleFragmentDoc}`;
+
+/**
+ * __useRecommendedArticlesQuery__
+ *
+ * To run a query within a React component, call `useRecommendedArticlesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRecommendedArticlesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRecommendedArticlesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRecommendedArticlesQuery(baseOptions?: Apollo.QueryHookOptions<RecommendedArticlesQuery, RecommendedArticlesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RecommendedArticlesQuery, RecommendedArticlesQueryVariables>(RecommendedArticlesDocument, options);
+      }
+export function useRecommendedArticlesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RecommendedArticlesQuery, RecommendedArticlesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RecommendedArticlesQuery, RecommendedArticlesQueryVariables>(RecommendedArticlesDocument, options);
+        }
+export function useRecommendedArticlesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RecommendedArticlesQuery, RecommendedArticlesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RecommendedArticlesQuery, RecommendedArticlesQueryVariables>(RecommendedArticlesDocument, options);
+        }
+export type RecommendedArticlesQueryHookResult = ReturnType<typeof useRecommendedArticlesQuery>;
+export type RecommendedArticlesLazyQueryHookResult = ReturnType<typeof useRecommendedArticlesLazyQuery>;
+export type RecommendedArticlesSuspenseQueryHookResult = ReturnType<typeof useRecommendedArticlesSuspenseQuery>;
+export type RecommendedArticlesQueryResult = Apollo.QueryResult<RecommendedArticlesQuery, RecommendedArticlesQueryVariables>;
 export const SendResetLinkDocument = gql`
     mutation sendResetLink($email: String!) {
   sendResetLink(email: $email)

@@ -101,7 +101,7 @@ const CollectionPage: React.FC<CollectionPageProps> = () => {
       <Flex
         direction="column"
         align="stretch"
-        style={{ marginRight: "2rem", maxWidth: "70%", margin: "auto" }}
+        style={{ marginRight: "2rem", maxWidth: "50rem", margin: "auto" }}
       >
         <Tabs
           items={[

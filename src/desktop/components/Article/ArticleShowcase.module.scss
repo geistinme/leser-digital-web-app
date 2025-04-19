@@ -3,13 +3,27 @@
 .article {
   width: 100%;
   max-width: 30rem;
-  padding-bottom: 0.6rem;
+  padding: $spacing-md 0;
   transition-property: box-shadow;
   transition-duration: $transition-fast;
+  border-bottom: $border;
+  border-color: $color-primary-dim;
+  margin-bottom: $spacing-sm;
 }
 
 .article.compact {
   max-width: 100%;
+  padding: initial;
+  border: initial;
+  margin-bottom: initial;
+}
+
+.header {
+  width: calc(100% - 1rem);
+}
+
+.header.compact {
+  width: 100%;
   padding: initial;
 }
 
@@ -17,13 +31,15 @@
   cursor: pointer;
   height: 20rem;
   width: 100%;
+  border-radius: $border-radius-xs;
+  border: $border;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
   box-sizing: border-box;
 }
 
-.compact.image {
+.image.compact {
   width: 10rem;
   height: 10rem;
   border-radius: $border-radius-sm;
@@ -31,7 +47,7 @@
 
 .content {
   width: calc(100% - 1rem);
-  padding: $spacing-xs $spacing-sm;
+  padding: $spacing-xs;
 }
 
 .sourceLogo {

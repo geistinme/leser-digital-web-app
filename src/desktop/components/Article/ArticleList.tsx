@@ -7,6 +7,7 @@ import {
   useLoggedInQuery,
 } from "../../../../generated/graphql";
 
+import { useIsDevice } from "../../../shared/hooks/isDevice";
 import ArticleShowcase from "./ArticleShowcase";
 
 interface ArticleListProps {
@@ -15,12 +16,17 @@ interface ArticleListProps {
 
 const ArticleList: React.FC<ArticleListProps> = ({ articles }) => {
   const { data: loggedInQueryData } = useLoggedInQuery();
+  const { isExtraLargeDesktop } = useIsDevice();
 
   return (
     <Flex
       direction="column"
       gap="lg"
-      style={{ maxWidth: "40rem", width: "100%", margin: "auto" }}
+      style={{
+        maxWidth: isExtraLargeDesktop ? "80%" : "100%",
+        width: "100%",
+        margin: "auto",
+      }}
     >
       {articles?.map((article) => (
         <ArticleShowcase

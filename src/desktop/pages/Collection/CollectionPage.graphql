@@ -33,6 +33,7 @@ fragment ArticleList on Article {
   premium
   uploadedAt
   source {
+    id
     name
     logo
   }
