@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { Flex, Spacing } from "@sampled-ui/base";
-import { Vibrant } from "node-vibrant/browser";
+import { Button, Flex, Spacing, Typography } from "@sampled-ui/base";
 
 import { SourceProfileFragment } from "../../../../generated/graphql";
 import { useColorScheme } from "../../../shared/hooks/colorScheme";
@@ -13,43 +12,21 @@ interface SourceShowcaseProps {
 
 export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
   const { colorScheme } = useColorScheme();
-  const [backgroundColor, setBackgroundColor] = useState(
-    colorScheme === "dark" ? "black" : "white"
-  );
-
-  useEffect(() => {
-    const logo = source?.logo;
-    if (logo) {
-      Vibrant.from(logo)
-        .getPalette()
-        .then((palette) => {
-          const hsl = palette.Vibrant?.hsl;
-          if (hsl?.[1] === 0) {
-            setBackgroundColor(colorScheme === "dark" ? "#333" : "gainsboro");
-          } else if (palette.Vibrant?.hex) {
-            setBackgroundColor(palette.Vibrant?.hex);
-          }
-        });
-    }
-  }, [colorScheme, source?.logo]);
 
   const invert =
     colorScheme === "dark" ? invertLogo(source?.key ?? "") : undefined;
 
   return (
     <Flex
-      align="end"
-      justify="center"
+      align="center"
+      justify="end"
+      direction="column"
       style={{
         width: "100%",
-        height: "10rem",
-        background: `var(--color-gradient), ${backgroundColor}`,
-        backgroundBlendMode: colorScheme === "dark" ? "darken" : "lighten",
-        transition: "background-color 0.5s ease-in",
-        transitionDelay: "0.2s",
+        height: "14rem",
       }}
     >
-      <Spacing gap="lg" style={{ marginBottom: "-2rem" }}>
+      <Spacing gap="lg">
         <img
           src={source?.logo}
           style={{
@@ -59,6 +36,27 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
           }}
         />
       </Spacing>
+      <Spacing>
+        <Flex gap="md">
+          <Flex gap="xs">
+            <Typography.Text size="md" bold>
+              192
+            </Typography.Text>
+            <Typography.Text size="md" variant="secondary">
+              Followers
+            </Typography.Text>
+          </Flex>
+          <Flex gap="xs">
+            <Typography.Text size="md" bold>
+              {source?.articleCount}
+            </Typography.Text>
+            <Typography.Text size="md" variant="secondary">
+              Articles
+            </Typography.Text>
+          </Flex>
+        </Flex>
+      </Spacing>
+      {source?.id ? <Button style={{ minWidth: "6rem", marginTop: "1rem" }}>Folgen</Button> : null}
     </Flex>
   );
 };

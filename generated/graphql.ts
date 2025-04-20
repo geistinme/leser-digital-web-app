@@ -199,6 +199,7 @@ export enum Role {
 
 export type Source = {
   __typename?: 'Source';
+  articleCount?: Maybe<Scalars['Int']['output']>;
   articles: Array<Article>;
   createdAt: Scalars['DateTime']['output'];
   editors: Array<Editor>;
@@ -285,9 +286,9 @@ export type SourceQueryVariables = Exact<{
 }>;
 
 
-export type SourceQuery = { __typename?: 'Query', source?: { __typename?: 'Source', id: number, key: string, name: string, logo: string, articles: Array<{ __typename?: 'Article', id: number, title: string, uploadedAt: any, image?: string | null, url: string }> } | null };
+export type SourceQuery = { __typename?: 'Query', source?: { __typename?: 'Source', id: number, key: string, name: string, logo: string, articleCount?: number | null, articles: Array<{ __typename?: 'Article', id: number, title: string, uploadedAt: any, image?: string | null, url: string }> } | null };
 
-export type SourceProfileFragment = { __typename?: 'Source', id: number, key: string, name: string, logo: string, articles: Array<{ __typename?: 'Article', id: number, title: string, uploadedAt: any, image?: string | null, url: string }> };
+export type SourceProfileFragment = { __typename?: 'Source', id: number, key: string, name: string, logo: string, articleCount?: number | null, articles: Array<{ __typename?: 'Article', id: number, title: string, uploadedAt: any, image?: string | null, url: string }> };
 
 export type ArticleGridFragment = { __typename?: 'Article', id: number, title: string, uploadedAt: any, image?: string | null, url: string };
 
@@ -405,6 +406,7 @@ export const SourceProfileFragmentDoc = gql`
   key
   name
   logo
+  articleCount
   articles {
     ...ArticleGrid
   }

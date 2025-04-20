@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Flex, Spacing } from "@sampled-ui/base";
+import { Flex, Spacing } from "@sampled-ui/base";
 import { useParams } from "react-router";
 
 import { useSourceQuery } from "../../../../generated/graphql";
@@ -29,9 +29,6 @@ const SourcePage: React.FC<SourcePageProps> = () => {
           gap="lg"
           style={{ marginRight: "2rem", maxWidth: "50rem", margin: "auto" }}
         >
-          {sourceQueryData?.source?.id ? (
-            <Button style={{ minWidth: "6rem" }}>Folgen</Button>
-          ) : null}
           {sourceQueryData?.source?.articles ? (
             <ArticleGrid
               articles={sourceQueryData.source?.articles}
