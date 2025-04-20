@@ -3,6 +3,7 @@ import React from "react";
 import { Flex, Spacing, Typography } from "@sampled-ui/base";
 import classNames from "classnames";
 import moment from "moment";
+import { useNavigate } from "react-router";
 
 import {
   ArticleActivityType,
@@ -26,6 +27,7 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
   compact,
   loggedIn,
 }) => {
+  const navigate = useNavigate();
   const { colorScheme } = useColorScheme();
   const [createArticleActivity] = useCreateArticleActivityMutation();
 
@@ -38,8 +40,10 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
       <Flex gap="sm">
         <img
           src={article.source.logo}
+          onClick={() => navigate("/" + article.source.key)}
           className={classNames(styles.sourceLogo, {
-            [styles.invert]: colorScheme === "dark" && invertLogo(article.source.key),
+            [styles.invert]:
+              colorScheme === "dark" && invertLogo(article.source.key),
           })}
         />
         {article.premium ? (

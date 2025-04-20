@@ -1,13 +1,6 @@
 import React from "react";
 
-import {
-  Column,
-  Divider,
-  Flex,
-  Row,
-  Spacing,
-  Typography,
-} from "@sampled-ui/base";
+import { Column, Divider, Flex, Row, Spacing, Tabs } from "@sampled-ui/base";
 
 import {
   useArticlesQuery,
@@ -19,10 +12,12 @@ import ExploreCallToAction from "../../components/CallToAction/ExploreCallToActi
 import LoggedOutCallToAction from "../../components/CallToAction/LoggedOutCallToAction";
 
 export const HomePage: React.FC = () => {
+  const [selectedTab, setSelectedTab] = React.useState("all");
+  const { isTablet, isDesktop } = useIsDevice();
+
   const { data: articlesQueryData, loading: loadingArticles } =
     useArticlesQuery();
   const { data: loggedInQueryData } = useLoggedInQuery();
-  const { isTablet, isDesktop } = useIsDevice();
 
   return (
     <Spacing gap="xl">
@@ -34,23 +29,19 @@ export const HomePage: React.FC = () => {
             align="stretch"
             style={{ marginRight: "2rem", maxWidth: "40rem", margin: "auto" }}
           >
-            <Flex gap="md" style={{ padding: "0 0.5rem" }}>
-              <Typography.Text bold size="md" variant="primary">
-                Alles
-              </Typography.Text>
-              <Typography.Text bold size="md" variant="secondary">
-                News
-              </Typography.Text>
-              <Typography.Text bold size="md" variant="secondary">
-                Politik
-              </Typography.Text>
-              <Typography.Text bold size="md" variant="secondary">
-                Technologie
-              </Typography.Text>
-              <Typography.Text bold size="md" variant="secondary">
-                Finanzen
-              </Typography.Text>
-            </Flex>
+            <Tabs
+              onSelect={(item) => setSelectedTab(item.key)}
+              selected={selectedTab}
+              items={[
+                { title: "Alles", key: "all" },
+                { title: "News", key: "news" },
+                { title: "Politik", key: "politics" },
+                { title: "Technologie", key: "technology" },
+                { title: "Finanzen", key: "finance" },
+                { title: "Kultur", key: "culture" },
+                { title: "Sport", key: "sports" },
+              ]}
+            />
             <Divider
               style={{
                 marginBottom: "2rem",

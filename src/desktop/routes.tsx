@@ -16,6 +16,7 @@ import CollectionPage from "./pages/Collection/CollectionPage";
 import NotFoundPage from "./pages/Error/404Page";
 import { ExplorePage } from "./pages/ExplorePage";
 import { HomePage } from "./pages/Home/HomePage";
+import SourcePage from "./pages/SourcePage";
 
 export const router = createBrowserRouter([
   {
@@ -24,10 +25,11 @@ export const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
     children: [
       { path: "/", element: <HomePage /> },
-      { path: "/about", element: <AboutPage /> },
-      { path: "/collection", element: <Private page={<CollectionPage />} /> },
-      { path: "/explore", element: <ExplorePage /> },
+      { path: "/:source", element: <SourcePage /> },
       { path: "/me", element: <Private page={<AccountPage />} /> },
+      { path: "/collection", element: <Private page={<CollectionPage />} /> },
+      { path: "/about", element: <AboutPage /> },
+      { path: "/explore", element: <ExplorePage /> },
     ],
   },
   {

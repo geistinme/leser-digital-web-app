@@ -31,8 +31,8 @@ const NavigationOption: React.FC<{
   const selected = useMemo(
     () =>
       option.path === "/"
-        ? option.path === location.pathname
-        : location.pathname.startsWith(option.path),
+    ? option.path === location.pathname
+    : location.pathname.startsWith(option.path),
     [location.pathname, option.path]
   );
   return (
