@@ -16,7 +16,7 @@ import CollectionPage from "./pages/Collection/CollectionPage";
 import NotFoundPage from "./pages/Error/404Page";
 import { ExplorePage } from "./pages/ExplorePage";
 import { HomePage } from "./pages/Home/HomePage";
-import SourcePage from "./pages/SourcePage";
+import SourcePage from "./pages/Profiles/SourceProfilePage";
 
 export const router = createBrowserRouter([
   {

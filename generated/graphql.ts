@@ -21,7 +21,7 @@ export type Scalars = {
 export type Article = {
   __typename?: 'Article';
   activity?: Maybe<Array<Maybe<ArticleActivity>>>;
-  categories: Array<Scalars['String']['output']>;
+  category: ArticleCategory;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
@@ -54,6 +54,31 @@ export type ArticleActivityInput = {
 export enum ArticleActivityType {
   SaveArticle = 'SAVE_ARTICLE',
   ViewArticle = 'VIEW_ARTICLE'
+}
+
+export enum ArticleCategory {
+  Art = 'ART',
+  Breaking = 'BREAKING',
+  Business = 'BUSINESS',
+  Culture = 'CULTURE',
+  Education = 'EDUCATION',
+  Entertainment = 'ENTERTAINMENT',
+  Environment = 'ENVIRONMENT',
+  Fashion = 'FASHION',
+  Food = 'FOOD',
+  Gaming = 'GAMING',
+  Health = 'HEALTH',
+  History = 'HISTORY',
+  Politics = 'POLITICS',
+  Psychology = 'PSYCHOLOGY',
+  Puzzle = 'PUZZLE',
+  Religion = 'RELIGION',
+  Science = 'SCIENCE',
+  Sports = 'SPORTS',
+  Technology = 'TECHNOLOGY',
+  Travel = 'TRAVEL',
+  Unknown = 'UNKNOWN',
+  Weather = 'WEATHER'
 }
 
 export type ArticleQueryFilter = {
@@ -136,6 +161,8 @@ export type Query = {
   mostViewedArticles?: Maybe<Array<Maybe<Article>>>;
   recommendedArticles?: Maybe<Array<Maybe<Article>>>;
   savedArticles?: Maybe<Array<Article>>;
+  source?: Maybe<Source>;
+  sources?: Maybe<Array<Maybe<Source>>>;
   users?: Maybe<Array<Maybe<User>>>;
   viewedArticles?: Maybe<Array<Article>>;
 };
@@ -153,6 +180,11 @@ export type QueryArticlesArgs = {
 
 export type QuerySavedArticlesArgs = {
   source?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QuerySourceArgs = {
+  key?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -247,6 +279,17 @@ export type RecommendedArticlesQuery = { __typename?: 'Query', recommendedArticl
 export type ArticleFeedFragment = { __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null };
 
 export type RecommendedArticleFragment = { __typename?: 'Article', id: number, title: string, url: string, source: { __typename?: 'Source', id: number, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null };
+
+export type SourceQueryVariables = Exact<{
+  key: Scalars['String']['input'];
+}>;
+
+
+export type SourceQuery = { __typename?: 'Query', source?: { __typename?: 'Source', id: number, key: string, name: string, logo: string, articles: Array<{ __typename?: 'Article', id: number, title: string, uploadedAt: any, image?: string | null, url: string }> } | null };
+
+export type SourceProfileFragment = { __typename?: 'Source', id: number, key: string, name: string, logo: string, articles: Array<{ __typename?: 'Article', id: number, title: string, uploadedAt: any, image?: string | null, url: string }> };
+
+export type ArticleGridFragment = { __typename?: 'Article', id: number, title: string, uploadedAt: any, image?: string | null, url: string };
 
 export type SendResetLinkMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -347,6 +390,26 @@ export const RecommendedArticleFragmentDoc = gql`
   }
 }
     `;
+export const ArticleGridFragmentDoc = gql`
+    fragment ArticleGrid on Article {
+  id
+  title
+  uploadedAt
+  image
+  url
+}
+    `;
+export const SourceProfileFragmentDoc = gql`
+    fragment SourceProfile on Source {
+  id
+  key
+  name
+  logo
+  articles {
+    ...ArticleGrid
+  }
+}
+    ${ArticleGridFragmentDoc}`;
 export const LoggedInDocument = gql`
     query loggedIn {
   loggedIn {
@@ -646,6 +709,46 @@ export type RecommendedArticlesQueryHookResult = ReturnType<typeof useRecommende
 export type RecommendedArticlesLazyQueryHookResult = ReturnType<typeof useRecommendedArticlesLazyQuery>;
 export type RecommendedArticlesSuspenseQueryHookResult = ReturnType<typeof useRecommendedArticlesSuspenseQuery>;
 export type RecommendedArticlesQueryResult = Apollo.QueryResult<RecommendedArticlesQuery, RecommendedArticlesQueryVariables>;
+export const SourceDocument = gql`
+    query source($key: String!) {
+  source(key: $key) {
+    ...SourceProfile
+  }
+}
+    ${SourceProfileFragmentDoc}`;
+
+/**
+ * __useSourceQuery__
+ *
+ * To run a query within a React component, call `useSourceQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSourceQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSourceQuery({
+ *   variables: {
+ *      key: // value for 'key'
+ *   },
+ * });
+ */
+export function useSourceQuery(baseOptions: Apollo.QueryHookOptions<SourceQuery, SourceQueryVariables> & ({ variables: SourceQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SourceQuery, SourceQueryVariables>(SourceDocument, options);
+      }
+export function useSourceLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SourceQuery, SourceQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SourceQuery, SourceQueryVariables>(SourceDocument, options);
+        }
+export function useSourceSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SourceQuery, SourceQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SourceQuery, SourceQueryVariables>(SourceDocument, options);
+        }
+export type SourceQueryHookResult = ReturnType<typeof useSourceQuery>;
+export type SourceLazyQueryHookResult = ReturnType<typeof useSourceLazyQuery>;
+export type SourceSuspenseQueryHookResult = ReturnType<typeof useSourceSuspenseQuery>;
+export type SourceQueryResult = Apollo.QueryResult<SourceQuery, SourceQueryVariables>;
 export const SendResetLinkDocument = gql`
     mutation sendResetLink($email: String!) {
   sendResetLink(email: $email)

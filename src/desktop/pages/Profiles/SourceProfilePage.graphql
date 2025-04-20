@@ -1,0 +1,23 @@
+query source($key: String!) {
+  source(key: $key) {
+    ...SourceProfile
+  }
+}
+
+fragment SourceProfile on Source {
+  id
+  key
+  name
+  logo
+  articles {
+    ...ArticleGrid
+  }
+}
+
+fragment ArticleGrid on Article {
+  id
+  title
+  uploadedAt
+  image
+  url
+}

@@ -18,6 +18,14 @@
   margin-bottom: initial;
 }
 
+.grid {
+  height: 100%;
+}
+
+.grid:hover {
+  background-color: $color-background-dim;
+}
+
 .header {
   width: 100%;
 }

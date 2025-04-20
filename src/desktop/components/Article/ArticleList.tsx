@@ -12,6 +12,7 @@ import ArticleShowcase from "./ArticleShowcase";
 
 interface ArticleListProps {
   articles: ArticleListFragment[];
+  noLogo?: boolean
 }
 
 const ArticleList: React.FC<ArticleListProps> = ({ articles }) => {

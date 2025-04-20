@@ -12,6 +12,7 @@ import {
 } from "../../../../generated/graphql";
 import { useColorScheme } from "../../../shared/hooks/colorScheme";
 
+import ArticleImage from "./ArticleImage";
 import ArticleMenu from "./ArticleMenu";
 import styles from "./ArticleShowcase.module.scss";
 import { invertLogo } from "./invertLogo";
@@ -19,6 +20,7 @@ import { invertLogo } from "./invertLogo";
 interface ArticleShowcaseProps {
   article: ArticleFeedFragment;
   compact?: boolean;
+  grid?: boolean;
   loggedIn?: boolean;
 }
 
@@ -70,9 +72,9 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
       key={article.id}
       className={classNames(styles.article, { [styles.compact]: compact })}
     >
-      <a
-        href={article.url}
-        target="_blank"
+      <ArticleImage
+        compact={compact}
+        article={article}
         onClick={() => {
           createArticleActivity({
             variables: {
@@ -83,17 +85,7 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
             },
           });
         }}
-        style={{
-          all: "unset",
-          height: compact ? "10rem" : "20rem",
-          width: compact ? "10rem" : "100%",
-        }}
-      >
-        <div
-          style={{ backgroundImage: `url(${article.image})` }}
-          className={classNames(styles.image, { [styles.compact]: compact })}
-        />
-      </a>
+      />
       <Spacing gap="sm" className={styles.content}>
         <Flex direction="column" align="start" gap="sm">
           {header}
