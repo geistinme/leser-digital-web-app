@@ -12,9 +12,9 @@ import {
 } from "../../../../generated/graphql";
 import { useColorScheme } from "../../../shared/hooks/colorScheme";
 
+import styles from "./Article.module.scss";
 import ArticleImage from "./ArticleImage";
 import ArticleMenu from "./ArticleMenu";
-import styles from "./ArticleShowcase.module.scss";
 import { invertLogo } from "./invertLogo";
 
 interface ArticleShowcaseProps {

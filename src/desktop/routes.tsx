@@ -15,6 +15,7 @@ import { AccountPage } from "./pages/AccountPage";
 import CollectionPage from "./pages/Collection/CollectionPage";
 import NotFoundPage from "./pages/Error/404Page";
 import { ExplorePage } from "./pages/ExplorePage";
+import FollowingPage from "./pages/Following/FollowingPage";
 import { HomePage } from "./pages/Home/HomePage";
 import SourcePage from "./pages/Profiles/SourceProfilePage";
 
@@ -30,6 +31,7 @@ export const router = createBrowserRouter([
       { path: "/collection", element: <Private page={<CollectionPage />} /> },
       { path: "/about", element: <AboutPage /> },
       { path: "/explore", element: <ExplorePage /> },
+      { path: "/following", element: <Private page={<FollowingPage />} /> },
     ],
   },
   {

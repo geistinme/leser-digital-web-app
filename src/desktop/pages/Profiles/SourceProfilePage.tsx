@@ -27,7 +27,7 @@ const SourcePage: React.FC<SourcePageProps> = () => {
           direction="column"
           align="center"
           gap="lg"
-          style={{ marginRight: "2rem", maxWidth: "56rem", margin: "auto" }}
+          style={{ maxWidth: "56rem", margin: "auto" }}
         >
           {sourceQueryData?.source?.articles ? (
             <ArticleGrid

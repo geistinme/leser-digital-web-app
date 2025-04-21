@@ -1,0 +1,13 @@
+query sources {
+  sources {
+    ...SourceGrid
+  }
+}
+
+fragment SourceGrid on Source {
+  id
+  key
+  name
+  logo
+  banner
+}

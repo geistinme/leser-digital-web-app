@@ -11,7 +11,7 @@ import {
 } from "../../../../generated/graphql";
 import { useColorScheme } from "../../../shared/hooks/colorScheme";
 
-import styles from "./ArticleShowcase.module.scss";
+import styles from "./Article.module.scss";
 
 interface ArticleMenuProps {
   activity?: ArticleFeedFragment["activity"] | null;

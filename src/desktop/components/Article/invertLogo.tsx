@@ -1,5 +1,5 @@
-const blackLogos = ["zeit"]
+const blackLogos = ["zeit", "manager"];
 
 export const invertLogo = (key: string) => {
-    return blackLogos.includes(key)
-}
+  return blackLogos.includes(key);
+};

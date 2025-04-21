@@ -162,7 +162,7 @@ export type Query = {
   recommendedArticles?: Maybe<Array<Maybe<Article>>>;
   savedArticles?: Maybe<Array<Article>>;
   source?: Maybe<Source>;
-  sources?: Maybe<Array<Maybe<Source>>>;
+  sources?: Maybe<Array<Source>>;
   users?: Maybe<Array<Maybe<User>>>;
   viewedArticles?: Maybe<Array<Article>>;
 };
@@ -201,6 +201,7 @@ export type Source = {
   __typename?: 'Source';
   articleCount?: Maybe<Scalars['Int']['output']>;
   articles: Array<Article>;
+  banner: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   editors: Array<Editor>;
   feedUrl: Scalars['String']['output'];
@@ -266,6 +267,13 @@ export type DeleteArticleActivityMutationVariables = Exact<{
 export type DeleteArticleActivityMutation = { __typename?: 'Mutation', deleteArticleActivity?: { __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null };
 
 export type ArticleListFragment = { __typename?: 'Article', id: number, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: number, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: number, type: ArticleActivityType } | null> | null };
+
+export type SourcesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SourcesQuery = { __typename?: 'Query', sources?: Array<{ __typename?: 'Source', id: number, key: string, name: string, logo: string, banner: string }> | null };
+
+export type SourceGridFragment = { __typename?: 'Source', id: number, key: string, name: string, logo: string, banner: string };
 
 export type ArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -353,6 +361,15 @@ export const ArticleListFragmentDoc = gql`
     id
     type
   }
+}
+    `;
+export const SourceGridFragmentDoc = gql`
+    fragment SourceGrid on Source {
+  id
+  key
+  name
+  logo
+  banner
 }
     `;
 export const ArticleFeedFragmentDoc = gql`
@@ -633,6 +650,45 @@ export function useDeleteArticleActivityMutation(baseOptions?: Apollo.MutationHo
 export type DeleteArticleActivityMutationHookResult = ReturnType<typeof useDeleteArticleActivityMutation>;
 export type DeleteArticleActivityMutationResult = Apollo.MutationResult<DeleteArticleActivityMutation>;
 export type DeleteArticleActivityMutationOptions = Apollo.BaseMutationOptions<DeleteArticleActivityMutation, DeleteArticleActivityMutationVariables>;
+export const SourcesDocument = gql`
+    query sources {
+  sources {
+    ...SourceGrid
+  }
+}
+    ${SourceGridFragmentDoc}`;
+
+/**
+ * __useSourcesQuery__
+ *
+ * To run a query within a React component, call `useSourcesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSourcesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSourcesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSourcesQuery(baseOptions?: Apollo.QueryHookOptions<SourcesQuery, SourcesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SourcesQuery, SourcesQueryVariables>(SourcesDocument, options);
+      }
+export function useSourcesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SourcesQuery, SourcesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SourcesQuery, SourcesQueryVariables>(SourcesDocument, options);
+        }
+export function useSourcesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SourcesQuery, SourcesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SourcesQuery, SourcesQueryVariables>(SourcesDocument, options);
+        }
+export type SourcesQueryHookResult = ReturnType<typeof useSourcesQuery>;
+export type SourcesLazyQueryHookResult = ReturnType<typeof useSourcesLazyQuery>;
+export type SourcesSuspenseQueryHookResult = ReturnType<typeof useSourcesSuspenseQuery>;
+export type SourcesQueryResult = Apollo.QueryResult<SourcesQuery, SourcesQueryVariables>;
 export const ArticlesDocument = gql`
     query articles {
   articles {

@@ -93,9 +93,9 @@
 
 @media (prefers-color-scheme: dark) {
   .invert {
-    filter: grayscale(1) brightness(2) invert(1);
+    filter: brightness(0) invert(1);
   }
   .invert:hover {
-    filter: grayscale(1) brightness(0) invert(1);
+    filter: brightness(0) invert(1);
   }
 }

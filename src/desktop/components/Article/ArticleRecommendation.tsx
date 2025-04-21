@@ -4,7 +4,7 @@ import { Flex, Typography } from "@sampled-ui/base";
 
 import { RecommendedArticleFragment } from "../../../../generated/graphql";
 
-import styles from "./ArticleShowcase.module.scss";
+import styles from "./Article.module.scss";
 
 interface ArticleRecommendationProps {
   article: RecommendedArticleFragment;

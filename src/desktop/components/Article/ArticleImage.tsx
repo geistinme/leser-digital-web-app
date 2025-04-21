@@ -1,11 +1,11 @@
-import React, { CSSProperties, useEffect, useRef } from "react";
+import React, { CSSProperties } from "react";
 
 import classNames from "classnames";
 
 import { Article } from "../../../../generated/graphql";
+import PreloadImage from "../PreloadImage";
 
-import { Skeleton } from "@sampled-ui/base";
-import styles from "./ArticleShowcase.module.scss";
+import styles from "./Article.module.scss";
 
 interface ArticleImageProps {
   article: Pick<Article, "id" | "url" | "image">;
@@ -24,26 +24,6 @@ const ArticleImage: React.FC<ArticleImageProps> = ({
   width,
   style,
 }) => {
-  const imageBackgroundRef = useRef<HTMLDivElement>(null);
-  const [imageLoaded, setImageLoaded] = React.useState(false);
-  useEffect(() => {
-    if (imageBackgroundRef.current && article.image) {
-      const image = new Image();
-      image.onload = function () {
-        // Now it's safe to use the image as a background
-        if (imageBackgroundRef.current?.style) {
-          imageBackgroundRef.current.style.backgroundImage = `url('${article.image}')`;
-          setImageLoaded(true);
-        }
-      };
-      image.onerror = function () {
-        console.error("Background image failed to load");
-        setImageLoaded(true);
-      };
-      image.src = article.image;
-    }
-  }, [article.image]);
-
   const calculatedWidth = width ? width : compact ? "10rem" : "100%";
   const calculatedHeight = height ? height : compact ? "10rem" : "20rem";
 
@@ -58,23 +38,13 @@ const ArticleImage: React.FC<ArticleImageProps> = ({
         width: calculatedWidth,
       }}
     >
-      <div
-        ref={imageBackgroundRef}
-        style={{
-          height: calculatedHeight,
-          width: calculatedWidth,
-          display: imageLoaded ? "block" : "none",
-          ...(style ?? {}),
-        }}
+      <PreloadImage
+        src={article.image}
+        width={calculatedWidth}
+        height={calculatedHeight}
         className={classNames(styles.image, { [styles.compact]: compact })}
+        style={style}
       />
-      {imageLoaded ? null : (
-        <Skeleton
-          width={calculatedWidth}
-          height={calculatedHeight}
-          style={{ borderRadius: "initial" }}
-        />
-      )}
     </a>
   );
 };

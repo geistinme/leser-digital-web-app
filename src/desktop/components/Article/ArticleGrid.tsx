@@ -10,8 +10,8 @@ import {
   useLoggedInQuery,
 } from "../../../../generated/graphql";
 
+import styles from "./Article.module.scss";
 import ArticleImage from "./ArticleImage";
-import styles from "./ArticleShowcase.module.scss";
 
 interface ArticleGridProps {
   articles?: ArticleGridFragment[] | null;
@@ -30,7 +30,7 @@ const ArticleGridItem: React.FC<{
         width="100%"
         style={{ borderRadius: "initial" }}
       />
-      <Spacing gap="sm" style={{marginBottom: "0.5rem"}}>
+      <Spacing gap="sm" style={{ marginBottom: "0.5rem" }}>
         <Flex direction="column" align="start">
           <a
             href={article.url}
@@ -73,16 +73,17 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
   }, [articles, loadingArticles]);
 
   const gridRows = useMemo(() => {
-    return articles?.reduce((allRows, currentArticle, index, allArticles) => {
+    return articles?.reduce((allRows, _currentArticle, index, allArticles) => {
       const row = [];
-      if (allArticles.length > index + 2) {
-        row.push(currentArticle);
-        row.push(allArticles[index + 1]);
-        row.push(allArticles[index + 2]);
+      const columns = 3;
+      for (let i = 0; i < columns; i++) {
+        if (allArticles[index + i]) {
+          row.push(allArticles[index + i]);
+        }
       }
       if (
-        index === 0 ||
-        (index % 3 === 0 && row.filter((a) => !!a).length === 3)
+        (index === 0 || index % 3 === 0) &&
+        row.filter((a) => !!a).length === 3
       ) {
         return [...allRows, row];
       }
