@@ -30,7 +30,7 @@ const ArticleGridItem: React.FC<{
         width="100%"
         style={{ borderRadius: "initial" }}
       />
-      <Spacing gap="sm">
+      <Spacing gap="sm" style={{marginBottom: "0.5rem"}}>
         <Flex direction="column" align="start">
           <a
             href={article.url}

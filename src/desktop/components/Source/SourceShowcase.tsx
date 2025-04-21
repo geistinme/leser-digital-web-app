@@ -26,7 +26,7 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
         height: "14rem",
       }}
     >
-      <Spacing gap="lg">
+      <Spacing gap="xl">
         <img
           src={source?.logo}
           style={{
@@ -36,27 +36,27 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
           }}
         />
       </Spacing>
-      <Spacing>
-        <Flex gap="md">
-          <Flex gap="xs">
-            <Typography.Text size="md" bold>
-              192
-            </Typography.Text>
-            <Typography.Text size="md" variant="secondary">
-              Followers
-            </Typography.Text>
-          </Flex>
-          <Flex gap="xs">
-            <Typography.Text size="md" bold>
-              {source?.articleCount}
-            </Typography.Text>
-            <Typography.Text size="md" variant="secondary">
-              Articles
-            </Typography.Text>
-          </Flex>
+      <Flex gap="md">
+        <Flex gap="xs">
+          <Typography.Text size="md" bold>
+            192
+          </Typography.Text>
+          <Typography.Text size="md" variant="secondary">
+            Followers
+          </Typography.Text>
         </Flex>
-      </Spacing>
-      {source?.id ? <Button style={{ minWidth: "6rem", marginTop: "1rem" }}>Folgen</Button> : null}
+        <Flex gap="xs">
+          <Typography.Text size="md" bold>
+            {source?.articleCount}
+          </Typography.Text>
+          <Typography.Text size="md" variant="secondary">
+            Articles
+          </Typography.Text>
+        </Flex>
+      </Flex>
+      {source?.id ? (
+        <Button style={{ minWidth: "6rem", marginTop: "1rem" }}>Folgen</Button>
+      ) : null}
     </Flex>
   );
 };
