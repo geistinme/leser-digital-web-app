@@ -1,5 +1,13 @@
 @use "../../../styles/variables.scss" as *;
 
+.row {
+  height: 14rem;
+}
+
+.column {
+  height: 100%;
+}
+
 .item {
   position: relative;
   height: calc(100% - $spacing-sm * 2);
@@ -9,13 +17,13 @@
   border-radius: $border-radius-md;
   overflow: hidden;
   transition-duration: $transition-fast;
-  transition-property: box-shadow, transform;
+  transition-property: box-shadow, opacity;
   transition-timing-function: ease-in-out;
 }
 
 .item:hover {
-    transform: translateY(-0.5rem);
-    box-shadow: $shadow-md;
+  opacity: 0.9;
+  box-shadow: $shadow-md;
 }
 
 .logo {

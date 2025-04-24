@@ -3,7 +3,7 @@ import React from "react";
 import { Flex, Spacing, Typography } from "@sampled-ui/base";
 
 import { useSourcesQuery } from "../../../../generated/graphql";
-import SubscriptionGrid from "../../components/Source/SubscriptionGrid";
+import SubscriptionGrid from "../../components/Subscription/SubscriptionGrid";
 
 interface FollowingPageProps {}
 

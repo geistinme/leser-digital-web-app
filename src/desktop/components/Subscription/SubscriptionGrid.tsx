@@ -3,9 +3,9 @@ import React, { useMemo } from "react";
 import { Column, Flex, Row } from "@sampled-ui/base";
 
 import { SourceSubscriptionFragment } from "../../../../generated/graphql";
-import SubscriptionGridItem from "../Subscription/SubscriptionItem";
 
-import styles from "./Source.module.scss";
+import styles from "./Subscription.module.scss";
+import SubscriptionGridItem from "./SubscriptionItem";
 
 interface SubscriptionGridProps {
   sources: SourceSubscriptionFragment[] | null;
@@ -33,7 +33,7 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({ sources }) => {
   }, [sources]);
 
   return (
-    <Flex direction="column" gap="md" style={{ width: "100%" }}>
+    <Flex direction="column" gap="lg" style={{ width: "100%" }}>
       {gridRows?.map((row, index) => {
         return (
           <Row key={`row-${index}`} className={styles.row} gap={"0.0625rem"}>
