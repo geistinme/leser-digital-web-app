@@ -3,7 +3,7 @@ import React from "react";
 import { Flex, Spacing, Typography } from "@sampled-ui/base";
 
 import { useSourcesQuery } from "../../../../generated/graphql";
-import SourceGrid from "../../components/Source/SourceGrid";
+import SubscriptionGrid from "../../components/Source/SubscriptionGrid";
 
 interface FollowingPageProps {}
 
@@ -22,7 +22,7 @@ const FollowingPage: React.FC<FollowingPageProps> = () => {
           Folge deinen Favoriten
         </Typography.Text>
         {sourcesQueryData?.sources ? (
-          <SourceGrid sources={sourcesQueryData.sources} />
+          <SubscriptionGrid sources={sourcesQueryData.sources} />
         ) : null}
       </Flex>
     </Spacing>

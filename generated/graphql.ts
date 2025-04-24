@@ -204,7 +204,6 @@ export type Source = {
   banner: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   editors: Array<Editor>;
-  feedUrl: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   key: Scalars['String']['output'];
   logo: Scalars['String']['output'];
@@ -273,7 +272,7 @@ export type SourcesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type SourcesQuery = { __typename?: 'Query', sources?: Array<{ __typename?: 'Source', id: number, key: string, name: string, logo: string, banner: string }> | null };
 
-export type SourceGridFragment = { __typename?: 'Source', id: number, key: string, name: string, logo: string, banner: string };
+export type SourceSubscriptionFragment = { __typename?: 'Source', id: number, key: string, name: string, logo: string, banner: string };
 
 export type ArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -363,8 +362,8 @@ export const ArticleListFragmentDoc = gql`
   }
 }
     `;
-export const SourceGridFragmentDoc = gql`
-    fragment SourceGrid on Source {
+export const SourceSubscriptionFragmentDoc = gql`
+    fragment SourceSubscription on Source {
   id
   key
   name
@@ -653,10 +652,10 @@ export type DeleteArticleActivityMutationOptions = Apollo.BaseMutationOptions<De
 export const SourcesDocument = gql`
     query sources {
   sources {
-    ...SourceGrid
+    ...SourceSubscription
   }
 }
-    ${SourceGridFragmentDoc}`;
+    ${SourceSubscriptionFragmentDoc}`;
 
 /**
  * __useSourcesQuery__

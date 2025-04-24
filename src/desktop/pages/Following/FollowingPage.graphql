@@ -1,10 +1,10 @@
 query sources {
   sources {
-    ...SourceGrid
+    ...SourceSubscription
   }
 }
 
-fragment SourceGrid on Source {
+fragment SourceSubscription on Source {
   id
   key
   name

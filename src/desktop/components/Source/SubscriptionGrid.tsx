@@ -2,16 +2,16 @@ import React, { useMemo } from "react";
 
 import { Column, Flex, Row } from "@sampled-ui/base";
 
-import { SourceGridFragment } from "../../../../generated/graphql";
-import SourceGridItem from "../Subscription/SubscriptionItem";
+import { SourceSubscriptionFragment } from "../../../../generated/graphql";
+import SubscriptionGridItem from "../Subscription/SubscriptionItem";
 
 import styles from "./Source.module.scss";
 
-interface SourceGridProps {
-  sources: SourceGridFragment[] | null;
+interface SubscriptionGridProps {
+  sources: SourceSubscriptionFragment[] | null;
 }
 
-const SourceGrid: React.FC<SourceGridProps> = ({ sources }) => {
+const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({ sources }) => {
   const gridRows = useMemo(() => {
     return sources?.reduce((allRows, _currentSource, index, allSources) => {
       const row = [];
@@ -21,35 +21,33 @@ const SourceGrid: React.FC<SourceGridProps> = ({ sources }) => {
           row.push(allSources[index + i]);
         }
       }
-      console.debug(index, row)
       if (
-        (index === 0 || index % 4 === 0) &&
-        row.filter((a) => !!a).length === 4
+        index === 0 ||
+        index % columns === 0 ||
+        allSources[row.length + 1] === undefined
       ) {
         return [...allRows, row];
       }
       return allRows;
-    }, [] as SourceGridFragment[][]);
+    }, [] as SourceSubscriptionFragment[][]);
   }, [sources]);
 
-  console.debug(sources, gridRows);
-
   return (
-    <Flex direction="column" style={{ width: "100%" }}>
+    <Flex direction="column" gap="md" style={{ width: "100%" }}>
       {gridRows?.map((row, index) => {
         return (
           <Row key={`row-${index}`} className={styles.row} gap={"0.0625rem"}>
             <Column span={6} className={styles.column}>
-              <SourceGridItem subscription={row[0]} />
+              {row[0] && <SubscriptionGridItem subscription={row[0]} />}
             </Column>
             <Column span={6}>
-              <SourceGridItem subscription={row[1]} />
+              {row[1] && <SubscriptionGridItem subscription={row[1]} />}
             </Column>
             <Column span={6}>
-              <SourceGridItem subscription={row[2]} />
+              {row[2] && <SubscriptionGridItem subscription={row[2]} />}
             </Column>
             <Column span={6}>
-              <SourceGridItem subscription={row[3]} />
+              {row[3] && <SubscriptionGridItem subscription={row[3]} />}
             </Column>
           </Row>
         );
@@ -58,4 +56,4 @@ const SourceGrid: React.FC<SourceGridProps> = ({ sources }) => {
   );
 };
 
-export default SourceGrid;
+export default SubscriptionGrid;

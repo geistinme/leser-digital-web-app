@@ -4,13 +4,13 @@ import { Flex } from "@sampled-ui/base";
 import { PlusIcon } from "lucide-react";
 import { Vibrant } from "node-vibrant/browser";
 
-import { SourceGridFragment } from "../../../../generated/graphql";
+import { SourceSubscriptionFragment } from "../../../../generated/graphql";
 import PreloadImage from "../PreloadImage";
 
 import styles from "./Subscription.module.scss";
 
 interface SubscriptionItemProps {
-  subscription: SourceGridFragment;
+  subscription: SourceSubscriptionFragment;
 }
 
 export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
