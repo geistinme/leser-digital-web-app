@@ -3,6 +3,7 @@ import React from "react";
 import { Flex, Typography } from "@sampled-ui/base";
 
 import { RecommendedArticleFragment } from "../../../../generated/graphql";
+import { decodeHtmlEntities } from "../../../shared/helpers";
 
 import styles from "./Article.module.scss";
 
@@ -21,7 +22,7 @@ const ArticleRecommendation: React.FC<ArticleRecommendationProps> = ({
         style={{ all: "unset", cursor: "pointer" }}
       >
         <Typography.Text size="sm" bold className={styles.title}>
-          {article.title}
+          {decodeHtmlEntities(article.title)}
         </Typography.Text>
       </a>
       <Typography.Text size="xs" variant="secondary">

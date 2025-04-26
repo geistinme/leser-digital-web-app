@@ -17,12 +17,11 @@
   border-radius: $border-radius-md;
   overflow: hidden;
   transition-duration: $transition-fast;
-  transition-property: box-shadow, opacity;
+  transition-property: box-shadow;
   transition-timing-function: ease-in-out;
 }
 
 .item:hover {
-  opacity: 0.9;
   box-shadow: $shadow-md;
 }
 
@@ -52,7 +51,20 @@
   background-color: $color-background-dim;
   border-radius: 50%;
 
+  transition: background-color $transition-fast ease-in-out;
+
   svg {
+    transition: stroke $transition-fast ease-in-out;
     stroke: $color-secondary;
+  }
+}
+
+.item:hover {
+  .toggle {
+    background-color: $color-accent;
+
+    svg {
+      stroke: $color-primary;
+    }
   }
 }

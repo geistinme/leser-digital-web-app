@@ -10,6 +10,7 @@ import {
   useLoggedInQuery,
 } from "../../../../generated/graphql";
 
+import { decodeHtmlEntities } from "../../../shared/helpers";
 import styles from "./Article.module.scss";
 import ArticleImage from "./ArticleImage";
 
@@ -39,7 +40,7 @@ const ArticleGridItem: React.FC<{
             onClick={onClick}
           >
             <Typography.Text bold size="md" className={styles.title}>
-              {article.title}
+              {decodeHtmlEntities(article.title)}
             </Typography.Text>
           </a>
           <Typography.Text

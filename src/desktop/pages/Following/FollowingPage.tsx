@@ -18,7 +18,7 @@ const FollowingPage: React.FC<FollowingPageProps> = () => {
         gap="lg"
         style={{ maxWidth: "56rem", margin: "auto" }}
       >
-        <Typography.Text bold size="lg">
+        <Typography.Text variant="secondary" size="lg">
           Folge deinen Favoriten
         </Typography.Text>
         {sourcesQueryData?.sources ? (

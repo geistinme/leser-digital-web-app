@@ -12,6 +12,7 @@ import {
 } from "../../../../generated/graphql";
 import { useColorScheme } from "../../../shared/hooks/colorScheme";
 
+import { decodeHtmlEntities } from "../../../shared/helpers";
 import styles from "./Article.module.scss";
 import ArticleImage from "./ArticleImage";
 import ArticleMenu from "./ArticleMenu";
@@ -105,11 +106,11 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
             }}
           >
             <Typography.Text bold size="md" className={styles.title}>
-              {article.title}
+              {decodeHtmlEntities(article.title)}
             </Typography.Text>
             {article.description && !compact ? (
               <Typography.Paragraph className={styles.description}>
-                {article.description}
+                {decodeHtmlEntities(article.description)}
               </Typography.Paragraph>
             ) : null}
           </a>
