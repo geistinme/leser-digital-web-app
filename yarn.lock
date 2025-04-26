@@ -5812,6 +5812,11 @@ value-or-promise@^1.0.12:
   resolved "https://registry.yarnpkg.com/value-or-promise/-/value-or-promise-1.0.12.tgz#0e5abfeec70148c78460a849f6b003ea7986f15c"
   integrity sha512-Z6Uz+TYwEqE7ZN50gwn+1LCVo9ZVrpxRPOhOLnncYkY1ZzOYtrX8Fwf/rFktZ8R5mJms6EZf5TqNOMeZmnPq9Q==
 
+vite-plugin-splash-screen@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/vite-plugin-splash-screen/-/vite-plugin-splash-screen-0.2.0.tgz#34682e93e62a8fbfcf319cdc0eb253bef87032e9"
+  integrity sha512-PCUiVq8wjx7dHMa9vOqnB+bewKp60VFbhPJJjQOA8UdwmPdf9ChBGuxh+sku4szrnJFsriB0gIDAURAmOqBcUQ==
+
 vite@^6.3.3:
   version "6.3.3"
   resolved "https://registry.yarnpkg.com/vite/-/vite-6.3.3.tgz#497392c3f2243194e4dbf09ea83e9a3dddf49b88"
