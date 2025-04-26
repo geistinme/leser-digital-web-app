@@ -12,12 +12,10 @@ export const Page: React.FC = () => {
   const navigate = useNavigate();
   const { data } = useLoggedInQuery();
   useEffect(() => {
-    if (data?.loggedIn) {
-      hideSplashScreen();
-    }
     if (data?.loggedIn?.verified === false) {
       navigate("/auth/verify");
     }
+    hideSplashScreen();
   }, [data?.loggedIn, data?.loggedIn?.verified, navigate]);
 
   return (

@@ -7,8 +7,9 @@ export default defineConfig({
   plugins: [
     react(),
     splashScreen({
-      logoSrc: "small-logo-shadowed.svg",
-      loaderType: "none"
+      logoSrc: "small-logo.svg",
+      loaderType: "none",
+      minDurationMs: 1000,
     }),
   ],
   server: {

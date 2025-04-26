@@ -35,7 +35,8 @@ const useGetSelectedNavItem = (
     const path = location.pathname + location.hash;
     const selected =
       path !== "/"
-        ? navItems.find((item) => item.key !== "/" && path.startsWith(item.key))?.key
+        ? navItems.find((item) => item.key !== "/" && path.startsWith(item.key))
+            ?.key
         : "/";
     return selected;
   }, [navItems, location]);

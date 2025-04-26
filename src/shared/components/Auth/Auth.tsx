@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Card, Header, Layout } from "@sampled-ui/base";
 import { Outlet, useNavigate } from "react-router";
+import { hideSplashScreen } from "vite-plugin-splash-screen/runtime";
 
 import { useLoggedInQuery } from "../../../../generated/graphql";
 import SvgWordmarkLogo from "../../../icons/WordmarkLogo";
@@ -12,15 +13,18 @@ export const Auth: React.FC = () => {
   const navigate = useNavigate();
   const { data } = useLoggedInQuery();
 
-  if (data?.loggedIn && data.loggedIn.verified) {
-    const redirect = localStorage.getItem("redirect");
-    if (redirect) {
-      localStorage.removeItem("redirect");
-      navigate(redirect, { replace: true });
-    } else {
-      navigate("/", { replace: true });
+  useEffect(() => {
+    if (data?.loggedIn && data.loggedIn.verified) {
+      const redirect = localStorage.getItem("redirect");
+      if (redirect) {
+        localStorage.removeItem("redirect");
+        navigate(redirect, { replace: true });
+      } else {
+        navigate("/", { replace: true });
+      }
     }
-  }
+    hideSplashScreen();
+  }, [data?.loggedIn, navigate]);
 
   return (
     <Layout style={{ height: "100vh" }}>
