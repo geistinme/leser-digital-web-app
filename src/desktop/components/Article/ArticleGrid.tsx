@@ -31,7 +31,10 @@ const ArticleGridItem: React.FC<{
         width="100%"
         style={{ borderRadius: "initial" }}
       />
-      <Spacing gap="sm" style={{ marginBottom: "0.5rem" }}>
+      <Spacing
+        gap="sm"
+        style={{ width: "calc(100% - 1.5rem)", marginBottom: "0.5rem" }}
+      >
         <Flex direction="column" align="start">
           <a
             href={article.url}
@@ -117,9 +120,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
     <Flex direction="column" align="stretch" style={{ width: "100%" }}>
       {empty}
       {gridRows?.map((row, index) => (
-        <Row
-          key={`row-${index}`}
-        >
+        <Row key={`row-${index}`}>
           <Column span={8}>
             <ArticleGridItem
               article={row[0]}
