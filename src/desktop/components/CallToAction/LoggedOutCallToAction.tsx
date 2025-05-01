@@ -13,7 +13,7 @@ const LoggedOutCallToAction: React.FC<LoggedOutCallToActionProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref.current]);
 
-  const redirect = useAuthRedirect();
+  const { redirect } = useAuthRedirect();
 
   const handleClick = () => {
     redirect();

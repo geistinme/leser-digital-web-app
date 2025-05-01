@@ -7,7 +7,7 @@ interface PrivatePageProps {
 }
 
 export const Private: React.FC<PrivatePageProps> = ({ page }) => {
-  const redirect = useAuthRedirect();
+  const { redirect } = useAuthRedirect();
   redirect();
 
   return page;

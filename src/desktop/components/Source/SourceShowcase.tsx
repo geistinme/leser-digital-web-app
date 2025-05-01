@@ -9,8 +9,9 @@ import {
   useCreateSubscriptionMutation,
   useDeleteSubscriptionMutation,
   UserSubscriptionFragment,
-  UserSubscriptionFragmentDoc,
+  UserSubscriptionFragmentDoc
 } from "../../../../generated/graphql";
+import { useAuthRedirect } from "../../../shared/components/PrivatePage/hooks";
 import { useColorScheme } from "../../../shared/hooks/colorScheme";
 import { invertLogo } from "../Article/invertLogo";
 
@@ -23,6 +24,7 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
   const invert =
     colorScheme === "dark" ? invertLogo(source?.key ?? "") : undefined;
 
+  const { redirect, loggedIn } = useAuthRedirect();
   const [createSubscription] = useCreateSubscriptionMutation({
     update: (cache, { data }) => {
       cache.modify({
@@ -74,9 +76,11 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
     refetchQueries: [{ query: SourceDocument, variables: { key: source.key } }],
   });
 
-  console.debug(source.isSubscribed);
-
   const handleToggle = useCallback(() => {
+    if (!loggedIn) {
+      redirect();
+      return;
+    }
     if (source.isSubscribed) {
       deleteSubscription({ variables: { id: source.isSubscribed.id } });
     } else {
@@ -84,7 +88,14 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
         variables: { sourceId: source?.id },
       });
     }
-  }, [createSubscription, deleteSubscription, source]);
+  }, [
+    createSubscription,
+    deleteSubscription,
+    loggedIn,
+    redirect,
+    source?.id,
+    source.isSubscribed,
+  ]);
 
   return (
     <Flex
