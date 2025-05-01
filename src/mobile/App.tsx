@@ -1,7 +1,7 @@
 import React from "react";
 
 import { ApolloProvider } from "@apollo/client";
-import { Flex, Typography } from "@sampled-ui/base";
+import { Flex, Spacing, Typography } from "@sampled-ui/base";
 
 import { client } from "../apollo";
 import SvgWordmarkLogo from "../icons/WordmarkLogo";
@@ -21,10 +21,12 @@ const App: React.FC = () => {
         }}
       >
         <SvgWordmarkLogo width="70%" height="80%" viewBox="0 0 586 160" />
-        <Typography.Text>
-          Bald auch auf mobilen Geräten verfügbar. Probiere solange die Desktop
-          Version aus.
-        </Typography.Text>
+        <Spacing gap="xl">
+          <Typography.Text>
+            Bald auch auf mobilen Geräten verfügbar. Probiere solange die
+            Desktop Version aus.
+          </Typography.Text>
+        </Spacing>
       </Flex>
       {/* <RouterProvider router={router} /> */}
     </ApolloProvider>
