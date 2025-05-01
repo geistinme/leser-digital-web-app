@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import { Button, Flex, Spacing, Typography } from "@sampled-ui/base";
 
-import { SourceProfileFragment } from "../../../../generated/graphql";
+import {
+  SourceDocument,
+  SourceProfileFragment,
+  Subscription,
+  useCreateSubscriptionMutation,
+  useDeleteSubscriptionMutation,
+  UserSubscriptionFragment,
+  UserSubscriptionFragmentDoc,
+} from "../../../../generated/graphql";
 import { useColorScheme } from "../../../shared/hooks/colorScheme";
 import { invertLogo } from "../Article/invertLogo";
 
@@ -12,9 +20,71 @@ interface SourceShowcaseProps {
 
 export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
   const { colorScheme } = useColorScheme();
-
   const invert =
     colorScheme === "dark" ? invertLogo(source?.key ?? "") : undefined;
+
+  const [createSubscription] = useCreateSubscriptionMutation({
+    update: (cache, { data }) => {
+      cache.modify({
+        fields: {
+          subscriptions(existingUserSubscriptions = []) {
+            const newUserSubscriptionRef = cache.writeFragment({
+              data: data?.createSubscription,
+              fragment: UserSubscriptionFragmentDoc,
+            });
+            return [...existingUserSubscriptions, newUserSubscriptionRef];
+          },
+          source(existingSource, { readField }) {
+            if (readField("key", existingSource) !== source.key) {
+              return existingSource;
+            }
+            return {
+              ...existingSource,
+              isSubscribed: data?.createSubscription,
+            };
+          },
+        },
+      });
+    },
+    refetchQueries: [{ query: SourceDocument, variables: { key: source.key } }],
+  });
+  const [deleteSubscription] = useDeleteSubscriptionMutation({
+    update: (cache) => {
+      cache.modify({
+        fields: {
+          subscriptions(existingUserSubscriptions = [], { readField }) {
+            return existingUserSubscriptions.filter(
+              (userSubscriptionRef: UserSubscriptionFragment) =>
+                readField("id", userSubscriptionRef) !==
+                readField("id", source.isSubscribed as Subscription)
+            );
+          },
+          source(existingSource, { readField }) {
+            if (readField("key", existingSource) !== source.key) {
+              return existingSource;
+            }
+            return {
+              ...existingSource,
+              isSubscribed: null,
+            };
+          },
+        },
+      });
+    },
+    refetchQueries: [{ query: SourceDocument, variables: { key: source.key } }],
+  });
+
+  console.debug(source.isSubscribed);
+
+  const handleToggle = useCallback(() => {
+    if (source.isSubscribed) {
+      deleteSubscription({ variables: { id: source.isSubscribed.id } });
+    } else {
+      createSubscription({
+        variables: { sourceId: source?.id },
+      });
+    }
+  }, [createSubscription, deleteSubscription, source]);
 
   return (
     <Flex
@@ -39,7 +109,7 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
       <Flex gap="md">
         <Flex gap="xs">
           <Typography.Text size="md" bold>
-            192
+            {source.subscribers}
           </Typography.Text>
           <Typography.Text size="md" variant="secondary">
             Followers
@@ -55,7 +125,13 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
         </Flex>
       </Flex>
       {source?.id ? (
-        <Button style={{ minWidth: "6rem", marginTop: "1rem" }}>Folgen</Button>
+        <Button
+          variant={source.isSubscribed ? "secondary" : "primary"}
+          style={{ minWidth: "6rem", marginTop: "1rem" }}
+          onClick={handleToggle}
+        >
+          {source.isSubscribed ? "Gefolgt" : "Folgen"}
+        </Button>
       ) : null}
     </Flex>
   );

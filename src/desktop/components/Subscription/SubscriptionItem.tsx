@@ -1,27 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Flex } from "@sampled-ui/base";
-import { PlusIcon } from "lucide-react";
+import classNames from "classnames";
+import { CheckIcon, PlusIcon } from "lucide-react";
 import { Vibrant } from "node-vibrant/browser";
 
-import { SourceSubscriptionFragment } from "../../../../generated/graphql";
+import {
+  SourceSubscriptionFragment,
+  useCreateSubscriptionMutation,
+  useDeleteSubscriptionMutation,
+  UserSubscriptionFragment,
+  UserSubscriptionFragmentDoc
+} from "../../../../generated/graphql";
 import PreloadImage from "../PreloadImage";
 
 import styles from "./Subscription.module.scss";
+import { CategorySubscription } from "./SubscriptionGrid";
 
 interface SubscriptionItemProps {
-  subscription: SourceSubscriptionFragment;
+  source: SourceSubscriptionFragment | CategorySubscription;
+  userSubscription?: UserSubscriptionFragment;
 }
 
 export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
-  subscription,
+  source,
+  userSubscription,
 }) => {
   const [backgroundColor, setBackgroundColor] = useState<string | undefined>(
     undefined
   );
 
   useEffect(() => {
-    Vibrant.from(subscription.logo)
+    if (!("logo" in source)) {
+      return;
+    }
+    Vibrant.from(source.logo)
       .getPalette()
       .then((palette) => {
         const hex = palette.Vibrant?.hex;
@@ -29,24 +42,77 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
           setBackgroundColor(hex);
         }
       });
-  }, [subscription]);
+  }, [source]);
+
+  const [createSubscription] = useCreateSubscriptionMutation({
+    update: (cache, { data }) => {
+      cache.modify({
+        fields: {
+          subscriptions(existingUserSubscriptions = []) {
+            const newUserSubscriptionRef = cache.writeFragment({
+              data: data?.createSubscription,
+              fragment: UserSubscriptionFragmentDoc,
+            });
+            return [...existingUserSubscriptions, newUserSubscriptionRef];
+          },
+        },
+      });
+    },
+  });
+  const [deleteSubscription] = useDeleteSubscriptionMutation({
+    update: (cache) => {
+      cache.modify({
+        fields: {
+          subscriptions(existingUserSubscriptions = [], { readField }) {
+            return existingUserSubscriptions.filter(
+              (userSubscriptionRef: UserSubscriptionFragment) =>
+                readField("id", userSubscriptionRef) !==
+                readField("id", userSubscription)
+            );
+          },
+        },
+      });
+    },
+  });
+
+  const handleToggle = useCallback(() => {
+    if (userSubscription) {
+      deleteSubscription({ variables: { id: userSubscription.id } });
+    } else {
+      if ("__typename" in source) {
+        createSubscription({
+          variables: { sourceId: source?.id },
+        });
+      } else {
+        createSubscription({
+          variables: { category: source?.key },
+        });
+      }
+    }
+  }, [createSubscription, deleteSubscription, source, userSubscription]);
 
   return (
-    <div className={styles.item} title={subscription.name}>
+    <div className={styles.item} title={source?.name}>
       <Flex
         direction="column"
-        gap="md"
         style={{ height: "100%", width: "100%", backgroundColor }}
+        onClick={handleToggle}
       >
         <PreloadImage
-          src={subscription.banner}
+          src={source?.banner}
           className={styles.banner}
           width="100%"
           height="100%"
         />
-        <img src={subscription.logo} className={styles.logo} />
-        <div className={styles.toggle}>
-          <PlusIcon />
+        <Flex align="center" justify="center" className={styles.logo}>
+          {"logo" in source ? <img src={source?.logo} /> : source?.name}
+        </Flex>
+        <div
+          className={classNames(styles.toggle, {
+            [styles.active]: userSubscription,
+          })}
+        >
+          {userSubscription ? <CheckIcon /> : <PlusIcon />}
         </div>
       </Flex>
     </div>

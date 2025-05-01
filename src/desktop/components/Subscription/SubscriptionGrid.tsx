@@ -2,23 +2,55 @@ import React, { useMemo } from "react";
 
 import { Column, Flex, Row } from "@sampled-ui/base";
 
-import { SourceSubscriptionFragment } from "../../../../generated/graphql";
+import {
+  ArticleCategory,
+  SourceSubscriptionFragment,
+  UserSubscriptionFragment
+} from "../../../../generated/graphql";
 
 import styles from "./Subscription.module.scss";
 import SubscriptionGridItem from "./SubscriptionItem";
 
-interface SubscriptionGridProps {
-  sources: SourceSubscriptionFragment[] | null;
+export interface CategorySubscription {
+  key: ArticleCategory;
+  banner: string;
+  name: string;
 }
 
-const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({ sources }) => {
+interface SubscriptionGridItem {
+  source: SourceSubscriptionFragment | CategorySubscription;
+  subscription?: UserSubscriptionFragment;
+}
+
+interface SubscriptionGridProps {
+  userSubscriptions?: UserSubscriptionFragment[] | null;
+  sources: SourceSubscriptionFragment[] | CategorySubscription[] | null;
+}
+
+const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
+  sources,
+  userSubscriptions,
+}) => {
+
   const gridRows = useMemo(() => {
     return sources?.reduce((allRows, _currentSource, index, allSources) => {
       const row = [];
       const columns = 4;
       for (let i = 0; i < columns; i++) {
         if (allSources[index + i]) {
-          row.push(allSources[index + i]);
+          row.push({
+            source: allSources[index + i],
+            subscription: userSubscriptions?.find((s) => {
+              if ("id" in allSources[index + i]) {
+                return (
+                  s.source?.id ===
+                  (allSources[index + i] as SourceSubscriptionFragment).id
+                );
+              } else {
+                return s.category === allSources[index + i].key;
+              }
+            }),
+          });
         }
       }
       if (
@@ -29,26 +61,24 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({ sources }) => {
         return [...allRows, row];
       }
       return allRows;
-    }, [] as SourceSubscriptionFragment[][]);
-  }, [sources]);
+    }, [] as SubscriptionGridItem[][]);
+  }, [sources, userSubscriptions]);
 
   return (
     <Flex direction="column" gap="lg" style={{ width: "100%" }}>
       {gridRows?.map((row, index) => {
         return (
           <Row key={`row-${index}`} className={styles.row} gap={"0.0625rem"}>
-            <Column span={6} className={styles.column}>
-              {row[0] && <SubscriptionGridItem subscription={row[0]} />}
-            </Column>
-            <Column span={6}>
-              {row[1] && <SubscriptionGridItem subscription={row[1]} />}
-            </Column>
-            <Column span={6}>
-              {row[2] && <SubscriptionGridItem subscription={row[2]} />}
-            </Column>
-            <Column span={6}>
-              {row[3] && <SubscriptionGridItem subscription={row[3]} />}
-            </Column>
+            {row.map((source, i) => {
+              return (
+                <Column key={`column-${i}`} span={6} className={styles.column}>
+                  <SubscriptionGridItem
+                    source={source.source}
+                    userSubscription={source.subscription}
+                  />
+                </Column>
+              );
+            })}
           </Row>
         );
       })}

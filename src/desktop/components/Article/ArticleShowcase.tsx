@@ -10,9 +10,9 @@ import {
   ArticleFeedFragment,
   useCreateArticleActivityMutation,
 } from "../../../../generated/graphql";
+import { decodeHtmlEntities } from "../../../shared/helpers";
 import { useColorScheme } from "../../../shared/hooks/colorScheme";
 
-import { decodeHtmlEntities } from "../../../shared/helpers";
 import styles from "./Article.module.scss";
 import ArticleImage from "./ArticleImage";
 import ArticleMenu from "./ArticleMenu";

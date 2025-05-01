@@ -15,7 +15,7 @@ import styles from "./Article.module.scss";
 
 interface ArticleMenuProps {
   activity?: ArticleFeedFragment["activity"] | null;
-  id: number;
+  id: string;
   url: string;
 }
 

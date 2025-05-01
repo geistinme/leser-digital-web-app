@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 
 import { useLocation, useNavigate } from "react-router";
 
@@ -8,23 +8,15 @@ export const useAuthRedirect = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { data, loading, error, refetch } = useLoggedInQuery();
-
-  useEffect(() => {
-    window.onmessage = (e: MessageEvent) => {
-      if (e.data === "REFRESHED_ACCESS_TOKEN") {
-        refetch();
-      }
-    };
-  }, [refetch]);
+  const { data, loading, error } = useLoggedInQuery();
 
   return useCallback(() => {
     if ((!loading && !data?.loggedIn) || error) {
       localStorage.setItem("redirect", location.pathname);
-      navigate("/auth/login");
+      navigate("/auth/login", { replace: true });
     } else if (!loading && !data?.loggedIn?.verified) {
       localStorage.setItem("redirect", location.pathname);
-      navigate("/auth/verify");
+      navigate("/auth/verify", { replace: true });
     }
   }, [data?.loggedIn, error, loading, location.pathname, navigate]);
 };

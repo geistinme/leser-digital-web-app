@@ -9,8 +9,8 @@ import {
   useCreateArticleActivityMutation,
   useLoggedInQuery,
 } from "../../../../generated/graphql";
-
 import { decodeHtmlEntities } from "../../../shared/helpers";
+
 import styles from "./Article.module.scss";
 import ArticleImage from "./ArticleImage";
 
@@ -27,7 +27,7 @@ const ArticleGridItem: React.FC<{
     <Flex direction="column" className={styles.grid}>
       <ArticleImage
         article={article}
-        height="10rem"
+        height="16rem"
         width="100%"
         style={{ borderRadius: "initial" }}
       />
@@ -96,7 +96,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
   const [createArticleActivity] = useCreateArticleActivityMutation();
 
   const createActivity = useCallback(
-    (id: number) => {
+    (id: string) => {
       return () => {
         if (loggedInQueryData?.loggedIn) {
           createArticleActivity({
@@ -119,8 +119,6 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
       {gridRows?.map((row, index) => (
         <Row
           key={`row-${index}`}
-          style={{ marginBottom: "0.0625rem" }}
-          gap={"0.0625rem"}
         >
           <Column span={8}>
             <ArticleGridItem

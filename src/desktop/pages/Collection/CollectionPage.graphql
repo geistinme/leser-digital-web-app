@@ -17,7 +17,7 @@ mutation createArticleActivity($data: ArticleActivityInput!) {
   }
 }
 
-mutation deleteArticleActivity($id: Int!) {
+mutation deleteArticleActivity($id: String!) {
   deleteArticleActivity(id: $id) {
     id
     type

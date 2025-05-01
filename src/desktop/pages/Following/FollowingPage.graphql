@@ -4,10 +4,38 @@ query sources {
   }
 }
 
+query subscriptions {
+  subscriptions {
+    ...UserSubscription
+  }
+}
+
+mutation createSubscription($sourceId: String, $category: ArticleCategory) {
+  createSubscription(sourceId: $sourceId, category: $category) {
+    ...UserSubscription
+  }
+}
+
+mutation deleteSubscription($id: String!) {
+  deleteSubscription(id: $id) {
+    id
+  }
+}
+
 fragment SourceSubscription on Source {
+  __typename
   id
   key
   name
   logo
   banner
+}
+
+fragment UserSubscription on Subscription {
+  id
+  source {
+    id
+  }
+  category
+  createdAt
 }

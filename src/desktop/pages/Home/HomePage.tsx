@@ -3,8 +3,8 @@ import React from "react";
 import { Column, Divider, Flex, Row, Spacing, Tabs } from "@sampled-ui/base";
 
 import {
-  useArticlesQuery,
-  useLoggedInQuery,
+    useArticlesQuery,
+    useLoggedInQuery,
 } from "../../../../generated/graphql";
 import { useIsDevice } from "../../../shared/hooks/isDevice";
 import ArticleFeed from "../../components/Article/ArticleFeed";

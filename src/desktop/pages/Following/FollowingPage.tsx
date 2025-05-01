@@ -2,16 +2,20 @@ import React from "react";
 
 import { Flex, Spacing, Typography } from "@sampled-ui/base";
 
-import { useSourcesQuery } from "../../../../generated/graphql";
+import {
+  useSourcesQuery,
+  useSubscriptionsQuery,
+} from "../../../../generated/graphql";
 import SubscriptionGrid from "../../components/Subscription/SubscriptionGrid";
 
 interface FollowingPageProps {}
 
 const FollowingPage: React.FC<FollowingPageProps> = () => {
   const { data: sourcesQueryData } = useSourcesQuery();
+  const { data: userSubscriptionsQueryData } = useSubscriptionsQuery();
   return (
     <Spacing gap="xl">
-      <title>Following</title>
+      <title>Gefolgt</title>
       <Flex
         direction="column"
         align="start"
@@ -22,7 +26,10 @@ const FollowingPage: React.FC<FollowingPageProps> = () => {
           Folge deinen Favoriten
         </Typography.Text>
         {sourcesQueryData?.sources ? (
-          <SubscriptionGrid sources={sourcesQueryData.sources} />
+          <SubscriptionGrid
+            sources={sourcesQueryData.sources}
+            userSubscriptions={userSubscriptionsQueryData?.subscriptions}
+          />
         ) : null}
       </Flex>
     </Spacing>
