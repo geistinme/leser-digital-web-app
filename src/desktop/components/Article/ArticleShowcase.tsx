@@ -21,14 +21,15 @@ import ArticleMenu from "./ArticleMenu";
 interface ArticleShowcaseProps {
   article: ArticleFeedFragment | ArticleListFragment;
   compact?: boolean;
-  grid?: boolean;
   loggedIn?: boolean;
+  ref?: (node: HTMLDivElement | null) => void;
 }
 
 const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
   article,
   compact,
   loggedIn,
+  ref,
 }) => {
   const navigate = useNavigate();
 
@@ -69,6 +70,7 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
       gap="sm"
       key={article.id}
       className={classNames(styles.article, { [styles.compact]: compact })}
+      ref={ref as unknown as React.RefObject<HTMLDivElement>}
     >
       <ArticleImage
         compact={compact}

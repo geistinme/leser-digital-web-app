@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Flex, Progress, Spacing, Typography } from "@sampled-ui/base";
+import { Flex, Spacing, Typography } from "@sampled-ui/base";
 import { useInView } from "react-intersection-observer";
 import { useParams } from "react-router";
 
@@ -20,11 +20,7 @@ const SourcePage: React.FC<SourcePageProps> = () => {
   const { data: sourceQueryData } = useSourceQuery({
     variables: { key: source as string },
   });
-  const {
-    data: articlesQueryData,
-    loading: loadingArticles,
-    fetchMore,
-  } = useArticlesQuery({
+  const { data: articlesQueryData, fetchMore } = useArticlesQuery({
     variables: {
       pagination: { offset: 0, limit: 10 },
       filter: { source },
@@ -72,13 +68,15 @@ const SourcePage: React.FC<SourcePageProps> = () => {
 
   const grid = useMemo(() => {
     if (articlesQueryData?.articles?.length) {
-      return <ArticleGrid articles={articlesQueryData.articles} />;
+      return (
+        <ArticleGrid articles={articlesQueryData.articles} lastRef={ref} />
+      );
     } else {
       return null;
     }
-  }, [articlesQueryData?.articles]);
+  }, [articlesQueryData?.articles, ref]);
 
-  console.debug(articlesQueryData?.articles, hasMore)
+  console.debug(articlesQueryData?.articles, hasMore);
 
   return (
     <Flex direction="column" align="center" style={{ width: "100%" }}>
@@ -94,13 +92,6 @@ const SourcePage: React.FC<SourcePageProps> = () => {
           style={{ maxWidth: "70rem", margin: "auto" }}
         >
           {grid}
-          {grid && hasMore ? (
-            <Progress
-              loading={loadingArticles}
-              done={!loadingArticles}
-              ref={ref as unknown as React.RefObject<HTMLDivElement>}
-            />
-          ) : null}
           {!hasMore ? (
             <Typography.Text disabled bold style={{ textAlign: "center" }}>
               Keine weiteren Artikel verfügbar.

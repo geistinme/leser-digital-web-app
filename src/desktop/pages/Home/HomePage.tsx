@@ -4,7 +4,6 @@ import {
   Column,
   Divider,
   Flex,
-  Progress,
   Row,
   Spacing,
   Tabs,
@@ -102,11 +101,13 @@ export const HomePage: React.FC = () => {
 
   const feed = useMemo(() => {
     if (articlesQueryData?.articles?.length) {
-      return <ArticleFeed articles={articlesQueryData.articles} />;
+      return (
+        <ArticleFeed articles={articlesQueryData.articles} lastRef={ref} />
+      );
     } else {
       return null;
     }
-  }, [articlesQueryData?.articles]);
+  }, [articlesQueryData?.articles, ref]);
 
   return (
     <Spacing gap="xl">
@@ -140,13 +141,6 @@ export const HomePage: React.FC = () => {
             {empty}
             {loading}
             {feed}
-            {feed && hasMore ? (
-              <Progress
-                loading={loadingArticles}
-                done={!loadingArticles}
-                ref={ref as unknown as React.RefObject<HTMLDivElement>}
-              />
-            ) : null}
             {!hasMore ? (
               <Typography.Text disabled bold style={{ textAlign: "center" }}>
                 Keine weiteren Artikel verfügbar.

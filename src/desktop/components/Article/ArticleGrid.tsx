@@ -17,6 +17,7 @@ import ArticleImage from "./ArticleImage";
 interface ArticleGridProps {
   articles?: ArticleGridFragment[] | null;
   loading?: boolean;
+  lastRef?: (node: HTMLDivElement | null) => void;
 }
 
 const ArticleGridItem: React.FC<{
@@ -63,6 +64,7 @@ const ArticleGridItem: React.FC<{
 const ArticleGrid: React.FC<ArticleGridProps> = ({
   articles,
   loading: loadingArticles,
+  lastRef,
 }) => {
   const empty = useMemo(() => {
     if ((!articles || articles.length === 0) && !loadingArticles) {
@@ -120,7 +122,14 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
     <Flex direction="column" align="stretch" style={{ width: "100%" }}>
       {empty}
       {gridRows?.map((row, index) => (
-        <Row key={`row-${index}`}>
+        <Row
+          key={`row-${index}`}
+          ref={
+            index === gridRows.length - 1
+              ? (lastRef as unknown as React.RefObject<HTMLDivElement>)
+              : undefined
+          }
+        >
           <Column span={8}>
             <ArticleGridItem
               article={row[0]}
