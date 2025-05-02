@@ -39,7 +39,7 @@ const ArticleImage: React.FC<ArticleImageProps> = ({
       }}
     >
       <PreloadImage
-        src={article.image}
+        src={article.image ?? undefined}
         width={calculatedWidth}
         height={calculatedHeight}
         className={classNames(styles.image, { [styles.compact]: compact })}

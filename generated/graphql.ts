@@ -341,17 +341,18 @@ export type UserSubscriptionFragment = { __typename?: 'Subscription', id: string
 
 export type ArticlesQueryVariables = Exact<{
   pagination: PaginationInput;
+  filter?: InputMaybe<ArticleQueryFilter>;
 }>;
 
 
-export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null }> | null };
+export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, category: ArticleCategory, uploadedAt: any, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null }> | null };
 
 export type RecommendedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type RecommendedArticlesQuery = { __typename?: 'Query', recommendedArticles?: Array<{ __typename?: 'Article', id: string, title: string, url: string, source: { __typename?: 'Source', id: string, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null } | null> | null };
 
-export type ArticleFeedFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null };
+export type ArticleFeedFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, category: ArticleCategory, uploadedAt: any, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null };
 
 export type RecommendedArticleFragment = { __typename?: 'Article', id: string, title: string, url: string, source: { __typename?: 'Source', id: string, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null };
 
@@ -360,9 +361,9 @@ export type SourceQueryVariables = Exact<{
 }>;
 
 
-export type SourceQuery = { __typename?: 'Query', source?: { __typename?: 'Source', id: string, key: string, name: string, logo: string, articleCount?: number | null, subscribers?: number | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null, articles: Array<{ __typename?: 'Article', id: string, title: string, uploadedAt: any, image?: string | null, url: string }> } | null };
+export type SourceQuery = { __typename?: 'Query', source?: { __typename?: 'Source', id: string, key: string, name: string, logo: string, articleCount?: number | null, subscribers?: number | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null } | null };
 
-export type SourceProfileFragment = { __typename?: 'Source', id: string, key: string, name: string, logo: string, articleCount?: number | null, subscribers?: number | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null, articles: Array<{ __typename?: 'Article', id: string, title: string, uploadedAt: any, image?: string | null, url: string }> };
+export type SourceProfileFragment = { __typename?: 'Source', id: string, key: string, name: string, logo: string, articleCount?: number | null, subscribers?: number | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null };
 
 export type ArticleGridFragment = { __typename?: 'Article', id: string, title: string, uploadedAt: any, image?: string | null, url: string };
 
@@ -457,6 +458,7 @@ export const ArticleFeedFragmentDoc = gql`
   image
   url
   premium
+  category
   uploadedAt
   source {
     id
@@ -485,15 +487,6 @@ export const RecommendedArticleFragmentDoc = gql`
   }
 }
     `;
-export const ArticleGridFragmentDoc = gql`
-    fragment ArticleGrid on Article {
-  id
-  title
-  uploadedAt
-  image
-  url
-}
-    `;
 export const SourceProfileFragmentDoc = gql`
     fragment SourceProfile on Source {
   id
@@ -505,11 +498,17 @@ export const SourceProfileFragmentDoc = gql`
   isSubscribed {
     id
   }
-  articles {
-    ...ArticleGrid
-  }
 }
-    ${ArticleGridFragmentDoc}`;
+    `;
+export const ArticleGridFragmentDoc = gql`
+    fragment ArticleGrid on Article {
+  id
+  title
+  uploadedAt
+  image
+  url
+}
+    `;
 export const LoggedInDocument = gql`
     query loggedIn {
   loggedIn {
@@ -877,8 +876,8 @@ export type DeleteSubscriptionMutationHookResult = ReturnType<typeof useDeleteSu
 export type DeleteSubscriptionMutationResult = Apollo.MutationResult<DeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
 export const ArticlesDocument = gql`
-    query articles($pagination: PaginationInput!) {
-  articles(pagination: $pagination) {
+    query articles($pagination: PaginationInput!, $filter: ArticleQueryFilter) {
+  articles(pagination: $pagination, filter: $filter) {
     ...ArticleFeed
   }
 }
@@ -897,6 +896,7 @@ export const ArticlesDocument = gql`
  * const { data, loading, error } = useArticlesQuery({
  *   variables: {
  *      pagination: // value for 'pagination'
+ *      filter: // value for 'filter'
  *   },
  * });
  */

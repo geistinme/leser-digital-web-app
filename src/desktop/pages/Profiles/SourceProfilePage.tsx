@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Flex, Spacing } from "@sampled-ui/base";
+import { Flex, Progress, Spacing, Typography } from "@sampled-ui/base";
+import { useInView } from "react-intersection-observer";
 import { useParams } from "react-router";
 
-import { useSourceQuery } from "../../../../generated/graphql";
+import {
+  ArticleGridFragment,
+  useArticlesQuery,
+  useSourceQuery,
+} from "../../../../generated/graphql";
 import ArticleGrid from "../../components/Article/ArticleGrid";
 import { SourceShowcase } from "../../components/Source/SourceShowcase";
 
@@ -12,9 +17,68 @@ interface SourcePageProps {}
 const SourcePage: React.FC<SourcePageProps> = () => {
   const { source } = useParams<{ source: string }>();
 
-  const { data: sourceQueryData, loading: loadingSource } = useSourceQuery({
+  const { data: sourceQueryData } = useSourceQuery({
     variables: { key: source as string },
   });
+  const {
+    data: articlesQueryData,
+    loading: loadingArticles,
+    fetchMore,
+  } = useArticlesQuery({
+    variables: {
+      pagination: { offset: 0, limit: 10 },
+      filter: { source },
+    },
+  });
+
+  const [hasMore, setHasMore] = useState(true);
+  const loadMore = useCallback(() => {
+    if (hasMore) {
+      fetchMore({
+        variables: {
+          pagination: {
+            offset: articlesQueryData?.articles?.length,
+            limit: 10,
+          },
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if ((fetchMoreResult.articles?.length ?? 0) < 10) {
+            setHasMore(false);
+          }
+          if (
+            prev.articles &&
+            fetchMoreResult.articles &&
+            (fetchMoreResult.articles?.length ?? 0) > 0
+          ) {
+            return Object.assign({}, prev, {
+              articles: [
+                ...prev.articles,
+                ...fetchMoreResult.articles,
+              ] as ArticleGridFragment[],
+            });
+          }
+          return prev;
+        },
+      });
+    }
+  }, [articlesQueryData?.articles?.length, fetchMore, hasMore]);
+
+  const { ref, inView } = useInView();
+  useEffect(() => {
+    if (inView && hasMore) {
+      loadMore();
+    }
+  }, [hasMore, inView, loadMore]);
+
+  const grid = useMemo(() => {
+    if (articlesQueryData?.articles?.length) {
+      return <ArticleGrid articles={articlesQueryData.articles} />;
+    } else {
+      return null;
+    }
+  }, [articlesQueryData?.articles]);
+
+  console.debug(articlesQueryData?.articles, hasMore)
 
   return (
     <Flex direction="column" align="center" style={{ width: "100%" }}>
@@ -29,11 +93,18 @@ const SourcePage: React.FC<SourcePageProps> = () => {
           gap="lg"
           style={{ maxWidth: "70rem", margin: "auto" }}
         >
-          {sourceQueryData?.source?.articles ? (
-            <ArticleGrid
-              articles={sourceQueryData.source?.articles}
-              loading={loadingSource}
+          {grid}
+          {grid && hasMore ? (
+            <Progress
+              loading={loadingArticles}
+              done={!loadingArticles}
+              ref={ref as unknown as React.RefObject<HTMLDivElement>}
             />
+          ) : null}
+          {!hasMore ? (
+            <Typography.Text disabled bold style={{ textAlign: "center" }}>
+              Keine weiteren Artikel verfügbar.
+            </Typography.Text>
           ) : null}
         </Flex>
       </Spacing>

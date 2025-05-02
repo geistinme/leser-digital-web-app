@@ -1,6 +1,7 @@
 @use "../../../styles/variables.scss" as *;
 
 .article {
+  position: relative;
   width: 100%;
   max-width: 30rem;
   padding: $spacing-md 0;
@@ -51,6 +52,16 @@
   width: 10rem;
   height: 10rem;
   border-radius: $border-radius-sm;
+}
+
+.category {
+  cursor: pointer;
+  position: absolute;
+  top: $spacing-lg;
+  right: $spacing-sm;
+  backdrop-filter: brightness(0.8) blur(5px);
+  -webkit-backdrop-filter: brightness(0.8) blur(5px);
+  transition: backdrop-filter $transition-fast;
 }
 
 .content {

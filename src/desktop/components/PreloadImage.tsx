@@ -2,12 +2,10 @@ import React, { useEffect, useRef } from "react";
 
 import { Skeleton } from "@sampled-ui/base";
 
-interface PreloadImageProps {
-  src?: string | null;
+interface PreloadImageProps extends React.HTMLProps<HTMLDivElement> {
+  src?: string;
   height: string;
   width: string;
-  className?: string;
-  style?: React.CSSProperties;
 }
 
 const PreloadImage: React.FC<PreloadImageProps> = ({
@@ -16,6 +14,7 @@ const PreloadImage: React.FC<PreloadImageProps> = ({
   width,
   className,
   style,
+  ...rest
 }) => {
   const imageBackgroundRef = useRef<HTMLDivElement>(null);
   const [imageLoaded, setImageLoaded] = React.useState(false);
@@ -47,6 +46,7 @@ const PreloadImage: React.FC<PreloadImageProps> = ({
         display: imageLoaded ? "block" : "none",
         ...(style ?? {}),
       }}
+      {...rest}
       className={className}
     />
   );

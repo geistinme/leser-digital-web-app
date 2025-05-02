@@ -1,13 +1,15 @@
 import React from "react";
 
-import { Flex, Spacing, Typography } from "@sampled-ui/base";
+import { Flex, Spacing, Tag, Typography } from "@sampled-ui/base";
 import classNames from "classnames";
+import { toSentenceCase } from "js-convert-case";
 import moment from "moment";
 import { useNavigate } from "react-router";
 
 import {
   ArticleActivityType,
   ArticleFeedFragment,
+  ArticleListFragment,
   useCreateArticleActivityMutation,
 } from "../../../../generated/graphql";
 import { decodeHtmlEntities } from "../../../shared/helpers";
@@ -19,7 +21,7 @@ import ArticleMenu from "./ArticleMenu";
 import { invertLogo } from "./invertLogo";
 
 interface ArticleShowcaseProps {
-  article: ArticleFeedFragment;
+  article: ArticleFeedFragment | ArticleListFragment;
   compact?: boolean;
   grid?: boolean;
   loggedIn?: boolean;
@@ -87,6 +89,15 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
           });
         }}
       />
+      {!compact && (article as ArticleFeedFragment).category ? (
+        <Tag
+          size="sm"
+          variant="filled"
+          color="transparent"
+          label={toSentenceCase((article as ArticleFeedFragment).category)}
+          className={classNames(styles.category)}
+        />
+      ) : null}
       <Spacing gap="sm" className={styles.content}>
         <Flex direction="column" align="start" gap="sm">
           {header}

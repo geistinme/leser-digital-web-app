@@ -14,9 +14,6 @@ fragment SourceProfile on Source {
   isSubscribed {
     id
   }
-  articles {
-    ...ArticleGrid
-  }
 }
 
 fragment ArticleGrid on Article {

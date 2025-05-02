@@ -10,10 +10,11 @@ import {
   useCreateSubscriptionMutation,
   useDeleteSubscriptionMutation,
   UserSubscriptionFragment,
-  UserSubscriptionFragmentDoc
+  UserSubscriptionFragmentDoc,
 } from "../../../../generated/graphql";
 import PreloadImage from "../PreloadImage";
 
+import { useNavigate } from "react-router";
 import styles from "./Subscription.module.scss";
 import { CategorySubscription } from "./SubscriptionGrid";
 
@@ -29,6 +30,7 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
   const [backgroundColor, setBackgroundColor] = useState<string | undefined>(
     undefined
   );
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!("logo" in source)) {
@@ -96,21 +98,27 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
       <Flex
         direction="column"
         style={{ height: "100%", width: "100%", backgroundColor }}
-        onClick={handleToggle}
       >
         <PreloadImage
           src={source?.banner}
           className={styles.banner}
           width="100%"
           height="100%"
+          onClick={handleToggle}
         />
-        <Flex align="center" justify="center" className={styles.logo}>
+        <Flex
+          align="center"
+          justify="center"
+          className={styles.logo}
+          onClick={() => navigate(`/${source?.key}`)}
+        >
           {"logo" in source ? <img src={source?.logo} /> : source?.name}
         </Flex>
         <div
           className={classNames(styles.toggle, {
             [styles.active]: userSubscription,
           })}
+          onClick={handleToggle}
         >
           {userSubscription ? <CheckIcon /> : <PlusIcon />}
         </div>

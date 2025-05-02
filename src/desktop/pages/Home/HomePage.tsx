@@ -39,7 +39,6 @@ export const HomePage: React.FC = () => {
 
   const [hasMore, setHasMore] = useState(true);
   const loadMore = useCallback(() => {
-    console.debug("loadMore");
     if (hasMore) {
       fetchMore({
         variables: {
@@ -52,10 +51,11 @@ export const HomePage: React.FC = () => {
           if ((fetchMoreResult.articles?.length ?? 0) < 10) {
             setHasMore(false);
           }
-          if (!fetchMoreResult.articles && prev) {
-            return prev;
-          }
-          if (prev.articles && fetchMoreResult.articles?.length === 10) {
+          if (
+            prev.articles &&
+            fetchMoreResult.articles &&
+            (fetchMoreResult.articles?.length ?? 0) > 0
+          ) {
             return Object.assign({}, prev, {
               articles: [
                 ...prev.articles,
@@ -63,7 +63,7 @@ export const HomePage: React.FC = () => {
               ] as ArticleFeedFragment[],
             });
           }
-          return { articles: [] as ArticleFeedFragment[] };
+          return prev;
         },
       });
     }
@@ -140,12 +140,17 @@ export const HomePage: React.FC = () => {
             {empty}
             {loading}
             {feed}
-            {feed ? (
+            {feed && hasMore ? (
               <Progress
                 loading={loadingArticles}
                 done={!loadingArticles}
                 ref={ref as unknown as React.RefObject<HTMLDivElement>}
               />
+            ) : null}
+            {!hasMore ? (
+              <Typography.Text disabled bold style={{ textAlign: "center" }}>
+                Keine weiteren Artikel verfügbar.
+              </Typography.Text>
             ) : null}
           </Flex>
         </Column>

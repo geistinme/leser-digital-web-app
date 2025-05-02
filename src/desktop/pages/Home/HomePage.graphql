@@ -1,5 +1,5 @@
-query articles($pagination: PaginationInput!) {
-  articles(pagination: $pagination) {
+query articles($pagination: PaginationInput!, $filter: ArticleQueryFilter) {
+  articles(pagination: $pagination, filter: $filter) {
     ...ArticleFeed
   }
 }
@@ -17,6 +17,7 @@ fragment ArticleFeed on Article {
   image
   url
   premium
+  category
   uploadedAt
   source {
     id
