@@ -1,5 +1,5 @@
-query articles {
-  articles {
+query articles($pagination: PaginationInput!) {
+  articles(pagination: $pagination) {
     ...ArticleFeed
   }
 }

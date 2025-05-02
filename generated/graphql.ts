@@ -72,6 +72,7 @@ export enum ArticleCategory {
   Gaming = 'GAMING',
   Health = 'HEALTH',
   History = 'HISTORY',
+  Law = 'LAW',
   Literature = 'LITERATURE',
   Movies = 'MOVIES',
   Music = 'MUSIC',
@@ -176,6 +177,11 @@ export type MutationVerifyArgs = {
   code?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type PaginationInput = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   articleActivity?: Maybe<ArticleActivity>;
@@ -199,6 +205,7 @@ export type QueryArticleActivityArgs = {
 
 export type QueryArticlesArgs = {
   filter?: InputMaybe<ArticleQueryFilter>;
+  pagination?: InputMaybe<PaginationInput>;
 };
 
 
@@ -332,7 +339,9 @@ export type SourceSubscriptionFragment = { __typename: 'Source', id: string, key
 
 export type UserSubscriptionFragment = { __typename?: 'Subscription', id: string, category?: ArticleCategory | null, createdAt: any, source?: { __typename?: 'Source', id: string } | null };
 
-export type ArticlesQueryVariables = Exact<{ [key: string]: never; }>;
+export type ArticlesQueryVariables = Exact<{
+  pagination: PaginationInput;
+}>;
 
 
 export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null }> | null };
@@ -868,8 +877,8 @@ export type DeleteSubscriptionMutationHookResult = ReturnType<typeof useDeleteSu
 export type DeleteSubscriptionMutationResult = Apollo.MutationResult<DeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
 export const ArticlesDocument = gql`
-    query articles {
-  articles {
+    query articles($pagination: PaginationInput!) {
+  articles(pagination: $pagination) {
     ...ArticleFeed
   }
 }
@@ -887,10 +896,11 @@ export const ArticlesDocument = gql`
  * @example
  * const { data, loading, error } = useArticlesQuery({
  *   variables: {
+ *      pagination: // value for 'pagination'
  *   },
  * });
  */
-export function useArticlesQuery(baseOptions?: Apollo.QueryHookOptions<ArticlesQuery, ArticlesQueryVariables>) {
+export function useArticlesQuery(baseOptions: Apollo.QueryHookOptions<ArticlesQuery, ArticlesQueryVariables> & ({ variables: ArticlesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<ArticlesQuery, ArticlesQueryVariables>(ArticlesDocument, options);
       }
