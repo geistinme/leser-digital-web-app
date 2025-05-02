@@ -9,20 +9,17 @@ import {
   useCreateSubscriptionMutation,
   useDeleteSubscriptionMutation,
   UserSubscriptionFragment,
-  UserSubscriptionFragmentDoc
+  UserSubscriptionFragmentDoc,
 } from "../../../../generated/graphql";
 import { useAuthRedirect } from "../../../shared/components/PrivatePage/hooks";
-import { useColorScheme } from "../../../shared/hooks/colorScheme";
-import { invertLogo } from "../Article/invertLogo";
+import { useInvertedLogo } from "../Article/invertLogo";
 
 interface SourceShowcaseProps {
   source: SourceProfileFragment;
 }
 
 export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
-  const { colorScheme } = useColorScheme();
-  const invert =
-    colorScheme === "dark" ? invertLogo(source?.key ?? "") : undefined;
+  const invert = useInvertedLogo(source.key);
 
   const { redirect, loggedIn } = useAuthRedirect();
   const [createSubscription] = useCreateSubscriptionMutation({
@@ -113,7 +110,7 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
           style={{
             maxHeight: "3rem",
             borderRadius: "0.5rem",
-            filter: invert ? `invert(1)` : undefined,
+            filter: invert ? `brightness(0) invert(1)` : undefined,
           }}
         />
       </Spacing>

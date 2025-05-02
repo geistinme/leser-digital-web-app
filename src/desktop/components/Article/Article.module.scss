@@ -102,11 +102,11 @@
   margin: initial;
 }
 
-@media (prefers-color-scheme: dark) {
-  .invert {
-    filter: brightness(0) invert(1);
-  }
-  .invert:hover {
-    filter: brightness(0) invert(1);
-  }
+.sourceLogo {
+  filter: brightness(0) invert(1);
+}
+
+.sourceLogo:hover {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
 }

@@ -13,12 +13,10 @@ import {
   useCreateArticleActivityMutation,
 } from "../../../../generated/graphql";
 import { decodeHtmlEntities } from "../../../shared/helpers";
-import { useColorScheme } from "../../../shared/hooks/colorScheme";
 
 import styles from "./Article.module.scss";
 import ArticleImage from "./ArticleImage";
 import ArticleMenu from "./ArticleMenu";
-import { invertLogo } from "./invertLogo";
 
 interface ArticleShowcaseProps {
   article: ArticleFeedFragment | ArticleListFragment;
@@ -33,7 +31,7 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
   loggedIn,
 }) => {
   const navigate = useNavigate();
-  const { colorScheme } = useColorScheme();
+
   const [createArticleActivity] = useCreateArticleActivityMutation();
 
   const header = (
@@ -46,10 +44,7 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
         <img
           src={article.source.logo}
           onClick={() => navigate("/" + article.source.key)}
-          className={classNames(styles.sourceLogo, {
-            [styles.invert]:
-              colorScheme === "dark" && invertLogo(article.source.key),
-          })}
+          className={styles.sourceLogo}
         />
         {article.premium ? (
           <Typography.Text size="xs" variant="warning" bold>

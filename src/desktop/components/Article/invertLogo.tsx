@@ -1,5 +1,9 @@
-const blackLogos = ["zeit", "manager"];
+import { useColorScheme } from "../../../shared/hooks/colorScheme";
 
-export const invertLogo = (key: string) => {
-  return blackLogos.includes(key);
+const blackLogos = ["zeit", "manager", "tagesschau", "spiegel"];
+
+export const useInvertedLogo = (key: string) => {
+  const { colorScheme } = useColorScheme();
+  
+  return blackLogos.includes(key) && colorScheme === "dark";
 };
