@@ -2,9 +2,11 @@ import React, { useCallback, useMemo } from "react";
 
 import { Column, Flex, Row, Spacing, Typography } from "@sampled-ui/base";
 import moment from "moment";
+import { useNavigate } from "react-router";
 
 import {
   ArticleActivityType,
+  ArticleFeedFragment,
   ArticleGridFragment,
   useCreateArticleActivityMutation,
   useLoggedInQuery,
@@ -15,35 +17,57 @@ import styles from "./Article.module.scss";
 import ArticleImage from "./ArticleImage";
 
 interface ArticleGridProps {
-  articles?: ArticleGridFragment[] | null;
+  articles?: (ArticleGridFragment | ArticleFeedFragment)[] | null;
+  compact?: boolean;
   loading?: boolean;
   lastRef?: (node: HTMLDivElement | null) => void;
 }
 
 const ArticleGridItem: React.FC<{
-  article: ArticleGridFragment;
-  onClick?: () => void;
-}> = ({ article, onClick }) => {
+  article: ArticleGridFragment | ArticleFeedFragment;
+  onViewArticle?: () => void;
+  compact?: boolean;
+}> = ({ article, compact, onViewArticle }) => {
+  const navigate = useNavigate();
+
   return (
     <Flex direction="column" className={styles.grid}>
       <ArticleImage
         article={article}
-        height="16rem"
+        height="12rem"
         width="100%"
-        style={{ borderRadius: "initial" }}
+        style={{ borderRadius: "var(--border-radius-md)" }}
+        onClick={onViewArticle}
       />
       <Spacing
         gap="sm"
-        style={{ width: "calc(100% - 1.5rem)", marginBottom: "0.5rem" }}
+        style={{
+          width: "calc(100% - 1rem)",
+          height: "100%",
+        }}
       >
-        <Flex direction="column" align="start">
+        <Flex
+          direction="column"
+          gap="sm"
+          align="start"
+          style={{ height: "100%" }}
+        >
+          {!compact && (article as ArticleFeedFragment).source.logo ? (
+            <img
+              src={(article as ArticleFeedFragment).source.logo}
+              onClick={() =>
+                navigate("/" + (article as ArticleFeedFragment).source.key)
+              }
+              className={styles.sourceLogo}
+            />
+          ) : null}
           <a
             href={article.url}
             target="_blank"
             style={{ all: "unset" }}
-            onClick={onClick}
+            onClick={onViewArticle}
           >
-            <Typography.Text bold size="md" className={styles.title}>
+            <Typography.Text bold size="sm" className={styles.title}>
               {decodeHtmlEntities(article.title)}
             </Typography.Text>
           </a>
@@ -52,6 +76,7 @@ const ArticleGridItem: React.FC<{
             size="xs"
             bold
             disabled
+            style={{ justifySelf: "end" }}
           >
             {moment(article.uploadedAt).fromNow()}
           </Typography.Text>
@@ -64,6 +89,7 @@ const ArticleGridItem: React.FC<{
 const ArticleGrid: React.FC<ArticleGridProps> = ({
   articles,
   loading: loadingArticles,
+  compact,
   lastRef,
 }) => {
   const empty = useMemo(() => {
@@ -98,16 +124,40 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
   }, [articles]);
 
   const { data: loggedInQueryData } = useLoggedInQuery();
-  const [createArticleActivity] = useCreateArticleActivityMutation();
-
-  const createActivity = useCallback(
-    (id: string) => {
+  const [createArticleActivity] = useCreateArticleActivityMutation({
+    update: (cache, { data }) => {
+      if (!data?.createArticleActivity) {
+        return;
+      }
+      cache.modify({
+        id: cache.identify({
+          __typename: "Article",
+          id: data.createArticleActivity.article.id,
+        }),
+        fields: {
+          activity() {
+            return [
+              ...(data.createArticleActivity?.article.activity ?? []),
+              data.createArticleActivity,
+            ];
+          },
+        },
+      });
+    },
+  });
+  const createViewActivity = useCallback(
+    (article: ArticleFeedFragment | ArticleGridFragment) => {
       return () => {
-        if (loggedInQueryData?.loggedIn) {
+        if (
+          loggedInQueryData?.loggedIn &&
+          !article.activity?.find(
+            (a) => a.type === ArticleActivityType.ViewArticle
+          )
+        ) {
           createArticleActivity({
             variables: {
               data: {
-                articleId: id,
+                articleId: article.id,
                 type: ArticleActivityType.ViewArticle,
               },
             },
@@ -115,37 +165,41 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
         }
       };
     },
-    [createArticleActivity, loggedInQueryData?.loggedIn]
+    [createArticleActivity, loggedInQueryData]
   );
 
   return (
-    <Flex direction="column" align="stretch" style={{ width: "100%" }}>
+    <Flex direction="column" align="stretch" gap="md" style={{ width: "100%" }}>
       {empty}
       {gridRows?.map((row, index) => (
         <Row
           key={`row-${index}`}
           ref={
-            index === gridRows.length - 1
+            index === gridRows.length - 1 && lastRef
               ? (lastRef as unknown as React.RefObject<HTMLDivElement>)
               : undefined
           }
+          gap={"1rem"}
         >
           <Column span={8}>
             <ArticleGridItem
+              compact={compact}
               article={row[0]}
-              onClick={createActivity(row[0].id)}
+              onViewArticle={createViewActivity(row[0])}
             />
           </Column>
           <Column span={8}>
             <ArticleGridItem
+              compact={compact}
               article={row[1]}
-              onClick={createActivity(row[1].id)}
+              onViewArticle={createViewActivity(row[1])}
             />
           </Column>
           <Column span={8}>
             <ArticleGridItem
+              compact={compact}
               article={row[2]}
-              onClick={createActivity(row[2].id)}
+              onViewArticle={createViewActivity(row[2])}
             />
           </Column>
         </Row>

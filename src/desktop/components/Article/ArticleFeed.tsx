@@ -7,7 +7,7 @@ import {
   useLoggedInQuery,
 } from "../../../../generated/graphql";
 
-import ArticleShowcase from "./ArticleShowcase";
+import ArticlePost from "./ArticlePost";
 
 interface ArticleFeedProps {
   articles?: ArticleFeedFragment[] | null;
@@ -25,7 +25,7 @@ const ArticleFeed: React.FC<ArticleFeedProps> = ({ articles, lastRef }) => {
     >
       {articles?.map((article, index) => {
         return (
-          <ArticleShowcase
+          <ArticlePost
             key={article.id}
             article={article}
             loggedIn={!!loggedInData?.loggedIn}

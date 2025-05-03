@@ -20,7 +20,7 @@ export type Scalars = {
 
 export type Article = {
   __typename?: 'Article';
-  activity?: Maybe<Array<Maybe<ArticleActivity>>>;
+  activity?: Maybe<Array<ArticleActivity>>;
   category: ArticleCategory;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
@@ -187,7 +187,7 @@ export type Query = {
   articleActivity?: Maybe<ArticleActivity>;
   articles?: Maybe<Array<Article>>;
   loggedIn: User;
-  mostViewedArticles?: Maybe<Array<Maybe<Article>>>;
+  mostViewedArticles?: Maybe<Array<Article>>;
   recommendedArticles?: Maybe<Array<Maybe<Article>>>;
   savedArticles?: Maybe<Array<Article>>;
   source?: Maybe<Source>;
@@ -287,19 +287,19 @@ export type LogoutMutation = { __typename?: 'Mutation', logout?: { __typename?: 
 export type SavedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SavedArticlesQuery = { __typename?: 'Query', savedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: string, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null }> | null };
+export type SavedArticlesQuery = { __typename?: 'Query', savedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: string, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
 
 export type ViewedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ViewedArticlesQuery = { __typename?: 'Query', viewedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: string, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null }> | null };
+export type ViewedArticlesQuery = { __typename?: 'Query', viewedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: string, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
 
 export type CreateArticleActivityMutationVariables = Exact<{
   data: ArticleActivityInput;
 }>;
 
 
-export type CreateArticleActivityMutation = { __typename?: 'Mutation', createArticleActivity?: { __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null };
+export type CreateArticleActivityMutation = { __typename?: 'Mutation', createArticleActivity?: { __typename?: 'ArticleActivity', id: string, type: ArticleActivityType, article: { __typename?: 'Article', id: string, activity?: Array<{ __typename?: 'ArticleActivity', id: string }> | null } } | null };
 
 export type DeleteArticleActivityMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -308,7 +308,12 @@ export type DeleteArticleActivityMutationVariables = Exact<{
 
 export type DeleteArticleActivityMutation = { __typename?: 'Mutation', deleteArticleActivity?: { __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null };
 
-export type ArticleListFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: string, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null };
+export type ArticleListFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, source: { __typename?: 'Source', id: string, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
+
+export type MostViewedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MostViewedArticlesQuery = { __typename?: 'Query', mostViewedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, category: ArticleCategory, uploadedAt: any, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
 
 export type SourcesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -345,16 +350,16 @@ export type ArticlesQueryVariables = Exact<{
 }>;
 
 
-export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, category: ArticleCategory, uploadedAt: any, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null }> | null };
+export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, category: ArticleCategory, uploadedAt: any, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
 
 export type RecommendedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RecommendedArticlesQuery = { __typename?: 'Query', recommendedArticles?: Array<{ __typename?: 'Article', id: string, title: string, url: string, source: { __typename?: 'Source', id: string, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null } | null> | null };
+export type RecommendedArticlesQuery = { __typename?: 'Query', recommendedArticles?: Array<{ __typename?: 'Article', id: string, title: string, url: string, source: { __typename?: 'Source', id: string, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null } | null> | null };
 
-export type ArticleFeedFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, category: ArticleCategory, uploadedAt: any, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null };
+export type ArticleFeedFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, category: ArticleCategory, uploadedAt: any, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
 
-export type RecommendedArticleFragment = { __typename?: 'Article', id: string, title: string, url: string, source: { __typename?: 'Source', id: string, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null> | null };
+export type RecommendedArticleFragment = { __typename?: 'Article', id: string, title: string, url: string, source: { __typename?: 'Source', id: string, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
 
 export type SourceQueryVariables = Exact<{
   key: Scalars['String']['input'];
@@ -365,7 +370,7 @@ export type SourceQuery = { __typename?: 'Query', source?: { __typename?: 'Sourc
 
 export type SourceProfileFragment = { __typename?: 'Source', id: string, key: string, name: string, logo: string, articleCount?: number | null, subscribers?: number | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null };
 
-export type ArticleGridFragment = { __typename?: 'Article', id: string, title: string, uploadedAt: any, image?: string | null, url: string };
+export type ArticleGridFragment = { __typename?: 'Article', id: string, title: string, uploadedAt: any, image?: string | null, url: string, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
 
 export type SendResetLinkMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -507,6 +512,10 @@ export const ArticleGridFragmentDoc = gql`
   uploadedAt
   image
   url
+  activity {
+    id
+    type
+  }
 }
     `;
 export const LoggedInDocument = gql`
@@ -666,6 +675,12 @@ export const CreateArticleActivityDocument = gql`
     mutation createArticleActivity($data: ArticleActivityInput!) {
   createArticleActivity(data: $data) {
     id
+    article {
+      id
+      activity {
+        id
+      }
+    }
     type
   }
 }
@@ -730,6 +745,45 @@ export function useDeleteArticleActivityMutation(baseOptions?: Apollo.MutationHo
 export type DeleteArticleActivityMutationHookResult = ReturnType<typeof useDeleteArticleActivityMutation>;
 export type DeleteArticleActivityMutationResult = Apollo.MutationResult<DeleteArticleActivityMutation>;
 export type DeleteArticleActivityMutationOptions = Apollo.BaseMutationOptions<DeleteArticleActivityMutation, DeleteArticleActivityMutationVariables>;
+export const MostViewedArticlesDocument = gql`
+    query mostViewedArticles {
+  mostViewedArticles {
+    ...ArticleFeed
+  }
+}
+    ${ArticleFeedFragmentDoc}`;
+
+/**
+ * __useMostViewedArticlesQuery__
+ *
+ * To run a query within a React component, call `useMostViewedArticlesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMostViewedArticlesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMostViewedArticlesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMostViewedArticlesQuery(baseOptions?: Apollo.QueryHookOptions<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>(MostViewedArticlesDocument, options);
+      }
+export function useMostViewedArticlesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>(MostViewedArticlesDocument, options);
+        }
+export function useMostViewedArticlesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>(MostViewedArticlesDocument, options);
+        }
+export type MostViewedArticlesQueryHookResult = ReturnType<typeof useMostViewedArticlesQuery>;
+export type MostViewedArticlesLazyQueryHookResult = ReturnType<typeof useMostViewedArticlesLazyQuery>;
+export type MostViewedArticlesSuspenseQueryHookResult = ReturnType<typeof useMostViewedArticlesSuspenseQuery>;
+export type MostViewedArticlesQueryResult = Apollo.QueryResult<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>;
 export const SourcesDocument = gql`
     query sources {
   sources {

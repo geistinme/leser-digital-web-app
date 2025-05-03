@@ -22,4 +22,8 @@ fragment ArticleGrid on Article {
   uploadedAt
   image
   url
+  activity {
+    id
+    type
+  }
 }

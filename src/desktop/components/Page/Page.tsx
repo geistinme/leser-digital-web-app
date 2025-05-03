@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { Layout } from "@sampled-ui/base";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router";
 import { hideSplashScreen } from "vite-plugin-splash-screen/runtime";
 
 import { useLoggedInQuery } from "../../../../generated/graphql";
@@ -18,6 +18,19 @@ export const Page: React.FC = () => {
     hideSplashScreen();
   }, [data?.loggedIn, data?.loggedIn?.verified, navigate]);
 
+  const location = useLocation();
+  const inner = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
+    }
+
+    if (inner.current) {
+      inner.current.scrollTo(0, 0);
+    }
+  }, [location.pathname, inner]);
+
   return (
     <Layout style={{ height: "100vh" }}>
       <Sidebar />
@@ -27,6 +40,7 @@ export const Page: React.FC = () => {
           margin: "auto",
           height: "100%",
         }}
+        ref={inner}
       >
         <Outlet />
       </Layout>

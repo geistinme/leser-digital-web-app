@@ -1,0 +1,5 @@
+query mostViewedArticles {
+  mostViewedArticles {
+    ...ArticleFeed
+  }
+}

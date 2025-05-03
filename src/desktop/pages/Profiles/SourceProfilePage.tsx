@@ -69,14 +69,16 @@ const SourcePage: React.FC<SourcePageProps> = () => {
   const grid = useMemo(() => {
     if (articlesQueryData?.articles?.length) {
       return (
-        <ArticleGrid articles={articlesQueryData.articles} lastRef={ref} />
+        <ArticleGrid
+          articles={articlesQueryData.articles}
+          compact
+          lastRef={ref}
+        />
       );
     } else {
       return null;
     }
   }, [articlesQueryData?.articles, ref]);
-
-  console.debug(articlesQueryData?.articles, hasMore);
 
   return (
     <Flex direction="column" align="center" style={{ width: "100%" }}>
@@ -89,7 +91,7 @@ const SourcePage: React.FC<SourcePageProps> = () => {
           direction="column"
           align="center"
           gap="lg"
-          style={{ maxWidth: "70rem", margin: "auto" }}
+          style={{ maxWidth: "64rem", margin: "auto" }}
         >
           {grid}
           {!hasMore ? (

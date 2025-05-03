@@ -8,7 +8,7 @@ import {
 } from "../../../../generated/graphql";
 import { useIsDevice } from "../../../shared/hooks/isDevice";
 
-import ArticleShowcase from "./ArticleShowcase";
+import ArticlePost from "./ArticlePost";
 
 interface ArticleListProps {
   articles: ArticleListFragment[];
@@ -30,7 +30,7 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles }) => {
       }}
     >
       {articles?.map((article) => (
-        <ArticleShowcase
+        <ArticlePost
           article={article}
           key={article.id}
           loggedIn={!!loggedInQueryData?.loggedIn}
