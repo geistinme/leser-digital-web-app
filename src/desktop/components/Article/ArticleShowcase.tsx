@@ -8,6 +8,7 @@ import { decodeHtmlEntities } from "../../../shared/helpers";
 
 import styles from "./Article.module.scss";
 import ArticleImage from "./ArticleImage";
+import { useCreateViewActivity } from "./hooks/createViewActivity";
 
 interface ArticleShowcaseProps {
   article: ArticleFeedFragment;
@@ -15,6 +16,8 @@ interface ArticleShowcaseProps {
 
 const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({ article }) => {
   const navigate = useNavigate();
+
+  const handleViewArticle = useCreateViewActivity();
 
   return (
     <div className={styles.showcase}>
@@ -27,6 +30,7 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({ article }) => {
           borderRadius: "initial",
           backgroundPosition: "center",
         }}
+        onClick={() => handleViewArticle({ article })}
       />
       <div
         className={styles.sourceLogoBox}
@@ -34,7 +38,13 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({ article }) => {
       >
         <img src={article.source.logo} />
       </div>
-      <div className={styles.overlay}>
+      <div
+        className={styles.overlay}
+        onClick={() => {
+          window.open(article.url, "_blank");
+          handleViewArticle({ article });
+        }}
+      >
         <Spacing gap="md">
           <Flex
             direction="column"

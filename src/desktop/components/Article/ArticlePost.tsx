@@ -7,16 +7,15 @@ import moment from "moment";
 import { useNavigate } from "react-router";
 
 import {
-  ArticleActivityType,
   ArticleFeedFragment,
   ArticleListFragment,
-  useCreateArticleActivityMutation,
 } from "../../../../generated/graphql";
 import { decodeHtmlEntities } from "../../../shared/helpers";
 
 import styles from "./Article.module.scss";
 import ArticleImage from "./ArticleImage";
 import ArticleMenu from "./ArticleMenu";
+import { useCreateViewActivity } from "./hooks/createViewActivity";
 
 interface ArticlePostProps {
   article: ArticleFeedFragment | ArticleListFragment;
@@ -33,44 +32,7 @@ const ArticlePost: React.FC<ArticlePostProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const [createArticleActivity] = useCreateArticleActivityMutation({
-    update: (cache, { data }) => {
-      if (!data?.createArticleActivity) {
-        return;
-      }
-      cache.modify({
-        id: cache.identify({
-          __typename: "Article",
-          id: data.createArticleActivity.article.id,
-        }),
-        fields: {
-          activity() {
-            return [
-              ...(data.createArticleActivity?.article.activity ?? []),
-              data.createArticleActivity,
-            ];
-          },
-        },
-      });
-    },
-  });
-
-  const handleViewArticle = () => {
-    if (
-      !article.activity?.find(
-        (activity) => activity.type === ArticleActivityType.ViewArticle
-      )
-    ) {
-      createArticleActivity({
-        variables: {
-          data: {
-            articleId: article.id,
-            type: ArticleActivityType.ViewArticle,
-          },
-        },
-      });
-    }
-  };
+  const handleViewArticle = useCreateViewActivity();
 
   const header = (
     <Flex
@@ -112,7 +74,7 @@ const ArticlePost: React.FC<ArticlePostProps> = ({
       <ArticleImage
         compact={compact}
         article={article}
-        onClick={handleViewArticle}
+        onClick={() => handleViewArticle({ article })}
       />
       {!compact && (article as ArticleFeedFragment).category ? (
         <Tag
@@ -130,7 +92,7 @@ const ArticlePost: React.FC<ArticlePostProps> = ({
             href={article.url}
             target="_blank"
             style={{ all: "unset" }}
-            onClick={handleViewArticle}
+            onClick={() => handleViewArticle({ article })}
           >
             <Typography.Text bold size="md" className={styles.title}>
               {decodeHtmlEntities(article.title)}
