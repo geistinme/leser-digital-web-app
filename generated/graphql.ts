@@ -299,7 +299,7 @@ export type CreateArticleActivityMutationVariables = Exact<{
 }>;
 
 
-export type CreateArticleActivityMutation = { __typename?: 'Mutation', createArticleActivity?: { __typename?: 'ArticleActivity', id: string, type: ArticleActivityType, article: { __typename?: 'Article', id: string, activity?: Array<{ __typename?: 'ArticleActivity', id: string }> | null } } | null };
+export type CreateArticleActivityMutation = { __typename?: 'Mutation', createArticleActivity?: { __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null };
 
 export type DeleteArticleActivityMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -675,12 +675,6 @@ export const CreateArticleActivityDocument = gql`
     mutation createArticleActivity($data: ArticleActivityInput!) {
   createArticleActivity(data: $data) {
     id
-    article {
-      id
-      activity {
-        id
-      }
-    }
     type
   }
 }

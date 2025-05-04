@@ -1,10 +1,10 @@
 import {
   ArticleActivityType,
   useCreateArticleActivityMutation,
-  useLoggedInQuery
+  useLoggedInQuery,
 } from "../../../../../generated/graphql";
 
-export type HandleViewArticleFn = ({
+type HandleViewArticleFn = ({
   article,
 }: {
   article: { id: string; activity?: { type: ArticleActivityType }[] | null };
@@ -13,21 +13,18 @@ export type HandleViewArticleFn = ({
 export const useCreateViewActivity = () => {
   const { data: loggedInData } = useLoggedInQuery();
   const [createArticleActivity] = useCreateArticleActivityMutation({
-    update: (cache, { data }) => {
+    update: (cache, { data }, { variables }) => {
       if (!data?.createArticleActivity) {
         return;
       }
       cache.modify({
         id: cache.identify({
           __typename: "Article",
-          id: data.createArticleActivity.article.id,
+          id: variables?.data.articleId,
         }),
         fields: {
-          activity() {
-            return [
-              ...(data.createArticleActivity?.article.activity ?? []),
-              data.createArticleActivity,
-            ];
+          activity: (existing = []) => {
+            return [...existing, data.createArticleActivity];
           },
         },
       });
