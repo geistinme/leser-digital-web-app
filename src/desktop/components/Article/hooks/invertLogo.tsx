@@ -1,4 +1,4 @@
-import { useColorScheme } from "../../../shared/hooks/colorScheme";
+import { useColorScheme } from "../../../../shared/hooks/colorScheme";
 
 const blackLogos = ["zeit", "manager", "tagesschau", "spiegel"];
 

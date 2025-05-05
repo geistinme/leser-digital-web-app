@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@sampled-ui/base";
 import { useInView } from "react-intersection-observer";
+import { useLocation, useNavigate } from "react-router";
 
 import {
   ArticleFeedFragment,
@@ -23,7 +24,10 @@ import ExploreCallToAction from "../../components/CallToAction/ExploreCallToActi
 import LoggedOutCallToAction from "../../components/CallToAction/LoggedOutCallToAction";
 
 export const HomePage: React.FC = () => {
-  const [selectedTab, setSelectedTab] = React.useState("all");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const params = new URLSearchParams(location.search);
+  const [selectedTab, setSelectedTab] = useState(params.get("tab") || "all");
   const { isTablet, isDesktop } = useIsDevice();
 
   const { data: loggedInQueryData } = useLoggedInQuery();
@@ -32,7 +36,17 @@ export const HomePage: React.FC = () => {
     loading: loadingArticles,
     fetchMore,
   } = useArticlesQuery({
-    variables: { pagination: { offset: 0, limit: 10 } },
+    variables: {
+      pagination: { offset: 0, limit: 10 },
+      filter: {
+        short:
+          selectedTab === "breaking"
+            ? true
+            : selectedTab === "articles"
+            ? false
+            : undefined,
+      },
+    },
     notifyOnNetworkStatusChange: true,
   });
 
@@ -120,16 +134,15 @@ export const HomePage: React.FC = () => {
             style={{ marginRight: "2rem", maxWidth: "40rem", margin: "auto" }}
           >
             <Tabs
-              onSelect={(item) => setSelectedTab(item.key)}
+              onSelect={(item) => {
+                navigate(`?tab=${item.key}`);
+                setSelectedTab(item.key);
+              }}
               selected={selectedTab}
               items={[
                 { title: "Alles", key: "all" },
-                { title: "News", key: "news" },
-                { title: "Politik", key: "politics" },
-                { title: "Technologie", key: "technology" },
-                { title: "Finanzen", key: "finance" },
-                { title: "Kultur", key: "culture" },
-                { title: "Sport", key: "sports" },
+                { title: "Artikel", key: "articles" },
+                { title: "Kurzmeldungen", key: "breaking" },
               ]}
             />
             <Divider

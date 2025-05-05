@@ -4,6 +4,7 @@ import { Flex } from "@sampled-ui/base";
 import classNames from "classnames";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { Vibrant } from "node-vibrant/browser";
+import { useNavigate } from "react-router";
 
 import {
   SourceSubscriptionFragment,
@@ -14,7 +15,6 @@ import {
 } from "../../../../generated/graphql";
 import PreloadImage from "../PreloadImage";
 
-import { useNavigate } from "react-router";
 import styles from "./Subscription.module.scss";
 import { CategorySubscription } from "./SubscriptionGrid";
 

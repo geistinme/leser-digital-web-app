@@ -91,4 +91,10 @@
       }
     }
   }
+
+  .toggle.active {
+    svg {
+      stroke: $color-secondary;
+    }
+  }
 }

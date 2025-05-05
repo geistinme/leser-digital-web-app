@@ -93,6 +93,7 @@ export enum ArticleCategory {
 export type ArticleQueryFilter = {
   category?: InputMaybe<Scalars['String']['input']>;
   editor?: InputMaybe<Scalars['String']['input']>;
+  short?: InputMaybe<Scalars['Boolean']['input']>;
   source?: InputMaybe<Scalars['String']['input']>;
 };
 

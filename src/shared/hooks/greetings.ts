@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { useLoggedInQuery } from "../../../generated/graphql";
 
 // Array mit zufälligen Sprüchen für "Gute Nacht"
@@ -40,13 +42,15 @@ function greetUser(name: string) {
     randomQuote = nightQuotes[Math.floor(Math.random() * nightQuotes.length)];
     greeting = `Gute Nacht, ${name}.`;
   } else if (hour < 12) {
-    randomQuote = morningQuotes[Math.floor(Math.random() * morningQuotes.length)];
+    randomQuote =
+      morningQuotes[Math.floor(Math.random() * morningQuotes.length)];
     greeting = `Guten Morgen, ${name}.`;
   } else if (hour < 18) {
     randomQuote = dayQuotes[Math.floor(Math.random() * dayQuotes.length)];
     greeting = `Guten Tag, ${name}.`;
   } else {
-    randomQuote = eveningQuotes[Math.floor(Math.random() * eveningQuotes.length)];
+    randomQuote =
+      eveningQuotes[Math.floor(Math.random() * eveningQuotes.length)];
     greeting = `Guten Abend, ${name}.`;
   }
 
@@ -56,9 +60,11 @@ function greetUser(name: string) {
 export const useGreeting = () => {
   const { data } = useLoggedInQuery();
 
-  if (data?.loggedIn.name) {
-    return greetUser(data.loggedIn.name);
-  }
-
-  return [null, null];
+  return useMemo(() => {
+    if (data?.loggedIn.name) {
+      return greetUser(data.loggedIn.name);
+    } else {
+      return [null, null];
+    }
+  }, [data?.loggedIn.name]);
 };

@@ -12,7 +12,7 @@ import {
   UserSubscriptionFragmentDoc,
 } from "../../../../generated/graphql";
 import { useAuthRedirect } from "../../../shared/components/PrivatePage/hooks";
-import { useInvertedLogo } from "../Article/invertLogo";
+import { useInvertedLogo } from "../Article/hooks/invertLogo";
 
 interface SourceShowcaseProps {
   source: SourceProfileFragment;
