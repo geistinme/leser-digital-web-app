@@ -41,7 +41,7 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
           const hex = palette.Vibrant?.hex;
           setBackgroundColor(hex);
         } else {
-          const rgb = palette.Vibrant?.rgb;
+          const rgb = palette.DarkVibrant?.rgb;
           setBackgroundColor(
             `rgba(${rgb?.[0]}, ${rgb?.[1]}, ${rgb?.[2]}, 20%)`
           );
@@ -110,7 +110,7 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
           className={styles.banner}
           width="100%"
           height="100%"
-          backgroundPosition="top"
+          backgroundPosition="center 30%"
           backgroundSize="cover"
           onClick={handleToggle}
         />
