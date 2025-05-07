@@ -76,12 +76,14 @@ const ArticlePost: React.FC<ArticlePostProps> = ({
         article={article}
         onClick={() => handleViewArticle({ article })}
       />
-      {!compact && (article as ArticleFeedFragment).category ? (
+      {!compact && (article as ArticleFeedFragment).topic.category ? (
         <Tag
           size="sm"
           variant="filled"
           color="transparent"
-          label={toSentenceCase((article as ArticleFeedFragment).category)}
+          label={toSentenceCase(
+            (article as ArticleFeedFragment).topic.category
+          )}
           className={classNames(styles.category)}
         />
       ) : null}

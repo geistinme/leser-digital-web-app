@@ -21,7 +21,6 @@ export type Scalars = {
 export type Article = {
   __typename?: 'Article';
   activity?: Maybe<Array<ArticleActivity>>;
-  category: ArticleCategory;
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
@@ -31,6 +30,7 @@ export type Article = {
   premium: Scalars['Boolean']['output'];
   source: Source;
   title: Scalars['String']['output'];
+  topic: Topic;
   updatedAt: Scalars['DateTime']['output'];
   uploadedAt: Scalars['DateTime']['output'];
   url: Scalars['String']['output'];
@@ -91,7 +91,6 @@ export enum ArticleCategory {
 }
 
 export type ArticleQueryFilter = {
-  category?: InputMaybe<Scalars['String']['input']>;
   editor?: InputMaybe<Scalars['String']['input']>;
   short?: InputMaybe<Scalars['Boolean']['input']>;
   source?: InputMaybe<Scalars['String']['input']>;
@@ -136,9 +135,9 @@ export type MutationCreateArticleActivityArgs = {
 
 
 export type MutationCreateSubscriptionArgs = {
-  category?: InputMaybe<ArticleCategory>;
   editorId?: InputMaybe<Scalars['String']['input']>;
   sourceId?: InputMaybe<Scalars['String']['input']>;
+  topicId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -194,6 +193,7 @@ export type Query = {
   source?: Maybe<Source>;
   sources?: Maybe<Array<Source>>;
   subscriptions?: Maybe<Array<Subscription>>;
+  topics?: Maybe<Array<Topic>>;
   users?: Maybe<Array<Maybe<User>>>;
   viewedArticles?: Maybe<Array<Article>>;
 };
@@ -247,11 +247,21 @@ export type Source = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  category?: Maybe<ArticleCategory>;
   createdAt: Scalars['DateTime']['output'];
   editor?: Maybe<Editor>;
   id: Scalars['ID']['output'];
   source?: Maybe<Source>;
+  topic?: Maybe<Topic>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type Topic = {
+  __typename?: 'Topic';
+  banner: Scalars['String']['output'];
+  category: ArticleCategory;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -314,25 +324,30 @@ export type ArticleListFragment = { __typename?: 'Article', id: string, title: s
 export type MostViewedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MostViewedArticlesQuery = { __typename?: 'Query', mostViewedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, category: ArticleCategory, uploadedAt: any, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
+export type MostViewedArticlesQuery = { __typename?: 'Query', mostViewedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, topic: { __typename?: 'Topic', id: string, category: ArticleCategory }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
 
 export type SourcesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type SourcesQuery = { __typename?: 'Query', sources?: Array<{ __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string }> | null };
 
+export type TopicsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TopicsQuery = { __typename?: 'Query', topics?: Array<{ __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string }> | null };
+
 export type SubscriptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SubscriptionsQuery = { __typename?: 'Query', subscriptions?: Array<{ __typename?: 'Subscription', id: string, category?: ArticleCategory | null, createdAt: any, source?: { __typename?: 'Source', id: string } | null }> | null };
+export type SubscriptionsQuery = { __typename?: 'Query', subscriptions?: Array<{ __typename?: 'Subscription', id: string, createdAt: any, source?: { __typename?: 'Source', id: string } | null, topic?: { __typename?: 'Topic', id: string, category: ArticleCategory } | null }> | null };
 
 export type CreateSubscriptionMutationVariables = Exact<{
   sourceId?: InputMaybe<Scalars['String']['input']>;
-  category?: InputMaybe<ArticleCategory>;
+  topicId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, category?: ArticleCategory | null, createdAt: any, source?: { __typename?: 'Source', id: string } | null } | null };
+export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, createdAt: any, source?: { __typename?: 'Source', id: string } | null, topic?: { __typename?: 'Topic', id: string, category: ArticleCategory } | null } | null };
 
 export type DeleteSubscriptionMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -343,7 +358,9 @@ export type DeleteSubscriptionMutation = { __typename?: 'Mutation', deleteSubscr
 
 export type SourceSubscriptionFragment = { __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string };
 
-export type UserSubscriptionFragment = { __typename?: 'Subscription', id: string, category?: ArticleCategory | null, createdAt: any, source?: { __typename?: 'Source', id: string } | null };
+export type TopicSubscriptionFragment = { __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string };
+
+export type UserSubscriptionFragment = { __typename?: 'Subscription', id: string, createdAt: any, source?: { __typename?: 'Source', id: string } | null, topic?: { __typename?: 'Topic', id: string, category: ArticleCategory } | null };
 
 export type ArticlesQueryVariables = Exact<{
   pagination: PaginationInput;
@@ -351,14 +368,14 @@ export type ArticlesQueryVariables = Exact<{
 }>;
 
 
-export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, category: ArticleCategory, uploadedAt: any, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
+export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, topic: { __typename?: 'Topic', id: string, category: ArticleCategory }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
 
 export type RecommendedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type RecommendedArticlesQuery = { __typename?: 'Query', recommendedArticles?: Array<{ __typename?: 'Article', id: string, title: string, url: string, source: { __typename?: 'Source', id: string, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null } | null> | null };
 
-export type ArticleFeedFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, category: ArticleCategory, uploadedAt: any, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
+export type ArticleFeedFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, topic: { __typename?: 'Topic', id: string, category: ArticleCategory }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
 
 export type RecommendedArticleFragment = { __typename?: 'Article', id: string, title: string, url: string, source: { __typename?: 'Source', id: string, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
 
@@ -446,13 +463,25 @@ export const SourceSubscriptionFragmentDoc = gql`
   banner
 }
     `;
+export const TopicSubscriptionFragmentDoc = gql`
+    fragment TopicSubscription on Topic {
+  __typename
+  id
+  name
+  category
+  banner
+}
+    `;
 export const UserSubscriptionFragmentDoc = gql`
     fragment UserSubscription on Subscription {
   id
   source {
     id
   }
-  category
+  topic {
+    id
+    category
+  }
   createdAt
 }
     `;
@@ -464,7 +493,10 @@ export const ArticleFeedFragmentDoc = gql`
   image
   url
   premium
-  category
+  topic {
+    id
+    category
+  }
   uploadedAt
   source {
     id
@@ -818,6 +850,45 @@ export type SourcesQueryHookResult = ReturnType<typeof useSourcesQuery>;
 export type SourcesLazyQueryHookResult = ReturnType<typeof useSourcesLazyQuery>;
 export type SourcesSuspenseQueryHookResult = ReturnType<typeof useSourcesSuspenseQuery>;
 export type SourcesQueryResult = Apollo.QueryResult<SourcesQuery, SourcesQueryVariables>;
+export const TopicsDocument = gql`
+    query topics {
+  topics {
+    ...TopicSubscription
+  }
+}
+    ${TopicSubscriptionFragmentDoc}`;
+
+/**
+ * __useTopicsQuery__
+ *
+ * To run a query within a React component, call `useTopicsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTopicsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTopicsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTopicsQuery(baseOptions?: Apollo.QueryHookOptions<TopicsQuery, TopicsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TopicsQuery, TopicsQueryVariables>(TopicsDocument, options);
+      }
+export function useTopicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TopicsQuery, TopicsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TopicsQuery, TopicsQueryVariables>(TopicsDocument, options);
+        }
+export function useTopicsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<TopicsQuery, TopicsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TopicsQuery, TopicsQueryVariables>(TopicsDocument, options);
+        }
+export type TopicsQueryHookResult = ReturnType<typeof useTopicsQuery>;
+export type TopicsLazyQueryHookResult = ReturnType<typeof useTopicsLazyQuery>;
+export type TopicsSuspenseQueryHookResult = ReturnType<typeof useTopicsSuspenseQuery>;
+export type TopicsQueryResult = Apollo.QueryResult<TopicsQuery, TopicsQueryVariables>;
 export const SubscriptionsDocument = gql`
     query subscriptions {
   subscriptions {
@@ -858,8 +929,8 @@ export type SubscriptionsLazyQueryHookResult = ReturnType<typeof useSubscription
 export type SubscriptionsSuspenseQueryHookResult = ReturnType<typeof useSubscriptionsSuspenseQuery>;
 export type SubscriptionsQueryResult = Apollo.QueryResult<SubscriptionsQuery, SubscriptionsQueryVariables>;
 export const CreateSubscriptionDocument = gql`
-    mutation createSubscription($sourceId: String, $category: ArticleCategory) {
-  createSubscription(sourceId: $sourceId, category: $category) {
+    mutation createSubscription($sourceId: String, $topicId: String) {
+  createSubscription(sourceId: $sourceId, topicId: $topicId) {
     ...UserSubscription
   }
 }
@@ -880,7 +951,7 @@ export type CreateSubscriptionMutationFn = Apollo.MutationFunction<CreateSubscri
  * const [createSubscriptionMutation, { data, loading, error }] = useCreateSubscriptionMutation({
  *   variables: {
  *      sourceId: // value for 'sourceId'
- *      category: // value for 'category'
+ *      topicId: // value for 'topicId'
  *   },
  * });
  */

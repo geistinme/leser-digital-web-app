@@ -4,14 +4,20 @@ query sources {
   }
 }
 
+query topics {
+  topics {
+    ...TopicSubscription
+  }
+}
+
 query subscriptions {
   subscriptions {
     ...UserSubscription
   }
 }
 
-mutation createSubscription($sourceId: String, $category: ArticleCategory) {
-  createSubscription(sourceId: $sourceId, category: $category) {
+mutation createSubscription($sourceId: String, $topicId: String) {
+  createSubscription(sourceId: $sourceId, topicId: $topicId) {
     ...UserSubscription
   }
 }
@@ -31,11 +37,22 @@ fragment SourceSubscription on Source {
   banner
 }
 
+fragment TopicSubscription on Topic {
+  __typename
+  id
+  name
+  category
+  banner
+}
+
 fragment UserSubscription on Subscription {
   id
   source {
     id
   }
-  category
+  topic {
+    id
+    category
+  }
   createdAt
 }

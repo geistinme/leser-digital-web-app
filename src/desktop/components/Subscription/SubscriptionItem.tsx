@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import { Flex } from "@sampled-ui/base";
+import { Flex, Typography } from "@sampled-ui/base";
 import classNames from "classnames";
+import { toKebabCase } from "js-convert-case";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { Vibrant } from "node-vibrant/browser";
 import { useNavigate } from "react-router";
 
 import {
   SourceSubscriptionFragment,
+  TopicSubscriptionFragment,
   useCreateSubscriptionMutation,
   useDeleteSubscriptionMutation,
   UserSubscriptionFragment,
@@ -16,10 +18,9 @@ import {
 import PreloadImage from "../PreloadImage";
 
 import styles from "./Subscription.module.scss";
-import { CategorySubscription } from "./SubscriptionGrid";
 
 interface SubscriptionItemProps {
-  source: SourceSubscriptionFragment | CategorySubscription;
+  source: SourceSubscriptionFragment | TopicSubscriptionFragment;
   userSubscription?: UserSubscriptionFragment;
 }
 
@@ -33,16 +34,21 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!("logo" in source)) {
-      return;
-    }
-    Vibrant.from(source.logo)
+    Vibrant.from((source as SourceSubscriptionFragment).logo ?? source.banner)
       .getPalette()
       .then((palette) => {
-        const hex = palette.Vibrant?.hex;
-        if (hex) {
+        if ("logo" in source) {
+          const hex = palette.Vibrant?.hex;
           setBackgroundColor(hex);
+        } else {
+          const rgb = palette.Vibrant?.rgb;
+          setBackgroundColor(
+            `rgba(${rgb?.[0]}, ${rgb?.[1]}, ${rgb?.[2]}, 20%)`
+          );
         }
+      })
+      .catch((error) => {
+        console.error("Error fetching palette:", error);
       });
   }, [source]);
 
@@ -81,13 +87,13 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
     if (userSubscription) {
       deleteSubscription({ variables: { id: userSubscription.id } });
     } else {
-      if ("__typename" in source) {
+      if (source.__typename === "Source") {
         createSubscription({
           variables: { sourceId: source?.id },
         });
-      } else {
+      } else if (source.__typename === "Topic") {
         createSubscription({
-          variables: { category: source?.key },
+          variables: { topicId: source?.id },
         });
       }
     }
@@ -104,15 +110,30 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
           className={styles.banner}
           width="100%"
           height="100%"
+          backgroundPosition="top"
+          backgroundSize="cover"
           onClick={handleToggle}
         />
         <Flex
           align="center"
           justify="center"
-          className={styles.logo}
-          onClick={() => navigate(`/${source?.key}`)}
+          className={classNames({
+            [styles.logo]: "logo" in source,
+            [styles.name]: !("logo" in source),
+          })}
+          onClick={() => {
+            if (source.__typename === "Source") {
+              navigate(`/${source?.key}`);
+            } else if (source.__typename === "Topic") {
+              navigate(`/${toKebabCase(source?.category)}`);
+            }
+          }}
         >
-          {"logo" in source ? <img src={source?.logo} /> : source?.name}
+          {"logo" in source ? (
+            <img src={source?.logo} />
+          ) : (
+            <Typography.Text size="lg">{source?.name}</Typography.Text>
+          )}
         </Flex>
         <div
           className={classNames(styles.toggle, {

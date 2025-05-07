@@ -47,7 +47,7 @@ export const HomePage: React.FC = () => {
             : undefined,
       },
     },
-    notifyOnNetworkStatusChange: true,
+    fetchPolicy: "cache-and-network",
   });
 
   const [hasMore, setHasMore] = useState(true);

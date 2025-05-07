@@ -5,6 +5,7 @@ import { Flex, Spacing, Typography } from "@sampled-ui/base";
 import {
   useSourcesQuery,
   useSubscriptionsQuery,
+  useTopicsQuery,
 } from "../../../../generated/graphql";
 import SubscriptionGrid from "../../components/Subscription/SubscriptionGrid";
 
@@ -12,6 +13,7 @@ interface FollowingPageProps {}
 
 const FollowingPage: React.FC<FollowingPageProps> = () => {
   const { data: sourcesQueryData } = useSourcesQuery();
+  const { data: topicsQueryData } = useTopicsQuery();
   const { data: userSubscriptionsQueryData } = useSubscriptionsQuery();
   return (
     <Spacing gap="xl">
@@ -28,6 +30,15 @@ const FollowingPage: React.FC<FollowingPageProps> = () => {
         {sourcesQueryData?.sources ? (
           <SubscriptionGrid
             sources={sourcesQueryData.sources}
+            userSubscriptions={userSubscriptionsQueryData?.subscriptions}
+          />
+        ) : null}
+        <Typography.Text variant="secondary" size="lg">
+          Folge deinen Interessen
+        </Typography.Text>
+        {topicsQueryData?.topics ? (
+          <SubscriptionGrid
+            sources={topicsQueryData.topics}
             userSubscriptions={userSubscriptionsQueryData?.subscriptions}
           />
         ) : null}

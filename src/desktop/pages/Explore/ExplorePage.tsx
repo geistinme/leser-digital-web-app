@@ -2,7 +2,9 @@ import React, { useMemo } from "react";
 
 import { Flex, Spacing } from "@sampled-ui/base";
 
-import { useMostViewedArticlesQuery } from "../../../../generated/graphql";
+import {
+  useMostViewedArticlesQuery
+} from "../../../../generated/graphql";
 import ArticleGrid from "../../components/Article/ArticleGrid";
 import ArticleShowcase from "../../components/Article/ArticleShowcase";
 
@@ -34,7 +36,7 @@ export const ExplorePage: React.FC = () => {
         {mostViewedArticle ? (
           <ArticleShowcase article={mostViewedArticle} />
         ) : null}
-        {allOtherArticles ? <ArticleGrid articles={allOtherArticles} /> : 0}
+        {allOtherArticles ? <ArticleGrid articles={allOtherArticles} /> : null}
       </Flex>
     </Spacing>
   );

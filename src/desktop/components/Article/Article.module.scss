@@ -120,13 +120,13 @@
 .sourceLogo {
   cursor: pointer;
   max-height: 1rem;
-  filter: grayscale(1) brightness(1.5);
-  transition-property: filter, box-shadow;
+  filter: brightness(0) opacity(0.3);
+  transition-property: filter;
   transition-duration: $transition-fast;
 }
 
 .sourceLogo:hover {
-  filter: grayscale(0) brightness(1);
+  filter: brightness(1) opacity(1);
 }
 
 .action {

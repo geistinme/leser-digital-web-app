@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { CSSProperties, useEffect, useRef } from "react";
 
 import { Skeleton } from "@sampled-ui/base";
 
@@ -6,12 +6,16 @@ interface PreloadImageProps extends React.HTMLProps<HTMLDivElement> {
   src?: string;
   height: string;
   width: string;
+  backgroundPosition?: CSSProperties["backgroundPosition"];
+  backgroundSize?: CSSProperties["backgroundSize"];
 }
 
 const PreloadImage: React.FC<PreloadImageProps> = ({
   src,
   height,
   width,
+  backgroundPosition,
+  backgroundSize,
   className,
   style,
   ...rest
@@ -44,6 +48,8 @@ const PreloadImage: React.FC<PreloadImageProps> = ({
         height,
         width,
         display: imageLoaded ? "block" : "none",
+        backgroundPosition: backgroundPosition ?? "center",
+        backgroundSize: backgroundSize ?? "cover",
         ...(style ?? {}),
       }}
       {...rest}

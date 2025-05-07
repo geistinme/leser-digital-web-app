@@ -3,35 +3,28 @@ import React, { useMemo } from "react";
 import { Column, Flex, Row } from "@sampled-ui/base";
 
 import {
-  ArticleCategory,
   SourceSubscriptionFragment,
-  UserSubscriptionFragment
+  TopicSubscriptionFragment,
+  UserSubscriptionFragment,
 } from "../../../../generated/graphql";
 
 import styles from "./Subscription.module.scss";
 import SubscriptionGridItem from "./SubscriptionItem";
 
-export interface CategorySubscription {
-  key: ArticleCategory;
-  banner: string;
-  name: string;
-}
-
 interface SubscriptionGridItem {
-  source: SourceSubscriptionFragment | CategorySubscription;
+  source: SourceSubscriptionFragment | TopicSubscriptionFragment;
   subscription?: UserSubscriptionFragment;
 }
 
 interface SubscriptionGridProps {
   userSubscriptions?: UserSubscriptionFragment[] | null;
-  sources: SourceSubscriptionFragment[] | CategorySubscription[] | null;
+  sources: SourceSubscriptionFragment[] | TopicSubscriptionFragment[] | null;
 }
 
 const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
   sources,
   userSubscriptions,
 }) => {
-
   const gridRows = useMemo(() => {
     return sources?.reduce((allRows, _currentSource, index, allSources) => {
       const row = [];
@@ -41,14 +34,10 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
           row.push({
             source: allSources[index + i],
             subscription: userSubscriptions?.find((s) => {
-              if ("id" in allSources[index + i]) {
-                return (
-                  s.source?.id ===
-                  (allSources[index + i] as SourceSubscriptionFragment).id
-                );
-              } else {
-                return s.category === allSources[index + i].key;
-              }
+              return (
+                s.source?.id === allSources[index + i].id ||
+                s.topic?.id === allSources[index + i].id
+              );
             }),
           });
         }

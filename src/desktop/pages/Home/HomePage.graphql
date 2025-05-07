@@ -17,7 +17,10 @@ fragment ArticleFeed on Article {
   image
   url
   premium
-  category
+  topic {
+    id
+    category
+  }
   uploadedAt
   source {
     id
