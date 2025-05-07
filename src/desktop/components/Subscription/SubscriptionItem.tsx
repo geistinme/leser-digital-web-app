@@ -41,12 +41,9 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
           const hex = palette.Vibrant?.hex;
           setBackgroundColor(hex);
         } else {
-          const hsl = palette.Vibrant?.hsl;
-          console.debug(hsl);
+          const rgb = palette.Vibrant?.rgb;
           setBackgroundColor(
-            `hsl(${(hsl?.[0] as number) * 360}, ${
-              (hsl?.[1] as number) * 100
-            }%, 50%)`
+            `rgba(${rgb?.[0]}, ${rgb?.[1]}, ${rgb?.[2]}, 20%)`
           );
         }
       })
