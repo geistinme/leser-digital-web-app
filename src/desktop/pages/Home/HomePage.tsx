@@ -120,8 +120,6 @@ export const HomePage: React.FC = () => {
     }
   }, [feedQueryData?.feed, ref])
 
-  console.debug(feedQueryData?.feed?.length)
-
   return (
     <Spacing gap="xl">
       <title>Startseite</title>
