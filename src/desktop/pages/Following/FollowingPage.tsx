@@ -16,8 +16,6 @@ const FollowingPage: React.FC<FollowingPageProps> = () => {
   const { data: topicsQueryData } = useTopicsQuery()
   const { data: userSubscriptionsQueryData } = useSubscriptionsQuery()
 
-  console.debug(userSubscriptionsQueryData)
-
   const sourcesGrid = useMemo(() => {
     return sourcesQueryData?.sources ? (
       <SubscriptionGrid
