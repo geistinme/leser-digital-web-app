@@ -1,27 +1,25 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 
-import { Flex, Typography } from "@sampled-ui/base";
-import classNames from "classnames";
-import { toKebabCase } from "js-convert-case";
-import { CheckIcon, PlusIcon } from "lucide-react";
-import { Vibrant } from "node-vibrant/browser";
-import { useNavigate } from "react-router";
+import { Flex, Typography } from "@sampled-ui/base"
+import classNames from "classnames"
+import { toKebabCase } from "js-convert-case"
+import { CheckIcon, PlusIcon } from "lucide-react"
+import { Vibrant } from "node-vibrant/browser"
+import { useNavigate } from "react-router"
 
 import {
-  SourceSubscriptionFragment,
-  TopicSubscriptionFragment,
-  useCreateSubscriptionMutation,
-  useDeleteSubscriptionMutation,
+  SourceGridFragment,
+  TopicGridFragment,
   UserSubscriptionFragment,
-  UserSubscriptionFragmentDoc,
-} from "../../../../generated/graphql";
-import PreloadImage from "../PreloadImage";
+} from "../../../../generated/graphql"
+import { useToggleSubscription } from "../../../shared/hooks/Subscription/toggleSubscription"
+import PreloadImage from "../PreloadImage"
 
-import styles from "./Subscription.module.scss";
+import styles from "./Subscription.module.scss"
 
 interface SubscriptionItemProps {
-  source: SourceSubscriptionFragment | TopicSubscriptionFragment;
-  userSubscription?: UserSubscriptionFragment;
+  source: SourceGridFragment | TopicGridFragment
+  userSubscription?: UserSubscriptionFragment
 }
 
 export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
@@ -30,74 +28,33 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
 }) => {
   const [backgroundColor, setBackgroundColor] = useState<string | undefined>(
     undefined
-  );
-  const navigate = useNavigate();
+  )
+  const navigate = useNavigate()
 
   useEffect(() => {
-    Vibrant.from((source as SourceSubscriptionFragment).logo ?? source.banner)
+    Vibrant.from((source as SourceGridFragment).logo ?? source.banner)
       .getPalette()
       .then((palette) => {
         if ("logo" in source) {
-          const hex = palette.Vibrant?.hex;
-          setBackgroundColor(hex);
+          const hex = palette.Vibrant?.hex
+          setBackgroundColor(hex)
         } else {
-          const rgb = palette.DarkVibrant?.rgb;
-          setBackgroundColor(
-            `rgba(${rgb?.[0]}, ${rgb?.[1]}, ${rgb?.[2]}, 20%)`
-          );
+          const rgb = palette.DarkVibrant?.rgb
+          setBackgroundColor(`rgba(${rgb?.[0]}, ${rgb?.[1]}, ${rgb?.[2]}, 20%)`)
         }
       })
       .catch((error) => {
-        console.error("Error fetching palette:", error);
-      });
-  }, [source]);
+        console.error("Error fetching palette:", error)
+      })
+  }, [source])
 
-  const [createSubscription] = useCreateSubscriptionMutation({
-    update: (cache, { data }) => {
-      cache.modify({
-        fields: {
-          subscriptions(existingUserSubscriptions = []) {
-            const newUserSubscriptionRef = cache.writeFragment({
-              data: data?.createSubscription,
-              fragment: UserSubscriptionFragmentDoc,
-            });
-            return [...existingUserSubscriptions, newUserSubscriptionRef];
-          },
-        },
-      });
-    },
-  });
-  const [deleteSubscription] = useDeleteSubscriptionMutation({
-    update: (cache) => {
-      cache.modify({
-        fields: {
-          subscriptions(existingUserSubscriptions = [], { readField }) {
-            return existingUserSubscriptions.filter(
-              (userSubscriptionRef: UserSubscriptionFragment) =>
-                readField("id", userSubscriptionRef) !==
-                readField("id", userSubscription)
-            );
-          },
-        },
-      });
-    },
-  });
-
-  const handleToggle = useCallback(() => {
-    if (userSubscription) {
-      deleteSubscription({ variables: { id: userSubscription.id } });
-    } else {
-      if (source.__typename === "Source") {
-        createSubscription({
-          variables: { sourceId: source?.id },
-        });
-      } else if (source.__typename === "Topic") {
-        createSubscription({
-          variables: { topicId: source?.id },
-        });
-      }
-    }
-  }, [createSubscription, deleteSubscription, source, userSubscription]);
+  const { handleToggle } = useToggleSubscription({
+    createVariables:
+      source.__typename === "Source"
+        ? { sourceId: source.id }
+        : { topicId: source.id },
+    subscription: userSubscription,
+  })
 
   return (
     <div className={styles.item} title={source?.name}>
@@ -123,9 +80,9 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
           })}
           onClick={() => {
             if (source.__typename === "Source") {
-              navigate(`/${source?.key}`);
+              navigate(`/${source?.key}`)
             } else if (source.__typename === "Topic") {
-              navigate(`/${toKebabCase(source?.category)}`);
+              navigate(`/t/${toKebabCase(source?.category)}`)
             }
           }}
         >
@@ -145,7 +102,7 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
         </div>
       </Flex>
     </div>
-  );
-};
+  )
+}
 
-export default SubscriptionItem;
+export default SubscriptionItem

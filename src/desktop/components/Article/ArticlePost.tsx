@@ -1,27 +1,27 @@
-import React from "react";
+import React from "react"
 
-import { Flex, Spacing, Tag, Typography } from "@sampled-ui/base";
-import classNames from "classnames";
-import { toSentenceCase } from "js-convert-case";
-import moment from "moment";
-import { useNavigate } from "react-router";
+import { Flex, Spacing, Tag, Typography } from "@sampled-ui/base"
+import classNames from "classnames"
+import { toSentenceCase } from "js-convert-case"
+import moment from "moment"
+import { useNavigate } from "react-router"
 
 import {
   ArticleFeedFragment,
   ArticleListFragment,
-} from "../../../../generated/graphql";
-import { decodeHtmlEntities } from "../../../shared/helpers";
+} from "../../../../generated/graphql"
+import { decodeHtmlEntities } from "../../../shared/helpers"
 
-import styles from "./Article.module.scss";
-import ArticleImage from "./ArticleImage";
-import ArticleMenu from "./ArticleMenu";
-import { useCreateViewActivity } from "./hooks/createViewActivity";
+import { useCreateViewActivity } from "../../../shared/hooks/Article/createViewActivity"
+import styles from "./Article.module.scss"
+import ArticleImage from "./ArticleImage"
+import ArticleMenu from "./ArticleMenu"
 
 interface ArticlePostProps {
-  article: ArticleFeedFragment | ArticleListFragment;
-  compact?: boolean;
-  loggedIn?: boolean;
-  ref?: (node: HTMLDivElement | null) => void;
+  article: ArticleFeedFragment | ArticleListFragment
+  compact?: boolean
+  loggedIn?: boolean
+  ref?: (node: HTMLDivElement | null) => void
 }
 
 const ArticlePost: React.FC<ArticlePostProps> = ({
@@ -30,9 +30,9 @@ const ArticlePost: React.FC<ArticlePostProps> = ({
   loggedIn,
   ref,
 }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const handleViewArticle = useCreateViewActivity();
+  const handleViewArticle = useCreateViewActivity()
 
   const header = (
     <Flex
@@ -60,7 +60,7 @@ const ArticlePost: React.FC<ArticlePostProps> = ({
         />
       ) : null}
     </Flex>
-  );
+  )
 
   return (
     <Flex
@@ -116,7 +116,7 @@ const ArticlePost: React.FC<ArticlePostProps> = ({
         </Flex>
       </Spacing>
     </Flex>
-  );
-};
+  )
+}
 
-export default ArticlePost;
+export default ArticlePost

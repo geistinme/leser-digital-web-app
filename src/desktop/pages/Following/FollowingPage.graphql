@@ -1,12 +1,12 @@
 query sources {
   sources {
-    ...SourceSubscription
+    ...SourceGrid
   }
 }
 
 query topics {
   topics {
-    ...TopicSubscription
+    ...TopicGrid
   }
 }
 
@@ -28,21 +28,27 @@ mutation deleteSubscription($id: String!) {
   }
 }
 
-fragment SourceSubscription on Source {
+fragment SourceGrid on Source {
   __typename
   id
   key
   name
   logo
   banner
+  isSubscribed {
+    id
+  }
 }
 
-fragment TopicSubscription on Topic {
+fragment TopicGrid on Topic {
   __typename
   id
   name
   category
   banner
+  isSubscribed {
+    id
+  }
 }
 
 fragment UserSubscription on Subscription {

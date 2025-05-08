@@ -1,24 +1,24 @@
-import React, { useMemo } from "react";
+import React, { useMemo } from "react"
 
-import { Column, Flex, Row } from "@sampled-ui/base";
+import { Column, Flex, Row } from "@sampled-ui/base"
 
 import {
-  SourceSubscriptionFragment,
-  TopicSubscriptionFragment,
+  SourceGridFragment,
+  TopicGridFragment,
   UserSubscriptionFragment,
-} from "../../../../generated/graphql";
+} from "../../../../generated/graphql"
 
-import styles from "./Subscription.module.scss";
-import SubscriptionGridItem from "./SubscriptionItem";
+import styles from "./Subscription.module.scss"
+import SubscriptionGridItem from "./SubscriptionItem"
 
 interface SubscriptionGridItem {
-  source: SourceSubscriptionFragment | TopicSubscriptionFragment;
-  subscription?: UserSubscriptionFragment;
+  source: SourceGridFragment | TopicGridFragment
+  subscription?: UserSubscriptionFragment
 }
 
 interface SubscriptionGridProps {
-  userSubscriptions?: UserSubscriptionFragment[] | null;
-  sources: SourceSubscriptionFragment[] | TopicSubscriptionFragment[] | null;
+  userSubscriptions?: UserSubscriptionFragment[] | null
+  sources: SourceGridFragment[] | TopicGridFragment[] | null
 }
 
 const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
@@ -27,8 +27,8 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
 }) => {
   const gridRows = useMemo(() => {
     return sources?.reduce((allRows, _currentSource, index, allSources) => {
-      const row = [];
-      const columns = 4;
+      const row = []
+      const columns = 4
       for (let i = 0; i < columns; i++) {
         if (allSources[index + i]) {
           row.push({
@@ -37,9 +37,9 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
               return (
                 s.source?.id === allSources[index + i].id ||
                 s.topic?.id === allSources[index + i].id
-              );
+              )
             }),
-          });
+          })
         }
       }
       if (
@@ -47,11 +47,11 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
         index % columns === 0 ||
         allSources[row.length + 1] === undefined
       ) {
-        return [...allRows, row];
+        return [...allRows, row]
       }
-      return allRows;
-    }, [] as SubscriptionGridItem[][]);
-  }, [sources, userSubscriptions]);
+      return allRows
+    }, [] as SubscriptionGridItem[][])
+  }, [sources, userSubscriptions])
 
   return (
     <Flex direction="column" gap="lg" style={{ width: "100%" }}>
@@ -66,13 +66,13 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
                     userSubscription={source.subscription}
                   />
                 </Column>
-              );
+              )
             })}
           </Row>
-        );
+        )
       })}
     </Flex>
-  );
-};
+  )
+}
 
-export default SubscriptionGrid;
+export default SubscriptionGrid

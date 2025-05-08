@@ -1,32 +1,32 @@
-import React, { useMemo } from "react";
+import React, { useMemo } from "react"
 
-import { Column, Flex, Row, Spacing, Typography } from "@sampled-ui/base";
-import moment from "moment";
-import { useNavigate } from "react-router";
+import { Column, Flex, Row, Spacing, Typography } from "@sampled-ui/base"
+import moment from "moment"
+import { useNavigate } from "react-router"
 
 import {
   ArticleFeedFragment,
   ArticleGridFragment,
-} from "../../../../generated/graphql";
-import { decodeHtmlEntities } from "../../../shared/helpers";
+} from "../../../../generated/graphql"
+import { decodeHtmlEntities } from "../../../shared/helpers"
 
-import styles from "./Article.module.scss";
-import ArticleImage from "./ArticleImage";
-import { useCreateViewActivity } from "./hooks/createViewActivity";
+import { useCreateViewActivity } from "../../../shared/hooks/Article/createViewActivity"
+import styles from "./Article.module.scss"
+import ArticleImage from "./ArticleImage"
 
 interface ArticleGridProps {
-  articles?: (ArticleGridFragment | ArticleFeedFragment)[] | null;
-  compact?: boolean;
-  loading?: boolean;
-  lastRef?: (node: HTMLDivElement | null) => void;
+  articles?: (ArticleGridFragment | ArticleFeedFragment)[] | null
+  compact?: boolean
+  loading?: boolean
+  lastRef?: (node: HTMLDivElement | null) => void
 }
 
 const ArticleGridItem: React.FC<{
-  article: ArticleGridFragment | ArticleFeedFragment;
-  onViewArticle?: () => void;
-  compact?: boolean;
+  article: ArticleGridFragment | ArticleFeedFragment
+  onViewArticle?: () => void
+  compact?: boolean
 }> = ({ article, compact, onViewArticle }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <Flex direction="column" className={styles.grid}>
@@ -81,8 +81,8 @@ const ArticleGridItem: React.FC<{
         </Flex>
       </Spacing>
     </Flex>
-  );
-};
+  )
+}
 
 const ArticleGrid: React.FC<ArticleGridProps> = ({
   articles,
@@ -96,32 +96,32 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
         <Typography.Text disabled bold style={{ textAlign: "center" }}>
           Keine Artikel gefunden
         </Typography.Text>
-      );
+      )
     } else {
-      return null;
+      return null
     }
-  }, [articles, loadingArticles]);
+  }, [articles, loadingArticles])
 
   const gridRows = useMemo(() => {
     return articles?.reduce((allRows, _currentArticle, index, allArticles) => {
-      const row = [];
-      const columns = 3;
+      const row = []
+      const columns = 3
       for (let i = 0; i < columns; i++) {
         if (allArticles[index + i]) {
-          row.push(allArticles[index + i]);
+          row.push(allArticles[index + i])
         }
       }
       if (
         (index === 0 || index % 3 === 0) &&
         row.filter((a) => !!a).length === 3
       ) {
-        return [...allRows, row];
+        return [...allRows, row]
       }
-      return allRows;
-    }, [] as ArticleGridFragment[][]);
-  }, [articles]);
+      return allRows
+    }, [] as ArticleGridFragment[][])
+  }, [articles])
 
-  const handleViewArticle = useCreateViewActivity();
+  const handleViewArticle = useCreateViewActivity()
 
   return (
     <Flex direction="column" align="stretch" gap="md" style={{ width: "100%" }}>
@@ -160,7 +160,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
         </Row>
       ))}
     </Flex>
-  );
-};
+  )
+}
 
-export default ArticleGrid;
+export default ArticleGrid

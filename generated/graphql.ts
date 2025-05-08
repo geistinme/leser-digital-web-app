@@ -59,6 +59,7 @@ export enum ArticleActivityType {
 export enum ArticleCategory {
   Animals = 'ANIMALS',
   Art = 'ART',
+  Automotive = 'AUTOMOTIVE',
   Breaking = 'BREAKING',
   Business = 'BUSINESS',
   Crime = 'CRIME',
@@ -67,6 +68,7 @@ export enum ArticleCategory {
   Entertainment = 'ENTERTAINMENT',
   Environment = 'ENVIRONMENT',
   Fashion = 'FASHION',
+  Finance = 'FINANCE',
   Fitness = 'FITNESS',
   Food = 'FOOD',
   Gaming = 'GAMING',
@@ -94,6 +96,7 @@ export type ArticleQueryFilter = {
   editor?: InputMaybe<Scalars['String']['input']>;
   short?: InputMaybe<Scalars['Boolean']['input']>;
   source?: InputMaybe<Scalars['String']['input']>;
+  topic?: InputMaybe<ArticleCategory>;
 };
 
 export type CreateUserInput = {
@@ -186,6 +189,7 @@ export type Query = {
   __typename?: 'Query';
   articleActivity?: Maybe<ArticleActivity>;
   articles?: Maybe<Array<Article>>;
+  feed?: Maybe<Array<Article>>;
   loggedIn: User;
   mostViewedArticles?: Maybe<Array<Article>>;
   recommendedArticles?: Maybe<Array<Maybe<Article>>>;
@@ -193,6 +197,7 @@ export type Query = {
   source?: Maybe<Source>;
   sources?: Maybe<Array<Source>>;
   subscriptions?: Maybe<Array<Subscription>>;
+  topic?: Maybe<Topic>;
   topics?: Maybe<Array<Topic>>;
   users?: Maybe<Array<Maybe<User>>>;
   viewedArticles?: Maybe<Array<Article>>;
@@ -210,6 +215,12 @@ export type QueryArticlesArgs = {
 };
 
 
+export type QueryFeedArgs = {
+  filter?: InputMaybe<ArticleQueryFilter>;
+  pagination?: InputMaybe<PaginationInput>;
+};
+
+
 export type QuerySavedArticlesArgs = {
   source?: InputMaybe<Scalars['String']['input']>;
 };
@@ -217,6 +228,11 @@ export type QuerySavedArticlesArgs = {
 
 export type QuerySourceArgs = {
   key?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryTopicArgs = {
+  category: ArticleCategory;
 };
 
 
@@ -257,11 +273,14 @@ export type Subscription = {
 
 export type Topic = {
   __typename?: 'Topic';
+  articleCount?: Maybe<Scalars['Int']['output']>;
   banner: Scalars['String']['output'];
   category: ArticleCategory;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
+  isSubscribed?: Maybe<Subscription>;
   name: Scalars['String']['output'];
+  subscribers?: Maybe<Scalars['Int']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -329,12 +348,12 @@ export type MostViewedArticlesQuery = { __typename?: 'Query', mostViewedArticles
 export type SourcesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SourcesQuery = { __typename?: 'Query', sources?: Array<{ __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string }> | null };
+export type SourcesQuery = { __typename?: 'Query', sources?: Array<{ __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null };
 
 export type TopicsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TopicsQuery = { __typename?: 'Query', topics?: Array<{ __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string }> | null };
+export type TopicsQuery = { __typename?: 'Query', topics?: Array<{ __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null };
 
 export type SubscriptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -356,11 +375,19 @@ export type DeleteSubscriptionMutationVariables = Exact<{
 
 export type DeleteSubscriptionMutation = { __typename?: 'Mutation', deleteSubscription?: { __typename?: 'Subscription', id: string } | null };
 
-export type SourceSubscriptionFragment = { __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string };
+export type SourceGridFragment = { __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null };
 
-export type TopicSubscriptionFragment = { __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string };
+export type TopicGridFragment = { __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null };
 
 export type UserSubscriptionFragment = { __typename?: 'Subscription', id: string, createdAt: any, source?: { __typename?: 'Source', id: string } | null, topic?: { __typename?: 'Topic', id: string, category: ArticleCategory } | null };
+
+export type FeedQueryVariables = Exact<{
+  pagination: PaginationInput;
+  filter?: InputMaybe<ArticleQueryFilter>;
+}>;
+
+
+export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, topic: { __typename?: 'Topic', id: string, category: ArticleCategory }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
 
 export type ArticlesQueryVariables = Exact<{
   pagination: PaginationInput;
@@ -389,6 +416,15 @@ export type SourceQuery = { __typename?: 'Query', source?: { __typename?: 'Sourc
 export type SourceProfileFragment = { __typename?: 'Source', id: string, key: string, name: string, logo: string, articleCount?: number | null, subscribers?: number | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null };
 
 export type ArticleGridFragment = { __typename?: 'Article', id: string, title: string, uploadedAt: any, image?: string | null, url: string, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
+
+export type TopicQueryVariables = Exact<{
+  category: ArticleCategory;
+}>;
+
+
+export type TopicQuery = { __typename?: 'Query', topic?: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string, articleCount?: number | null, subscribers?: number | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null } | null };
+
+export type TopicProfileFragment = { __typename?: 'Topic', id: string, category: ArticleCategory, name: string, articleCount?: number | null, subscribers?: number | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null };
 
 export type SendResetLinkMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -453,23 +489,29 @@ export const ArticleListFragmentDoc = gql`
   }
 }
     `;
-export const SourceSubscriptionFragmentDoc = gql`
-    fragment SourceSubscription on Source {
+export const SourceGridFragmentDoc = gql`
+    fragment SourceGrid on Source {
   __typename
   id
   key
   name
   logo
   banner
+  isSubscribed {
+    id
+  }
 }
     `;
-export const TopicSubscriptionFragmentDoc = gql`
-    fragment TopicSubscription on Topic {
+export const TopicGridFragmentDoc = gql`
+    fragment TopicGrid on Topic {
   __typename
   id
   name
   category
   banner
+  isSubscribed {
+    id
+  }
 }
     `;
 export const UserSubscriptionFragmentDoc = gql`
@@ -548,6 +590,18 @@ export const ArticleGridFragmentDoc = gql`
   activity {
     id
     type
+  }
+}
+    `;
+export const TopicProfileFragmentDoc = gql`
+    fragment TopicProfile on Topic {
+  id
+  category
+  name
+  articleCount
+  subscribers
+  isSubscribed {
+    id
   }
 }
     `;
@@ -814,10 +868,10 @@ export type MostViewedArticlesQueryResult = Apollo.QueryResult<MostViewedArticle
 export const SourcesDocument = gql`
     query sources {
   sources {
-    ...SourceSubscription
+    ...SourceGrid
   }
 }
-    ${SourceSubscriptionFragmentDoc}`;
+    ${SourceGridFragmentDoc}`;
 
 /**
  * __useSourcesQuery__
@@ -853,10 +907,10 @@ export type SourcesQueryResult = Apollo.QueryResult<SourcesQuery, SourcesQueryVa
 export const TopicsDocument = gql`
     query topics {
   topics {
-    ...TopicSubscription
+    ...TopicGrid
   }
 }
-    ${TopicSubscriptionFragmentDoc}`;
+    ${TopicGridFragmentDoc}`;
 
 /**
  * __useTopicsQuery__
@@ -995,6 +1049,47 @@ export function useDeleteSubscriptionMutation(baseOptions?: Apollo.MutationHookO
 export type DeleteSubscriptionMutationHookResult = ReturnType<typeof useDeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationResult = Apollo.MutationResult<DeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
+export const FeedDocument = gql`
+    query feed($pagination: PaginationInput!, $filter: ArticleQueryFilter) {
+  feed(pagination: $pagination, filter: $filter) {
+    ...ArticleFeed
+  }
+}
+    ${ArticleFeedFragmentDoc}`;
+
+/**
+ * __useFeedQuery__
+ *
+ * To run a query within a React component, call `useFeedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFeedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFeedQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useFeedQuery(baseOptions: Apollo.QueryHookOptions<FeedQuery, FeedQueryVariables> & ({ variables: FeedQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FeedQuery, FeedQueryVariables>(FeedDocument, options);
+      }
+export function useFeedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FeedQuery, FeedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FeedQuery, FeedQueryVariables>(FeedDocument, options);
+        }
+export function useFeedSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FeedQuery, FeedQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FeedQuery, FeedQueryVariables>(FeedDocument, options);
+        }
+export type FeedQueryHookResult = ReturnType<typeof useFeedQuery>;
+export type FeedLazyQueryHookResult = ReturnType<typeof useFeedLazyQuery>;
+export type FeedSuspenseQueryHookResult = ReturnType<typeof useFeedSuspenseQuery>;
+export type FeedQueryResult = Apollo.QueryResult<FeedQuery, FeedQueryVariables>;
 export const ArticlesDocument = gql`
     query articles($pagination: PaginationInput!, $filter: ArticleQueryFilter) {
   articles(pagination: $pagination, filter: $filter) {
@@ -1115,6 +1210,46 @@ export type SourceQueryHookResult = ReturnType<typeof useSourceQuery>;
 export type SourceLazyQueryHookResult = ReturnType<typeof useSourceLazyQuery>;
 export type SourceSuspenseQueryHookResult = ReturnType<typeof useSourceSuspenseQuery>;
 export type SourceQueryResult = Apollo.QueryResult<SourceQuery, SourceQueryVariables>;
+export const TopicDocument = gql`
+    query topic($category: ArticleCategory!) {
+  topic(category: $category) {
+    ...TopicProfile
+  }
+}
+    ${TopicProfileFragmentDoc}`;
+
+/**
+ * __useTopicQuery__
+ *
+ * To run a query within a React component, call `useTopicQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTopicQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTopicQuery({
+ *   variables: {
+ *      category: // value for 'category'
+ *   },
+ * });
+ */
+export function useTopicQuery(baseOptions: Apollo.QueryHookOptions<TopicQuery, TopicQueryVariables> & ({ variables: TopicQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TopicQuery, TopicQueryVariables>(TopicDocument, options);
+      }
+export function useTopicLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TopicQuery, TopicQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TopicQuery, TopicQueryVariables>(TopicDocument, options);
+        }
+export function useTopicSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<TopicQuery, TopicQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TopicQuery, TopicQueryVariables>(TopicDocument, options);
+        }
+export type TopicQueryHookResult = ReturnType<typeof useTopicQuery>;
+export type TopicLazyQueryHookResult = ReturnType<typeof useTopicLazyQuery>;
+export type TopicSuspenseQueryHookResult = ReturnType<typeof useTopicSuspenseQuery>;
+export type TopicQueryResult = Apollo.QueryResult<TopicQuery, TopicQueryVariables>;
 export const SendResetLinkDocument = gql`
     mutation sendResetLink($email: String!) {
   sendResetLink(email: $email)

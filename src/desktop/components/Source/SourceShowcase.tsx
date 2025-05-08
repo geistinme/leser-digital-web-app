@@ -1,98 +1,31 @@
-import React, { useCallback } from "react";
+import React from "react"
 
-import { Button, Flex, Spacing, Typography } from "@sampled-ui/base";
+import { Button, Flex, Spacing, Typography } from "@sampled-ui/base"
 
 import {
   SourceDocument,
   SourceProfileFragment,
-  Subscription,
-  useCreateSubscriptionMutation,
-  useDeleteSubscriptionMutation,
-  UserSubscriptionFragment,
-  UserSubscriptionFragmentDoc,
-} from "../../../../generated/graphql";
-import { useAuthRedirect } from "../../../shared/components/PrivatePage/hooks";
-import { useInvertedLogo } from "../Article/hooks/invertLogo";
+  TopicDocument,
+  TopicProfileFragment,
+} from "../../../../generated/graphql"
+import { useInvertedLogo } from "../../../shared/hooks/Article/invertLogo"
+import { useToggleSubscription } from "../../../shared/hooks/Subscription/toggleSubscription"
+
+import styles from "./Source.module.scss"
 
 interface SourceShowcaseProps {
-  source: SourceProfileFragment;
+  source: SourceProfileFragment | TopicProfileFragment
 }
 
 export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
-  const invert = useInvertedLogo(source.key);
+  const isTopic = "category" in source
+  const invert = useInvertedLogo((source as SourceProfileFragment).key)
 
-  const { redirect, loggedIn } = useAuthRedirect();
-  const [createSubscription] = useCreateSubscriptionMutation({
-    update: (cache, { data }) => {
-      cache.modify({
-        fields: {
-          subscriptions(existingUserSubscriptions = []) {
-            const newUserSubscriptionRef = cache.writeFragment({
-              data: data?.createSubscription,
-              fragment: UserSubscriptionFragmentDoc,
-            });
-            return [...existingUserSubscriptions, newUserSubscriptionRef];
-          },
-          source(existingSource, { readField }) {
-            if (readField("key", existingSource) !== source.key) {
-              return existingSource;
-            }
-            return {
-              ...existingSource,
-              isSubscribed: data?.createSubscription,
-            };
-          },
-        },
-      });
-    },
-    refetchQueries: [{ query: SourceDocument, variables: { key: source.key } }],
-  });
-  const [deleteSubscription] = useDeleteSubscriptionMutation({
-    update: (cache) => {
-      cache.modify({
-        fields: {
-          subscriptions(existingUserSubscriptions = [], { readField }) {
-            return existingUserSubscriptions.filter(
-              (userSubscriptionRef: UserSubscriptionFragment) =>
-                readField("id", userSubscriptionRef) !==
-                readField("id", source.isSubscribed as Subscription)
-            );
-          },
-          source(existingSource, { readField }) {
-            if (readField("key", existingSource) !== source.key) {
-              return existingSource;
-            }
-            return {
-              ...existingSource,
-              isSubscribed: null,
-            };
-          },
-        },
-      });
-    },
-    refetchQueries: [{ query: SourceDocument, variables: { key: source.key } }],
-  });
-
-  const handleToggle = useCallback(() => {
-    if (!loggedIn) {
-      redirect();
-      return;
-    }
-    if (source.isSubscribed) {
-      deleteSubscription({ variables: { id: source.isSubscribed.id } });
-    } else {
-      createSubscription({
-        variables: { sourceId: source?.id },
-      });
-    }
-  }, [
-    createSubscription,
-    deleteSubscription,
-    loggedIn,
-    redirect,
-    source?.id,
-    source.isSubscribed,
-  ]);
+  const { handleToggle } = useToggleSubscription({
+    createVariables: isTopic ? { topicId: source.id } : { sourceId: source.id },
+    subscription: source.isSubscribed,
+    refetchQueries: isTopic ? [TopicDocument] : [SourceDocument],
+  })
 
   return (
     <Flex
@@ -105,14 +38,20 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
       }}
     >
       <Spacing gap="xl">
-        <img
-          src={source?.logo}
-          style={{
-            maxHeight: "3rem",
-            borderRadius: "0.5rem",
-            filter: invert ? `brightness(0) invert(1)` : undefined,
-          }}
-        />
+        {isTopic ? (
+          <Typography.Heading level={2} className={styles.name}>
+            {source.name}
+          </Typography.Heading>
+        ) : (
+          <img
+            src={source?.logo}
+            style={{
+              maxHeight: "3rem",
+              borderRadius: "0.5rem",
+              filter: invert ? `brightness(0) invert(1)` : undefined,
+            }}
+          />
+        )}
       </Spacing>
       <Flex gap="md">
         <Flex gap="xs">
@@ -142,5 +81,5 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
         </Button>
       ) : null}
     </Flex>
-  );
-};
+  )
+}

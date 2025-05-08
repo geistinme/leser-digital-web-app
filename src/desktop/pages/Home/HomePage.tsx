@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 
 import {
   Column,
@@ -8,34 +8,34 @@ import {
   Spacing,
   Tabs,
   Typography,
-} from "@sampled-ui/base";
-import { useInView } from "react-intersection-observer";
-import { useLocation, useNavigate } from "react-router";
+} from "@sampled-ui/base"
+import { useInView } from "react-intersection-observer"
+import { useLocation, useNavigate } from "react-router"
 
 import {
   ArticleFeedFragment,
-  useArticlesQuery,
+  useFeedQuery,
   useLoggedInQuery,
-} from "../../../../generated/graphql";
-import { useIsDevice } from "../../../shared/hooks/isDevice";
-import ArticleFeed from "../../components/Article/ArticleFeed";
-import LoadingArticleFeed from "../../components/Article/LoadingArticleFeed";
-import ExploreCallToAction from "../../components/CallToAction/ExploreCallToAction";
-import LoggedOutCallToAction from "../../components/CallToAction/LoggedOutCallToAction";
+} from "../../../../generated/graphql"
+import { useIsDevice } from "../../../shared/hooks/isDevice"
+import ArticleFeed from "../../components/Article/ArticleFeed"
+import LoadingArticleFeed from "../../components/Article/LoadingArticleFeed"
+import ExploreCallToAction from "../../components/CallToAction/ExploreCallToAction"
+import LoggedOutCallToAction from "../../components/CallToAction/LoggedOutCallToAction"
 
 export const HomePage: React.FC = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const params = new URLSearchParams(location.search);
-  const [selectedTab, setSelectedTab] = useState(params.get("tab") || "all");
-  const { isTablet, isDesktop } = useIsDevice();
+  const location = useLocation()
+  const navigate = useNavigate()
+  const params = new URLSearchParams(location.search)
+  const [selectedTab, setSelectedTab] = useState(params.get("tab") || "all")
+  const { isTablet, isDesktop } = useIsDevice()
 
-  const { data: loggedInQueryData } = useLoggedInQuery();
+  const { data: loggedInQueryData } = useLoggedInQuery()
   const {
     data: articlesQueryData,
     loading: loadingArticles,
     fetchMore,
-  } = useArticlesQuery({
+  } = useFeedQuery({
     variables: {
       pagination: { offset: 0, limit: 10 },
       filter: {
@@ -48,80 +48,77 @@ export const HomePage: React.FC = () => {
       },
     },
     fetchPolicy: "cache-and-network",
-  });
+  })
 
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(true)
   const loadMore = useCallback(() => {
     if (hasMore) {
       fetchMore({
         variables: {
           pagination: {
-            offset: articlesQueryData?.articles?.length,
+            offset: articlesQueryData?.feed?.length,
             limit: 10,
           },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if ((fetchMoreResult.articles?.length ?? 0) < 10) {
-            setHasMore(false);
+          if ((fetchMoreResult.feed?.length ?? 0) < 10) {
+            setHasMore(false)
           }
           if (
-            prev.articles &&
-            fetchMoreResult.articles &&
-            (fetchMoreResult.articles?.length ?? 0) > 0
+            prev.feed &&
+            fetchMoreResult.feed &&
+            (fetchMoreResult.feed?.length ?? 0) > 0
           ) {
             return Object.assign({}, prev, {
               articles: [
-                ...prev.articles,
-                ...fetchMoreResult.articles,
+                ...prev.feed,
+                ...fetchMoreResult.feed,
               ] as ArticleFeedFragment[],
-            });
+            })
           }
-          return prev;
+          return prev
         },
-      });
+      })
     }
-  }, [articlesQueryData?.articles?.length, fetchMore, hasMore]);
+  }, [articlesQueryData?.feed?.length, fetchMore, hasMore])
 
-  const { ref, inView } = useInView();
+  const { ref, inView } = useInView()
   useEffect(() => {
     if (inView && hasMore) {
-      loadMore();
+      loadMore()
     }
-  }, [hasMore, inView, loadMore]);
+  }, [hasMore, inView, loadMore])
 
   const empty = useMemo(() => {
     if (
-      (!articlesQueryData?.articles ||
-        articlesQueryData.articles.length === 0) &&
+      (!articlesQueryData?.feed || articlesQueryData.feed.length === 0) &&
       !loadingArticles
     ) {
       return (
         <Typography.Text disabled bold style={{ textAlign: "center" }}>
           Keine Artikel gefunden
         </Typography.Text>
-      );
+      )
     } else {
-      return null;
+      return null
     }
-  }, [articlesQueryData?.articles, loadingArticles]);
+  }, [articlesQueryData?.feed, loadingArticles])
 
   const loading = useMemo(() => {
     if (loadingArticles) {
-      return <LoadingArticleFeed />;
+      return <LoadingArticleFeed />
     } else {
-      return null;
+      return null
     }
-  }, [loadingArticles]);
+  }, [loadingArticles])
 
   const feed = useMemo(() => {
-    if (articlesQueryData?.articles?.length) {
-      return (
-        <ArticleFeed articles={articlesQueryData.articles} lastRef={ref} />
-      );
+    if (articlesQueryData?.feed?.length) {
+      return <ArticleFeed articles={articlesQueryData.feed} lastRef={ref} />
     } else {
-      return null;
+      return null
     }
-  }, [articlesQueryData?.articles, ref]);
+  }, [articlesQueryData?.feed, ref])
 
   return (
     <Spacing gap="xl">
@@ -135,8 +132,8 @@ export const HomePage: React.FC = () => {
           >
             <Tabs
               onSelect={(item) => {
-                navigate(`?tab=${item.key}`);
-                setSelectedTab(item.key);
+                navigate(`?tab=${item.key}`)
+                setSelectedTab(item.key)
               }}
               selected={selectedTab}
               items={[
@@ -172,5 +169,5 @@ export const HomePage: React.FC = () => {
         )}
       </Row>
     </Spacing>
-  );
-};
+  )
+}

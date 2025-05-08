@@ -2,20 +2,20 @@ import {
   ArticleActivityType,
   useCreateArticleActivityMutation,
   useLoggedInQuery,
-} from "../../../../../generated/graphql";
+} from "../../../../generated/graphql"
 
 type HandleViewArticleFn = ({
   article,
 }: {
-  article: { id: string; activity?: { type: ArticleActivityType }[] | null };
-}) => void;
+  article: { id: string; activity?: { type: ArticleActivityType }[] | null }
+}) => void
 
 export const useCreateViewActivity = () => {
-  const { data: loggedInData } = useLoggedInQuery();
+  const { data: loggedInData } = useLoggedInQuery()
   const [createArticleActivity] = useCreateArticleActivityMutation({
     update: (cache, { data }, { variables }) => {
       if (!data?.createArticleActivity) {
-        return;
+        return
       }
       cache.modify({
         id: cache.identify({
@@ -24,12 +24,12 @@ export const useCreateViewActivity = () => {
         }),
         fields: {
           activity: (existing = []) => {
-            return [...existing, data.createArticleActivity];
+            return [...existing, data.createArticleActivity]
           },
         },
-      });
+      })
     },
-  });
+  })
 
   const handleViewArticle: HandleViewArticleFn = ({ article }) => {
     if (
@@ -45,9 +45,9 @@ export const useCreateViewActivity = () => {
             type: ArticleActivityType.ViewArticle,
           },
         },
-      });
+      })
     }
-  };
+  }
 
-  return handleViewArticle;
-};
+  return handleViewArticle
+}

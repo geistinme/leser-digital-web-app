@@ -1,23 +1,23 @@
-import React from "react";
+import React from "react"
 
-import { Flex, Spacing, Typography } from "@sampled-ui/base";
-import { useNavigate } from "react-router";
+import { Flex, Spacing, Typography } from "@sampled-ui/base"
+import { useNavigate } from "react-router"
 
-import { ArticleFeedFragment } from "../../../../generated/graphql";
-import { decodeHtmlEntities } from "../../../shared/helpers";
+import { ArticleFeedFragment } from "../../../../generated/graphql"
+import { decodeHtmlEntities } from "../../../shared/helpers"
 
-import styles from "./Article.module.scss";
-import ArticleImage from "./ArticleImage";
-import { useCreateViewActivity } from "./hooks/createViewActivity";
+import { useCreateViewActivity } from "../../../shared/hooks/Article/createViewActivity"
+import styles from "./Article.module.scss"
+import ArticleImage from "./ArticleImage"
 
 interface ArticleShowcaseProps {
-  article: ArticleFeedFragment;
+  article: ArticleFeedFragment
 }
 
 const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({ article }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const handleViewArticle = useCreateViewActivity();
+  const handleViewArticle = useCreateViewActivity()
 
   return (
     <div className={styles.showcase}>
@@ -41,8 +41,8 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({ article }) => {
       <div
         className={styles.overlay}
         onClick={() => {
-          window.open(article.url, "_blank");
-          handleViewArticle({ article });
+          window.open(article.url, "_blank")
+          handleViewArticle({ article })
         }}
       >
         <Spacing gap="md">
@@ -66,7 +66,7 @@ const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({ article }) => {
         </Spacing>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ArticleShowcase;
+export default ArticleShowcase

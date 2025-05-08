@@ -1,0 +1,16 @@
+query topic($category: ArticleCategory!) {
+  topic(category: $category) {
+    ...TopicProfile
+  }
+}
+
+fragment TopicProfile on Topic {
+  id
+  category
+  name
+  articleCount
+  subscribers
+  isSubscribed {
+    id
+  }
+}

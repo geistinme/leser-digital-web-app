@@ -5,25 +5,26 @@ import { useInView } from "react-intersection-observer"
 import { useParams } from "react-router"
 
 import {
+  ArticleCategory,
   ArticleGridFragment,
   useArticlesQuery,
-  useSourceQuery,
+  useTopicQuery,
 } from "../../../../generated/graphql"
 import ArticleGrid from "../../components/Article/ArticleGrid"
 import { SourceShowcase } from "../../components/Source/SourceShowcase"
 
-interface SourcePageProps {}
+interface TopicPageProps {}
 
-const SourcePage: React.FC<SourcePageProps> = () => {
-  const { source } = useParams<{ source: string }>()
+const TopicPage: React.FC<TopicPageProps> = () => {
+  const { topic: topicKey } = useParams<{ topic: string }>()
 
-  const { data: sourceQueryData } = useSourceQuery({
-    variables: { key: source as string },
+  const { data: topicQueryData } = useTopicQuery({
+    variables: { category: topicKey?.toUpperCase() as ArticleCategory },
   })
   const { data: articlesQueryData, fetchMore } = useArticlesQuery({
     variables: {
       pagination: { offset: 0, limit: 10 },
-      filter: { source },
+      filter: { topic: topicKey?.toUpperCase() as ArticleCategory },
     },
   })
 
@@ -82,9 +83,9 @@ const SourcePage: React.FC<SourcePageProps> = () => {
 
   return (
     <Flex direction="column" align="center" style={{ width: "100%" }}>
-      <title>{sourceQueryData?.source?.name}</title>
-      {sourceQueryData?.source ? (
-        <SourceShowcase source={sourceQueryData.source} />
+      <title>{topicQueryData?.topic?.name}</title>
+      {topicQueryData?.topic ? (
+        <SourceShowcase source={topicQueryData.topic} />
       ) : null}
       <Spacing gap="xl">
         <Flex
@@ -105,4 +106,4 @@ const SourcePage: React.FC<SourcePageProps> = () => {
   )
 }
 
-export default SourcePage
+export default TopicPage

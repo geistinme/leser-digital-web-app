@@ -1,20 +1,41 @@
-import React from "react";
+import React, { useMemo } from "react"
 
-import { Flex, Spacing, Typography } from "@sampled-ui/base";
+import { Flex, Spacing, Typography } from "@sampled-ui/base"
 
 import {
   useSourcesQuery,
   useSubscriptionsQuery,
   useTopicsQuery,
-} from "../../../../generated/graphql";
-import SubscriptionGrid from "../../components/Subscription/SubscriptionGrid";
+} from "../../../../generated/graphql"
+import SubscriptionGrid from "../../components/Subscription/SubscriptionGrid"
 
 interface FollowingPageProps {}
 
 const FollowingPage: React.FC<FollowingPageProps> = () => {
-  const { data: sourcesQueryData } = useSourcesQuery();
-  const { data: topicsQueryData } = useTopicsQuery();
-  const { data: userSubscriptionsQueryData } = useSubscriptionsQuery();
+  const { data: sourcesQueryData } = useSourcesQuery()
+  const { data: topicsQueryData } = useTopicsQuery()
+  const { data: userSubscriptionsQueryData } = useSubscriptionsQuery()
+
+  console.debug(userSubscriptionsQueryData)
+
+  const sourcesGrid = useMemo(() => {
+    return sourcesQueryData?.sources ? (
+      <SubscriptionGrid
+        sources={sourcesQueryData.sources}
+        userSubscriptions={userSubscriptionsQueryData?.subscriptions}
+      />
+    ) : null
+  }, [sourcesQueryData?.sources, userSubscriptionsQueryData?.subscriptions])
+
+  const topicGrid = useMemo(() => {
+    return topicsQueryData?.topics ? (
+      <SubscriptionGrid
+        sources={topicsQueryData.topics}
+        userSubscriptions={userSubscriptionsQueryData?.subscriptions}
+      />
+    ) : null
+  }, [topicsQueryData?.topics, userSubscriptionsQueryData?.subscriptions])
+
   return (
     <Spacing gap="xl">
       <title>Gefolgt</title>
@@ -27,24 +48,14 @@ const FollowingPage: React.FC<FollowingPageProps> = () => {
         <Typography.Text variant="secondary" size="lg">
           Folge deinen Favoriten
         </Typography.Text>
-        {sourcesQueryData?.sources ? (
-          <SubscriptionGrid
-            sources={sourcesQueryData.sources}
-            userSubscriptions={userSubscriptionsQueryData?.subscriptions}
-          />
-        ) : null}
+        {sourcesGrid}
         <Typography.Text variant="secondary" size="lg">
           Folge deinen Interessen
         </Typography.Text>
-        {topicsQueryData?.topics ? (
-          <SubscriptionGrid
-            sources={topicsQueryData.topics}
-            userSubscriptions={userSubscriptionsQueryData?.subscriptions}
-          />
-        ) : null}
+        {topicGrid}
       </Flex>
     </Spacing>
-  );
-};
+  )
+}
 
-export default FollowingPage;
+export default FollowingPage
