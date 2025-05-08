@@ -32,7 +32,7 @@ export const HomePage: React.FC = () => {
 
   const { data: loggedInQueryData } = useLoggedInQuery()
   const {
-    data: articlesQueryData,
+    data: feedQueryData,
     loading: loadingArticles,
     fetchMore,
   } = useFeedQuery({
@@ -52,11 +52,11 @@ export const HomePage: React.FC = () => {
 
   const [hasMore, setHasMore] = useState(true)
   const loadMore = useCallback(() => {
-    if (hasMore) {
+    if (hasMore && !loadingArticles) {
       fetchMore({
         variables: {
           pagination: {
-            offset: articlesQueryData?.feed?.length,
+            offset: feedQueryData?.feed?.length,
             limit: 10,
           },
         },
@@ -70,7 +70,7 @@ export const HomePage: React.FC = () => {
             (fetchMoreResult.feed?.length ?? 0) > 0
           ) {
             return Object.assign({}, prev, {
-              articles: [
+              feed: [
                 ...prev.feed,
                 ...fetchMoreResult.feed,
               ] as ArticleFeedFragment[],
@@ -80,7 +80,7 @@ export const HomePage: React.FC = () => {
         },
       })
     }
-  }, [articlesQueryData?.feed?.length, fetchMore, hasMore])
+  }, [feedQueryData?.feed?.length, fetchMore, hasMore, loadingArticles])
 
   const { ref, inView } = useInView()
   useEffect(() => {
@@ -91,7 +91,7 @@ export const HomePage: React.FC = () => {
 
   const empty = useMemo(() => {
     if (
-      (!articlesQueryData?.feed || articlesQueryData.feed.length === 0) &&
+      (!feedQueryData?.feed || feedQueryData.feed.length === 0) &&
       !loadingArticles
     ) {
       return (
@@ -102,7 +102,7 @@ export const HomePage: React.FC = () => {
     } else {
       return null
     }
-  }, [articlesQueryData?.feed, loadingArticles])
+  }, [feedQueryData?.feed, loadingArticles])
 
   const loading = useMemo(() => {
     if (loadingArticles) {
@@ -113,12 +113,14 @@ export const HomePage: React.FC = () => {
   }, [loadingArticles])
 
   const feed = useMemo(() => {
-    if (articlesQueryData?.feed?.length) {
-      return <ArticleFeed articles={articlesQueryData.feed} lastRef={ref} />
+    if (feedQueryData?.feed?.length) {
+      return <ArticleFeed articles={feedQueryData.feed} lastRef={ref} />
     } else {
       return null
     }
-  }, [articlesQueryData?.feed, ref])
+  }, [feedQueryData?.feed, ref])
+
+  console.debug(feedQueryData?.feed?.length)
 
   return (
     <Spacing gap="xl">
