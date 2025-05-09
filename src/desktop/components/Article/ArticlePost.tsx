@@ -2,17 +2,18 @@ import React from "react"
 
 import { Flex, Spacing, Tag, Typography } from "@sampled-ui/base"
 import classNames from "classnames"
-import { toSentenceCase } from "js-convert-case"
+import { Eye } from "lucide-react"
 import moment from "moment"
 import { useNavigate } from "react-router"
 
 import {
+  ArticleActivityType,
   ArticleFeedFragment,
   ArticleListFragment,
 } from "../../../../generated/graphql"
 import { decodeHtmlEntities } from "../../../shared/helpers"
-
 import { useCreateViewActivity } from "../../../shared/hooks/Article/createViewActivity"
+
 import styles from "./Article.module.scss"
 import ArticleImage from "./ArticleImage"
 import ArticleMenu from "./ArticleMenu"
@@ -76,16 +77,27 @@ const ArticlePost: React.FC<ArticlePostProps> = ({
         article={article}
         onClick={() => handleViewArticle({ article })}
       />
-      {!compact && (article as ArticleFeedFragment).topic.category ? (
-        <Tag
-          size="sm"
-          variant="filled"
-          color="transparent"
-          label={toSentenceCase(
-            (article as ArticleFeedFragment).topic.category
+      {!compact ? (
+        <Flex gap="sm" className={styles.tags}>
+          {article.activity?.find(
+            (a) => a.type === ArticleActivityType.ViewArticle
+          ) ? (
+            <Tag
+              size="sm"
+              variant="filled"
+              color="var(--color-accent)"
+              label="Gelesen"
+            />
+          ) : (
+            <Tag
+              size="sm"
+              variant="filled"
+              color="transparent"
+              label={(article as ArticleFeedFragment).topic.name}
+              className={classNames(styles.category)}
+            />
           )}
-          className={classNames(styles.category)}
-        />
+        </Flex>
       ) : null}
       <Spacing gap="sm" className={styles.content}>
         <Flex direction="column" align="start" gap="sm">
@@ -105,14 +117,29 @@ const ArticlePost: React.FC<ArticlePostProps> = ({
               </Typography.Paragraph>
             ) : null}
           </a>
-          <Typography.Text
-            title={new Date(article.uploadedAt).toLocaleString()}
-            size="xs"
-            bold
-            disabled
+          <Flex
+            gap="sm"
+            align="center"
+            justify="between"
+            style={{ width: "100%" }}
           >
-            {moment(article.uploadedAt).fromNow()}
-          </Typography.Text>
+            <Typography.Text
+              title={new Date(article.uploadedAt).toLocaleString()}
+              size="xs"
+              bold
+              disabled
+            >
+              {moment(article.uploadedAt).fromNow()}
+            </Typography.Text>
+            {article.views && !compact ? (
+              <Flex gap="xs" align="center">
+                <Eye color="#ccc" size={18} />
+                <Typography.Text size="xs" bold disabled>
+                  {article.views}
+                </Typography.Text>
+              </Flex>
+            ) : null}
+          </Flex>
         </Flex>
       </Spacing>
     </Flex>

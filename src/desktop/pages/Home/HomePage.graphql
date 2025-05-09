@@ -26,6 +26,7 @@ fragment ArticleFeed on Article {
   topic {
     id
     category
+    name
   }
   uploadedAt
   source {
@@ -38,6 +39,7 @@ fragment ArticleFeed on Article {
     id
     type
   }
+  views
 }
 
 fragment RecommendedArticle on Article {

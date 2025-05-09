@@ -1,16 +1,18 @@
 import React, { useMemo } from "react"
 
-import { Column, Flex, Row, Spacing, Typography } from "@sampled-ui/base"
+import { Column, Flex, Row, Spacing, Tag, Typography } from "@sampled-ui/base"
+import classNames from "classnames"
 import moment from "moment"
 import { useNavigate } from "react-router"
 
 import {
+  ArticleActivityType,
   ArticleFeedFragment,
   ArticleGridFragment,
 } from "../../../../generated/graphql"
 import { decodeHtmlEntities } from "../../../shared/helpers"
-
 import { useCreateViewActivity } from "../../../shared/hooks/Article/createViewActivity"
+
 import styles from "./Article.module.scss"
 import ArticleImage from "./ArticleImage"
 
@@ -37,6 +39,26 @@ const ArticleGridItem: React.FC<{
         style={{ borderRadius: "var(--border-radius-md)" }}
         onClick={onViewArticle}
       />
+      <Flex gap="sm" className={styles.tags}>
+        {article.activity?.find(
+          (a) => a.type === ArticleActivityType.ViewArticle
+        ) ? (
+          <Tag
+            size="sm"
+            variant="filled"
+            color="var(--color-accent)"
+            label="Gelesen"
+          />
+        ) : (
+          <Tag
+            size="sm"
+            variant="filled"
+            color="transparent"
+            label={(article as ArticleFeedFragment).topic.name}
+            className={classNames(styles.category)}
+          />
+        )}
+      </Flex>
       <Spacing
         gap="sm"
         style={{

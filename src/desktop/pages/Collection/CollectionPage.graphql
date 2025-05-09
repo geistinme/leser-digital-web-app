@@ -42,4 +42,5 @@ fragment ArticleList on Article {
     id
     type
   }
+  views
 }
