@@ -38,11 +38,6 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
         if ("logo" in source) {
           const hex = palette.Vibrant?.hex;
           setBackgroundColor(hex);
-        } else {
-          const rgb = palette.DarkVibrant?.rgb;
-          setBackgroundColor(
-            `rgba(${rgb?.[0]}, ${rgb?.[1]}, ${rgb?.[2]}, 20%)`
-          );
         }
       })
       .catch((error) => {
