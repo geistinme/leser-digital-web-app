@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 
-import { Flex, Typography } from "@sampled-ui/base"
-import classNames from "classnames"
-import { toKebabCase } from "js-convert-case"
-import { CheckIcon, PlusIcon } from "lucide-react"
-import { Vibrant } from "node-vibrant/browser"
-import { useNavigate } from "react-router"
+import { Flex, Typography } from "@sampled-ui/base";
+import classNames from "classnames";
+import { toKebabCase } from "js-convert-case";
+import { CheckIcon, PlusIcon } from "lucide-react";
+import { Vibrant } from "node-vibrant/browser";
+import { useNavigate } from "react-router";
 
 import {
   SourceGridFragment,
   TopicGridFragment,
   UserSubscriptionFragment,
-} from "../../../../generated/graphql"
-import { useToggleSubscription } from "../../../shared/hooks/Subscription/toggleSubscription"
-import PreloadImage from "../PreloadImage"
+} from "../../../../generated/graphql";
+import { useToggleSubscription } from "../../../shared/hooks/Subscription/toggleSubscription";
+import PreloadImage from "../PreloadImage";
 
-import styles from "./Subscription.module.scss"
+import styles from "./Subscription.module.scss";
 
 interface SubscriptionItemProps {
-  source: SourceGridFragment | TopicGridFragment
-  userSubscription?: UserSubscriptionFragment
+  source: SourceGridFragment | TopicGridFragment;
+  userSubscription?: UserSubscriptionFragment;
 }
 
 export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
@@ -28,25 +28,27 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
 }) => {
   const [backgroundColor, setBackgroundColor] = useState<string | undefined>(
     undefined
-  )
-  const navigate = useNavigate()
+  );
+  const navigate = useNavigate();
 
   useEffect(() => {
     Vibrant.from((source as SourceGridFragment).logo ?? source.banner)
       .getPalette()
       .then((palette) => {
         if ("logo" in source) {
-          const hex = palette.Vibrant?.hex
-          setBackgroundColor(hex)
+          const hex = palette.Vibrant?.hex;
+          setBackgroundColor(hex);
         } else {
-          const rgb = palette.DarkVibrant?.rgb
-          setBackgroundColor(`rgba(${rgb?.[0]}, ${rgb?.[1]}, ${rgb?.[2]}, 20%)`)
+          const rgb = palette.DarkVibrant?.rgb;
+          setBackgroundColor(
+            `rgba(${rgb?.[0]}, ${rgb?.[1]}, ${rgb?.[2]}, 20%)`
+          );
         }
       })
       .catch((error) => {
-        console.error("Error fetching palette:", error)
-      })
-  }, [source])
+        console.error("Error fetching palette:", error);
+      });
+  }, [source]);
 
   const { handleToggle } = useToggleSubscription({
     createVariables:
@@ -54,7 +56,7 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
         ? { sourceId: source.id }
         : { topicId: source.id },
     subscription: userSubscription,
-  })
+  });
 
   return (
     <div className={styles.item} title={source?.name}>
@@ -69,7 +71,13 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
           height="100%"
           backgroundPosition="center 30%"
           backgroundSize="cover"
-          onClick={handleToggle}
+          onClick={() => {
+            if (source.__typename === "Source") {
+              navigate(`/${source?.key}`);
+            } else if (source.__typename === "Topic") {
+              navigate(`/t/${toKebabCase(source?.category)}`);
+            }
+          }}
         />
         <Flex
           align="center"
@@ -80,9 +88,9 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
           })}
           onClick={() => {
             if (source.__typename === "Source") {
-              navigate(`/${source?.key}`)
+              navigate(`/${source?.key}`);
             } else if (source.__typename === "Topic") {
-              navigate(`/t/${toKebabCase(source?.category)}`)
+              navigate(`/t/${toKebabCase(source?.category)}`);
             }
           }}
         >
@@ -102,7 +110,7 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
         </div>
       </Flex>
     </div>
-  )
-}
+  );
+};
 
-export default SubscriptionItem
+export default SubscriptionItem;

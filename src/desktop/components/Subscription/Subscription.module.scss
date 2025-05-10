@@ -84,24 +84,20 @@
   }
 }
 
-.item:hover {
-  .toggle {
-    background-color: $color-accent;
+.toggle:hover {
+  background-color: $color-accent;
 
-    svg {
-      stroke: $color-primary;
-    }
+  svg {
+    stroke: $color-primary;
   }
 }
 
 @media (prefers-color-scheme: dark) {
-  .item:hover {
-    .toggle {
-      background-color: $color-accent;
+  .toggle:hover {
+    background-color: $color-accent;
 
-      svg {
-        stroke: $color-secondary;
-      }
+    svg {
+      stroke: $color-secondary;
     }
   }
 
