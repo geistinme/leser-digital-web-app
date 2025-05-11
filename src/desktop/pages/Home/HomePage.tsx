@@ -47,7 +47,6 @@ export const HomePage: React.FC = () => {
             : undefined,
       },
     },
-    fetchPolicy: "cache-and-network",
   })
 
   const [hasMore, setHasMore] = useState(true)
