@@ -27,6 +27,12 @@ const SourcePage: React.FC<SourcePageProps> = () => {
     },
   })
 
+  useEffect(() => {
+    if (!!sourceQueryData && !sourceQueryData.source) {
+      throw new Error("Page not found")
+    }
+  }, [sourceQueryData])
+
   const [hasMore, setHasMore] = useState(true)
   const loadMore = useCallback(() => {
     if (hasMore) {

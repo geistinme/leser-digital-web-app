@@ -1699,10 +1699,10 @@
   resolved "https://registry.yarnpkg.com/@rtsao/scc/-/scc-1.1.0.tgz#927dd2fae9bc3361403ac2c7a00c32ddce9ad7e8"
   integrity sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==
 
-"@sampled-ui/base@^0.0.46":
-  version "0.0.46"
-  resolved "https://registry.yarnpkg.com/@sampled-ui/base/-/base-0.0.46.tgz#12e4d39ea539f9c993e05b34e66b69ac377abd7d"
-  integrity sha512-8GnOfUcBVgwi5l3RUjwkp2Ki3tRyySOQMavc9QXoSjWJem7gbnHucHYf0lVTIGM4bBJKjbGe5a7YnFK4uYjuUA==
+"@sampled-ui/base@^0.0.48":
+  version "0.0.48"
+  resolved "https://registry.yarnpkg.com/@sampled-ui/base/-/base-0.0.48.tgz#894333a9908863497738db87a189ff1dd983a375"
+  integrity sha512-WuabNFXWTD9WL2r6StEVBSqG3ufIywodv8N2yHUpF/l0gM/SOK7w/Uup+6yLaIonvYRJ7EX5uATeafcJ+WcM3A==
   dependencies:
     classnames "^2.5.1"
 

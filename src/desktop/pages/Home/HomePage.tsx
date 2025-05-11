@@ -14,7 +14,7 @@ import { useLocation, useNavigate } from "react-router"
 
 import {
   ArticleFeedFragment,
-  useFeedQuery,
+  useFeedLazyQuery,
   useLoggedInQuery,
 } from "../../../../generated/graphql"
 import { useIsDevice } from "../../../shared/hooks/isDevice"
@@ -31,12 +31,12 @@ export const HomePage: React.FC = () => {
   const { isTablet, isDesktop } = useIsDevice()
 
   const { data: loggedInQueryData } = useLoggedInQuery()
-  const {
-    data: feedQueryData,
-    loading: loadingArticles,
-    fetchMore,
-  } = useFeedQuery({
-    variables: {
+  const [
+    feedQuery,
+    { data: feedQueryData, loading: loadingArticles, fetchMore },
+  ] = useFeedLazyQuery()
+  useEffect(() => {
+    const initialQueryVariables = {
       pagination: { offset: 0, limit: 10 },
       filter: {
         short:
@@ -46,8 +46,18 @@ export const HomePage: React.FC = () => {
             ? false
             : undefined,
       },
-    },
-  })
+    }
+    if (loggedInQueryData?.loggedIn) {
+      feedQuery({
+        variables: initialQueryVariables,
+        fetchPolicy: "network-only",
+      })
+    } else {
+      feedQuery({
+        variables: initialQueryVariables,
+      })
+    }
+  }, [feedQuery, loggedInQueryData, selectedTab])
 
   const [hasMore, setHasMore] = useState(true)
   const loadMore = useCallback(() => {

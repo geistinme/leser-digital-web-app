@@ -1,0 +1,11 @@
+@use "../../../styles/variables.scss" as *;
+
+.menu {
+  cursor: pointer;
+  padding: $padding-md;
+  border: initial;
+}
+
+.menu:hover {
+  background-color: $color-background-dim;
+}

@@ -1,59 +1,64 @@
-import React, { useMemo } from "react";
+import React, { useMemo } from "react"
 
 import {
+  Card,
   Flex,
+  Menu,
   Navigation as NavigationMenu,
   Sidebar as SidebarComponent,
   Spacing,
   Typography,
-} from "@sampled-ui/base";
+} from "@sampled-ui/base"
 import {
   Bookmark,
   CircleUserRound,
   Compass,
   GalleryVertical,
+  Menu as MenuIcon,
   Rss,
-} from "lucide-react";
-import { Location, useLocation, useNavigate } from "react-router";
+} from "lucide-react"
+import { Location, useLocation, useNavigate } from "react-router"
 
 import {
   useLoggedInQuery,
   useLogoutMutation,
-} from "../../../../generated/graphql";
-import SvgWordmarkLogo from "../../../icons/WordmarkLogo";
+} from "../../../../generated/graphql"
+import SvgWordmarkLogo from "../../../icons/WordmarkLogo"
+
+import styles from "./Sidebar.module.scss"
 
 const useGetSelectedNavItem = (
   navItems: {
-    key: string;
-    title: string;
-    icon: React.ReactNode;
-    onClick: () => void;
+    key: string
+    title: string
+    icon: React.ReactNode
+    onClick: () => void
   }[],
   location: Location
 ) => {
   return useMemo(() => {
-    const path = location.pathname + location.hash;
+    const path = location.pathname + location.hash
     const selected =
       path !== "/"
         ? navItems.find((item) => item.key !== "/" && path.startsWith(item.key))
             ?.key
-        : "/";
-    return selected;
-  }, [navItems, location]);
-};
+        : "/"
+    return selected
+  }, [navItems, location])
+}
 
 export const Sidebar: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  const { data } = useLoggedInQuery();
+  const { data } = useLoggedInQuery()
   const [logout] = useLogoutMutation({
     refetchQueries: ["loggedIn"],
     onCompleted: () => {
-      navigate("/");
-      window.location.reload();
+      navigate("/")
+      window.location.reload()
     },
-  });
+  })
 
   const items = [
     {
@@ -86,9 +91,9 @@ export const Sidebar: React.FC = () => {
       icon: <CircleUserRound size={24} />,
       onClick: () => navigate("/me"),
     },
-  ];
+  ]
 
-  const selected = useGetSelectedNavItem(items, location);
+  const selected = useGetSelectedNavItem(items, location)
 
   return (
     <SidebarComponent style={{ width: "18rem", height: "100%" }}>
@@ -116,13 +121,33 @@ export const Sidebar: React.FC = () => {
           style={{ paddingTop: "initial" }}
         />
         {data?.loggedIn ? (
-          <Spacing gap="lg">
-            <Typography.Text variant="danger" onClick={() => logout()} bold>
-              Logout
-            </Typography.Text>
+          <Spacing gap="sm">
+            <Menu
+              items={[
+                {
+                  title: "Settings",
+                  key: "settings",
+                  onClick: () => navigate("/settings"),
+                },
+                {
+                  title: "Logout",
+                  key: "logout",
+                  danger: true,
+                  onClick: () => logout(),
+                },
+              ]}
+            >
+              <Card className={styles.menu}>
+                <Flex gap="md">
+                  <MenuIcon size={24} />
+                  <Typography.Text size="md">More</Typography.Text>
+                </Flex>
+              </Card>
+            </Menu>
           </Spacing>
         ) : null}
+        {/* {data?.loggedIn ? <Spacing gap="lg"></Spacing> : null} */}
       </Flex>
     </SidebarComponent>
-  );
-};
+  )
+}

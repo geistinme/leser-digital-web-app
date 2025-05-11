@@ -1,30 +1,30 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from "react"
 
-import { Card, Header, Layout } from "@sampled-ui/base";
-import { Outlet, useNavigate } from "react-router";
-import { hideSplashScreen } from "vite-plugin-splash-screen/runtime";
+import { Card, Header, Layout, Spacing } from "@sampled-ui/base"
+import { Outlet, useNavigate } from "react-router"
+import { hideSplashScreen } from "vite-plugin-splash-screen/runtime"
 
-import { useLoggedInQuery } from "../../../../generated/graphql";
-import SvgWordmarkLogo from "../../../icons/WordmarkLogo";
-import { useIsDevice } from "../../hooks/isDevice";
+import { useLoggedInQuery } from "../../../../generated/graphql"
+import SvgWordmarkLogo from "../../../icons/WordmarkLogo"
+import { useIsDevice } from "../../hooks/isDevice"
 
 export const Auth: React.FC = () => {
-  const { isMobile } = useIsDevice();
-  const navigate = useNavigate();
-  const { data } = useLoggedInQuery();
+  const { isMobile } = useIsDevice()
+  const navigate = useNavigate()
+  const { data } = useLoggedInQuery()
 
   useEffect(() => {
     if (data?.loggedIn && data.loggedIn.verified) {
-      const redirect = localStorage.getItem("redirect");
+      const redirect = localStorage.getItem("redirect")
       if (redirect) {
-        localStorage.removeItem("redirect");
-        navigate(redirect, { replace: true });
+        localStorage.removeItem("redirect")
+        navigate(redirect, { replace: true })
       } else {
-        navigate("/", { replace: true });
+        navigate("/", { replace: true })
       }
     }
-    hideSplashScreen();
-  }, [data?.loggedIn, navigate]);
+    hideSplashScreen()
+  }, [data?.loggedIn, navigate])
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -46,10 +46,11 @@ export const Auth: React.FC = () => {
           left: "50%",
           transform: "translate(-50%, -50%)",
         }}
-        innerProps={{ align: "center", justify: "center" }}
       >
-        <Outlet />
+        <Spacing gap="xl">
+          <Outlet />
+        </Spacing>
       </Card>
     </Layout>
-  );
-};
+  )
+}
