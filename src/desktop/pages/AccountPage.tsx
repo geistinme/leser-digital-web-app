@@ -1,6 +1,6 @@
 import React from "react"
 
-import { Spacing } from "@sampled-ui/base"
+import { Flex, Spacing, Typography } from "@sampled-ui/base"
 
 import { useLoggedInQuery } from "../../../generated/graphql"
 
@@ -9,8 +9,19 @@ export const AccountPage: React.FC = () => {
   return (
     <Spacing gap="xl">
       <title>Account</title>
-      <p>{loggedInQueryData?.loggedIn.name}</p>
-      <p>{loggedInQueryData?.loggedIn.email}</p>
+      <Flex
+        direction="column"
+        align="start"
+        gap="sm"
+        style={{ width: "100%", maxWidth: "40rem", margin: "auto" }}
+      >
+        <Typography.Heading level={3}>
+          {loggedInQueryData?.loggedIn.name as string}
+        </Typography.Heading>
+        <Typography.Text disabled>
+          {loggedInQueryData?.loggedIn.email}
+        </Typography.Text>
+      </Flex>
     </Spacing>
   )
 }
