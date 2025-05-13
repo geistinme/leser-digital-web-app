@@ -17,3 +17,24 @@ query myTopicActivityStats {
     views
   }
 }
+
+query myProfile {
+  loggedIn {
+    id
+    name
+    email
+  }
+  ...UserProfile
+}
+
+fragment UserProfile on Query {
+  subscriptions {
+    id
+  }
+  viewedArticles {
+    id
+  }
+  savedArticles {
+    id
+  }
+}

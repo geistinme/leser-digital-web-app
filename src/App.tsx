@@ -1,13 +1,19 @@
-import React from "react";
+import React from "react"
 
-import DesktopApp from "./desktop/App";
-import MobileApp from "./mobile/App";
-import { useIsDevice } from "./shared/hooks/isDevice";
+import moment from "moment"
+// @ts-expect-error Cannot find type definition
+import "moment/dist/locale/de"
+
+import DesktopApp from "./desktop/App"
+import MobileApp from "./mobile/App"
+import { useIsDevice } from "./shared/hooks/isDevice"
 
 const App: React.FC = () => {
-  const { isMobile } = useIsDevice();
+  moment.locale("de")
 
-  return isMobile ? <MobileApp /> : <DesktopApp />;
-};
+  const { isMobile } = useIsDevice()
+  
+  return isMobile ? <MobileApp /> : <DesktopApp />
+}
 
-export default App;
+export default App
