@@ -188,11 +188,13 @@ export type PaginationInput = {
 
 export type Query = {
   __typename?: 'Query';
-  articleActivity?: Maybe<ArticleActivity>;
+  articleActivity?: Maybe<Array<ArticleActivity>>;
   articles?: Maybe<Array<Article>>;
   feed?: Maybe<Array<Article>>;
   loggedIn: User;
   mostViewedArticles?: Maybe<Array<Article>>;
+  mySourceActivityStats?: Maybe<Array<SourceActivityStat>>;
+  myTopicActivityStats?: Maybe<Array<TopicActivityStat>>;
   recommendedArticles?: Maybe<Array<Maybe<Article>>>;
   savedArticles?: Maybe<Array<Article>>;
   source?: Maybe<Source>;
@@ -262,6 +264,12 @@ export type Source = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
+export type SourceActivityStat = {
+  __typename?: 'SourceActivityStat';
+  source: Source;
+  views: Scalars['Int']['output'];
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   createdAt: Scalars['DateTime']['output'];
@@ -283,6 +291,12 @@ export type Topic = {
   name: Scalars['String']['output'];
   subscribers?: Maybe<Scalars['Int']['output']>;
   updatedAt: Scalars['DateTime']['output'];
+};
+
+export type TopicActivityStat = {
+  __typename?: 'TopicActivityStat';
+  topic: Topic;
+  views: Scalars['Int']['output'];
 };
 
 export type User = {
@@ -314,6 +328,16 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout?: { __typename?: 'User', id: string, name: string } | null };
+
+export type MySourceActivityStatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MySourceActivityStatsQuery = { __typename?: 'Query', mySourceActivityStats?: Array<{ __typename?: 'SourceActivityStat', views: number, source: { __typename?: 'Source', id: string, name: string } }> | null };
+
+export type MyTopicActivityStatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyTopicActivityStatsQuery = { __typename?: 'Query', myTopicActivityStats?: Array<{ __typename?: 'TopicActivityStat', views: number, topic: { __typename?: 'Topic', id: string, name: string } }> | null };
 
 export type SavedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -684,6 +708,92 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const MySourceActivityStatsDocument = gql`
+    query mySourceActivityStats {
+  mySourceActivityStats {
+    source {
+      id
+      name
+    }
+    views
+  }
+}
+    `;
+
+/**
+ * __useMySourceActivityStatsQuery__
+ *
+ * To run a query within a React component, call `useMySourceActivityStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMySourceActivityStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMySourceActivityStatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMySourceActivityStatsQuery(baseOptions?: Apollo.QueryHookOptions<MySourceActivityStatsQuery, MySourceActivityStatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MySourceActivityStatsQuery, MySourceActivityStatsQueryVariables>(MySourceActivityStatsDocument, options);
+      }
+export function useMySourceActivityStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MySourceActivityStatsQuery, MySourceActivityStatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MySourceActivityStatsQuery, MySourceActivityStatsQueryVariables>(MySourceActivityStatsDocument, options);
+        }
+export function useMySourceActivityStatsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MySourceActivityStatsQuery, MySourceActivityStatsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<MySourceActivityStatsQuery, MySourceActivityStatsQueryVariables>(MySourceActivityStatsDocument, options);
+        }
+export type MySourceActivityStatsQueryHookResult = ReturnType<typeof useMySourceActivityStatsQuery>;
+export type MySourceActivityStatsLazyQueryHookResult = ReturnType<typeof useMySourceActivityStatsLazyQuery>;
+export type MySourceActivityStatsSuspenseQueryHookResult = ReturnType<typeof useMySourceActivityStatsSuspenseQuery>;
+export type MySourceActivityStatsQueryResult = Apollo.QueryResult<MySourceActivityStatsQuery, MySourceActivityStatsQueryVariables>;
+export const MyTopicActivityStatsDocument = gql`
+    query myTopicActivityStats {
+  myTopicActivityStats {
+    topic {
+      id
+      name
+    }
+    views
+  }
+}
+    `;
+
+/**
+ * __useMyTopicActivityStatsQuery__
+ *
+ * To run a query within a React component, call `useMyTopicActivityStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyTopicActivityStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyTopicActivityStatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyTopicActivityStatsQuery(baseOptions?: Apollo.QueryHookOptions<MyTopicActivityStatsQuery, MyTopicActivityStatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyTopicActivityStatsQuery, MyTopicActivityStatsQueryVariables>(MyTopicActivityStatsDocument, options);
+      }
+export function useMyTopicActivityStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyTopicActivityStatsQuery, MyTopicActivityStatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyTopicActivityStatsQuery, MyTopicActivityStatsQueryVariables>(MyTopicActivityStatsDocument, options);
+        }
+export function useMyTopicActivityStatsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MyTopicActivityStatsQuery, MyTopicActivityStatsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<MyTopicActivityStatsQuery, MyTopicActivityStatsQueryVariables>(MyTopicActivityStatsDocument, options);
+        }
+export type MyTopicActivityStatsQueryHookResult = ReturnType<typeof useMyTopicActivityStatsQuery>;
+export type MyTopicActivityStatsLazyQueryHookResult = ReturnType<typeof useMyTopicActivityStatsLazyQuery>;
+export type MyTopicActivityStatsSuspenseQueryHookResult = ReturnType<typeof useMyTopicActivityStatsSuspenseQuery>;
+export type MyTopicActivityStatsQueryResult = Apollo.QueryResult<MyTopicActivityStatsQuery, MyTopicActivityStatsQueryVariables>;
 export const SavedArticlesDocument = gql`
     query savedArticles {
   savedArticles {

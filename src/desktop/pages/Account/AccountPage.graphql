@@ -1,0 +1,19 @@
+query mySourceActivityStats {
+  mySourceActivityStats {
+    source {
+      id
+      name
+    }
+    views
+  }
+}
+
+query myTopicActivityStats {
+  myTopicActivityStats {
+    topic {
+      id
+      name
+    }
+    views
+  }
+}
