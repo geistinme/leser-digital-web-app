@@ -1,18 +1,11 @@
-import React, { useState } from "react"
+import React from "react"
 
 import { Flex, Spacing, Typography } from "@sampled-ui/base"
-import { useLocation, useNavigate } from "react-router"
 
 import { useMyProfileQuery } from "../../../../generated/graphql"
 import UserActivity from "../../components/Profile/UserActivity"
 
 export const AccountPage: React.FC = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const params = new URLSearchParams(location.search)
-  const [selectedTab, setSelectedTab] = useState(
-    params.get("tab") ?? "activity"
-  )
   const { data: myProfileQueryData } = useMyProfileQuery()
 
   return (

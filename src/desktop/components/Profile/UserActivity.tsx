@@ -6,6 +6,7 @@ import {
     Statistic,
     Typography,
 } from "@sampled-ui/base"
+import { Eye } from "lucide-react"
 
 import {
     useMySourceActivityStatsQuery,
@@ -50,6 +51,12 @@ const UserActivity: React.FC<UserActivityProps> = ({ profile }) => {
               (stat) => ({ label: stat.source.name, value: stat.views })
             ) ?? []
           }
+          formatValue={(value) => (
+            <Flex gap="xs">
+              <Typography.Text>{value}</Typography.Text>
+              <Eye size={16} />
+            </Flex>
+          )}
           unit="Views"
         />
       </Flex>
@@ -64,6 +71,12 @@ const UserActivity: React.FC<UserActivityProps> = ({ profile }) => {
               })
             ) ?? []
           }
+          formatValue={(value) => (
+            <Flex gap="xs">
+              <Typography.Text>{value}</Typography.Text>
+              <Eye size={16} />
+            </Flex>
+          )}
           unit="Views"
         />
       </Flex>
