@@ -74,7 +74,7 @@ export const Sidebar: React.FC = () => {
       onClick: () => navigate("/explore"),
     },
     {
-      title: "Gefolgt",
+      title: "Abonnements",
       key: "/following",
       icon: <Rss size={24} />,
       onClick: () => navigate("/following"),
