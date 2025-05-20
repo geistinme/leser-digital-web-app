@@ -4,3 +4,10 @@
   height: 100vh;
   overflow-y: auto;
 }
+
+@media (prefers-color-scheme: dark) {
+  .outlet {
+    background-color: $color-background;
+    color: $color-secondary;
+  }
+}

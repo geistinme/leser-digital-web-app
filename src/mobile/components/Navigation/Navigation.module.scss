@@ -32,3 +32,9 @@
 .selected {
   opacity: initial;
 }
+
+@media (prefers-color-scheme: dark) {
+  .container {
+    color: $color-secondary;
+  }
+}
