@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
-import { Divider, Flex, Header, Tabs, Typography } from "@sampled-ui/base"
+import { Flex, Header, Tabs, Typography } from "@sampled-ui/base"
 import { useInView } from "react-intersection-observer"
 import { useLocation, useNavigate } from "react-router"
 
@@ -139,7 +139,7 @@ export const HomePage: React.FC = () => {
             { title: "Artikel", key: "articles" },
             { title: "Kurzmeldungen", key: "breaking" },
           ]}
-          style={{ marginTop: "1rem", marginLeft: "0.5rem" }}
+          style={{ margin: "1rem 0.5rem" }}
         />
       </Header>
       <title>Startseite</title>
@@ -148,7 +148,6 @@ export const HomePage: React.FC = () => {
         align="stretch"
         style={{ width: "100%", paddingBottom: "6rem" }}
       >
-        <Divider />
         {empty}
         {loading}
         {feed}
