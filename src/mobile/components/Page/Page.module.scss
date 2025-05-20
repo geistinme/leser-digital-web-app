@@ -1,5 +1,7 @@
 @use "../../../styles/variables" as *;
 
 .outlet {
+  height: 100vh;
+  overflow-y: auto;
   padding: $padding-sm;
 }

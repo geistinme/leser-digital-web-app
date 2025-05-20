@@ -20,7 +20,7 @@ const ArticleFeed: React.FC<ArticleFeedProps> = ({ articles, lastRef }) => {
     <Flex
       direction="column"
       align="stretch"
-      style={{ width: "100%", maxWidth: "30rem", margin: "auto" }}
+      style={{ width: "100%" }}
     >
       {articles?.map((article, index) => {
         return (

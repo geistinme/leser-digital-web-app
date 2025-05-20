@@ -4,8 +4,8 @@ import { Flex, Spacing, Typography } from "@sampled-ui/base";
 import { useNavigate } from "react-router";
 
 import { ArticleFeedFragment } from "../../../../generated/graphql";
-import { decodeHtmlEntities } from "../../../shared/helpers";
-import { useCreateViewActivity } from "../../../shared/hooks/Article/createViewActivity";
+import { decodeHtmlEntities } from "../../helpers";
+import { useCreateViewActivity } from "../../hooks/Article/createViewActivity";
 
 import styles from "./Article.module.scss";
 import ArticleImage from "./ArticleImage";

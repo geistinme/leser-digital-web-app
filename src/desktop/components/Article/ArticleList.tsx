@@ -1,23 +1,23 @@
-import React from "react";
+import React from "react"
 
-import { Flex } from "@sampled-ui/base";
+import { Flex } from "@sampled-ui/base"
 
 import {
   ArticleListFragment,
   useLoggedInQuery,
-} from "../../../../generated/graphql";
-import { useIsDevice } from "../../../shared/hooks/isDevice";
+} from "../../../../generated/graphql"
+import ArticlePost from "../../../shared/components/Article/ArticlePost"
+import { useIsDevice } from "../../../shared/hooks/isDevice"
 
-import ArticlePost from "./ArticlePost";
 
 interface ArticleListProps {
-  articles: ArticleListFragment[];
+  articles: ArticleListFragment[]
   noLogo?: boolean
 }
 
 const ArticleList: React.FC<ArticleListProps> = ({ articles }) => {
-  const { data: loggedInQueryData } = useLoggedInQuery();
-  const { isExtraLargeDesktop } = useIsDevice();
+  const { data: loggedInQueryData } = useLoggedInQuery()
+  const { isExtraLargeDesktop } = useIsDevice()
 
   return (
     <Flex
@@ -38,7 +38,7 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles }) => {
         />
       ))}
     </Flex>
-  );
-};
+  )
+}
 
-export default ArticleList;
+export default ArticleList

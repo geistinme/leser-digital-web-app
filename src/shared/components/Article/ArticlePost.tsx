@@ -8,6 +8,7 @@ import { useNavigate } from "react-router"
 
 import {
   ArticleActivityType,
+  ArticleCategory,
   ArticleFeedFragment,
   ArticleListFragment,
 } from "../../../../generated/graphql"
@@ -88,7 +89,8 @@ const ArticlePost: React.FC<ArticlePostProps> = ({
               color="var(--color-accent)"
               label="Gelesen"
             />
-          ) : (
+          ) : (article as ArticleFeedFragment).topic.category !==
+            ArticleCategory.Unknown ? (
             <Tag
               size="sm"
               variant="filled"
@@ -96,7 +98,7 @@ const ArticlePost: React.FC<ArticlePostProps> = ({
               label={(article as ArticleFeedFragment).topic.name}
               className={classNames(styles.category)}
             />
-          )}
+          ) : null}
         </Flex>
       ) : null}
       <Spacing gap="sm" className={styles.content}>

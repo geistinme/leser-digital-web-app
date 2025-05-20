@@ -12,8 +12,8 @@ import {
   TopicGridFragment,
   UserSubscriptionFragment,
 } from "../../../../generated/graphql";
+import PreloadImage from "../../../shared/components/PreloadImage";
 import { useToggleSubscription } from "../../../shared/hooks/Subscription/toggleSubscription";
-import PreloadImage from "../PreloadImage";
 
 import styles from "./Subscription.module.scss";
 

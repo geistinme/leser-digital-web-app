@@ -5,8 +5,8 @@ import { Flex, Spacing } from "@sampled-ui/base";
 import {
   useMostViewedArticlesQuery
 } from "../../../../generated/graphql";
+import ArticleShowcase from "../../../shared/components/Article/ArticleShowcase";
 import ArticleGrid from "../../components/Article/ArticleGrid";
-import ArticleShowcase from "../../components/Article/ArticleShowcase";
 
 export const ExplorePage: React.FC = () => {
   const { data } = useMostViewedArticlesQuery();

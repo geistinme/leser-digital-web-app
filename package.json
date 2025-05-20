@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -n \"APP, TYPECHECK, GRAPHQL\" \"vite\" \"tsc -b --watch\" \"graphql-codegen --config codegen.yml --watch\"",
+    "dev:host": "concurrently -n \"APP, TYPECHECK, GRAPHQL\" \"vite --host\" \"tsc -b --watch\" \"graphql-codegen --config codegen.yml --watch\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",

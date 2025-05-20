@@ -3,8 +3,8 @@ import React from "react"
 import { Card, Flex, Spacing, Typography } from "@sampled-ui/base"
 
 import { useRecommendedArticlesQuery } from "../../../../generated/graphql"
+import ArticleRecommendation from "../../../shared/components/Article/ArticleRecommendation"
 import { useGreeting } from "../../../shared/hooks/greetings"
-import ArticleRecommendation from "../Article/ArticleRecommendation"
 
 const ExploreCallToAction: React.FC = () => {
   const [greeting, randomQuote] = useGreeting()
