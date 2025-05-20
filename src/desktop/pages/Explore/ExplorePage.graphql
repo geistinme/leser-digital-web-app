@@ -1,5 +1,5 @@
-query mostViewedArticles {
-  mostViewedArticles {
+query mostViewedArticles($pagination: PaginationInput) {
+  mostViewedArticles(pagination: $pagination) {
     ...ArticleFeed
   }
 }

@@ -16,8 +16,8 @@ import { decodeHtmlEntities } from "../../../shared/helpers"
 import { useCreateViewActivity } from "../../../shared/hooks/Article/createViewActivity"
 
 import styles from "./Article.module.scss"
-import ArticleImage from "./ArticleImage"
-import ArticleMenu from "./ArticleMenu"
+
+import { ArticleImage, ArticleMenu } from "./"
 
 interface ArticlePostProps {
   article: ArticleFeedFragment | ArticleListFragment
@@ -26,7 +26,7 @@ interface ArticlePostProps {
   ref?: (node: HTMLDivElement | null) => void
 }
 
-const ArticlePost: React.FC<ArticlePostProps> = ({
+export const ArticlePost: React.FC<ArticlePostProps> = ({
   article,
   compact,
   loggedIn,
@@ -88,6 +88,7 @@ const ArticlePost: React.FC<ArticlePostProps> = ({
               variant="filled"
               color="var(--color-accent)"
               label="Gelesen"
+              className={classNames(styles.category)}
             />
           ) : (article as ArticleFeedFragment).topic.category !==
             ArticleCategory.Unknown ? (
@@ -147,5 +148,3 @@ const ArticlePost: React.FC<ArticlePostProps> = ({
     </Flex>
   )
 }
-
-export default ArticlePost

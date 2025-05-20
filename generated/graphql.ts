@@ -224,6 +224,11 @@ export type QueryFeedArgs = {
 };
 
 
+export type QueryMostViewedArticlesArgs = {
+  pagination?: InputMaybe<PaginationInput>;
+};
+
+
 export type QuerySavedArticlesArgs = {
   source?: InputMaybe<Scalars['String']['input']>;
 };
@@ -372,7 +377,9 @@ export type DeleteArticleActivityMutation = { __typename?: 'Mutation', deleteArt
 
 export type ArticleListFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, source: { __typename?: 'Source', id: string, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
 
-export type MostViewedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
+export type MostViewedArticlesQueryVariables = Exact<{
+  pagination?: InputMaybe<PaginationInput>;
+}>;
 
 
 export type MostViewedArticlesQuery = { __typename?: 'Query', mostViewedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
@@ -1003,8 +1010,8 @@ export type DeleteArticleActivityMutationHookResult = ReturnType<typeof useDelet
 export type DeleteArticleActivityMutationResult = Apollo.MutationResult<DeleteArticleActivityMutation>;
 export type DeleteArticleActivityMutationOptions = Apollo.BaseMutationOptions<DeleteArticleActivityMutation, DeleteArticleActivityMutationVariables>;
 export const MostViewedArticlesDocument = gql`
-    query mostViewedArticles {
-  mostViewedArticles {
+    query mostViewedArticles($pagination: PaginationInput) {
+  mostViewedArticles(pagination: $pagination) {
     ...ArticleFeed
   }
 }
@@ -1022,6 +1029,7 @@ export const MostViewedArticlesDocument = gql`
  * @example
  * const { data, loading, error } = useMostViewedArticlesQuery({
  *   variables: {
+ *      pagination: // value for 'pagination'
  *   },
  * });
  */

@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",
-    "@sampled-ui/base": "^0.0.59",
+    "@sampled-ui/base": "^0.0.60",
     "formik": "^2.4.6",
     "graphql": "^16.11.0",
     "js-convert-case": "^4.2.0",
@@ -48,6 +48,7 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.1.0",
+    "include-media": "^2.0.0",
     "sass": "1.87.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.32.0",

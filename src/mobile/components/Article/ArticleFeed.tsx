@@ -6,7 +6,7 @@ import {
   ArticleFeedFragment,
   useLoggedInQuery,
 } from "../../../../generated/graphql"
-import ArticlePost from "../../../shared/components/Article/ArticlePost"
+import { ArticlePost } from "../../../shared/components"
 
 interface ArticleFeedProps {
   articles?: ArticleFeedFragment[] | null
@@ -17,11 +17,7 @@ const ArticleFeed: React.FC<ArticleFeedProps> = ({ articles, lastRef }) => {
   const { data: loggedInData } = useLoggedInQuery()
 
   return (
-    <Flex
-      direction="column"
-      align="stretch"
-      style={{ width: "100%" }}
-    >
+    <Flex direction="column" align="stretch" style={{ width: "100%" }}>
       {articles?.map((article, index) => {
         return (
           <ArticlePost

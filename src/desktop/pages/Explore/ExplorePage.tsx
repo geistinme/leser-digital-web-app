@@ -1,20 +1,18 @@
-import React, { useMemo } from "react";
+import React, { useMemo } from "react"
 
-import { Flex, Spacing } from "@sampled-ui/base";
+import { Flex, Spacing } from "@sampled-ui/base"
 
-import {
-  useMostViewedArticlesQuery
-} from "../../../../generated/graphql";
-import ArticleShowcase from "../../../shared/components/Article/ArticleShowcase";
-import ArticleGrid from "../../components/Article/ArticleGrid";
+import { useMostViewedArticlesQuery } from "../../../../generated/graphql"
+import { ArticleShowcase } from "../../../shared/components"
+import ArticleGrid from "../../components/Article/ArticleGrid"
 
 export const ExplorePage: React.FC = () => {
-  const { data } = useMostViewedArticlesQuery();
+  const { data } = useMostViewedArticlesQuery()
 
   const mostViewedArticle = useMemo(
     () => (data?.mostViewedArticles ? data?.mostViewedArticles[0] : null),
     [data?.mostViewedArticles]
-  );
+  )
 
   const allOtherArticles = useMemo(
     () =>
@@ -22,7 +20,7 @@ export const ExplorePage: React.FC = () => {
         ? data?.mostViewedArticles.slice(1, data.mostViewedArticles.length)
         : null,
     [data?.mostViewedArticles]
-  );
+  )
 
   return (
     <Spacing gap="xl">
@@ -39,5 +37,5 @@ export const ExplorePage: React.FC = () => {
         {allOtherArticles ? <ArticleGrid articles={allOtherArticles} /> : null}
       </Flex>
     </Spacing>
-  );
-};
+  )
+}

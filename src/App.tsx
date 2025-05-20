@@ -1,12 +1,12 @@
-import React from "react"
+import React from "react";
 
-import moment from "moment"
+import moment from "moment";
 // @ts-expect-error Cannot find type definition
-import "moment/dist/locale/de"
+import "moment/dist/locale/de";
 
-import DesktopApp from "./desktop/App"
-import MobileApp from "./mobile/App"
-import { useIsDevice } from "./shared/hooks/isDevice"
+import DesktopApp from "./desktop/App";
+import MobileApp from "./mobile/App";
+import { useIsDevice } from "./shared/hooks/isDevice";
 
 const App: React.FC = () => {
   moment.locale("de")

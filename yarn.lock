@@ -1699,10 +1699,10 @@
   resolved "https://registry.yarnpkg.com/@rtsao/scc/-/scc-1.1.0.tgz#927dd2fae9bc3361403ac2c7a00c32ddce9ad7e8"
   integrity sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==
 
-"@sampled-ui/base@^0.0.59":
-  version "0.0.59"
-  resolved "https://registry.yarnpkg.com/@sampled-ui/base/-/base-0.0.59.tgz#84c597b8ac68c639bd7520a02b35c06f0a8eb4e7"
-  integrity sha512-x7knCmHgrhmFrIgZpiwza1r2w/jk/d4HkwHQI89DdgLK2Wp/W7Ee1IlQIWoSqvIML2eNaahrHVAQgwoKUvUbkw==
+"@sampled-ui/base@^0.0.60":
+  version "0.0.60"
+  resolved "https://registry.yarnpkg.com/@sampled-ui/base/-/base-0.0.60.tgz#bca63a0f162ba50366a963b2710fef4f970d2b7f"
+  integrity sha512-dEqJbNLs3IU76vshlGsS7TNSB1C8w2Z6Z0MPa/Uq+TN8HRlDFM6jPGYP3MBOaZGhM7+9SnD1QRtpX8SsxfSG3w==
   dependencies:
     classnames "^2.5.1"
 
@@ -4065,6 +4065,11 @@ imurmurhash@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
   integrity sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==
+
+include-media@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/include-media/-/include-media-2.0.0.tgz#21f80a4b40addd1da5d500cf8bf3b123cb1136a6"
+  integrity sha512-LSJcffPYIZ/Kln0rIi5UhqQbZxElDCMYA4dPC5MI1rkwwjptgEiOicHnzB0MMhMNJver0+4zULb4MKlgDyapZg==
 
 indent-string@^4.0.0:
   version "4.0.0"

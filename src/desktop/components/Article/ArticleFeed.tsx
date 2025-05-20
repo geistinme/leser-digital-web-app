@@ -6,7 +6,7 @@ import {
   ArticleFeedFragment,
   useLoggedInQuery,
 } from "../../../../generated/graphql"
-import ArticlePost from "../../../shared/components/Article/ArticlePost"
+import { ArticlePost } from "../../../shared/components"
 
 interface ArticleFeedProps {
   articles?: ArticleFeedFragment[] | null

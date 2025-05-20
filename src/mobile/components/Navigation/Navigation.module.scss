@@ -4,9 +4,9 @@
   position: fixed;
   background-color: $color-background;
   bottom: 0;
-  width: calc(100% - 5rem);
+  width: calc(100% - 4rem);
   border-top: $border;
-  padding: $spacing-lg $spacing-xl;
+  padding: $spacing-md 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;

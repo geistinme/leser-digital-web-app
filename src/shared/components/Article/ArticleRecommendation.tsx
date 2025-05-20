@@ -1,17 +1,17 @@
-import React from "react";
+import React from "react"
 
-import { Flex, Typography } from "@sampled-ui/base";
+import { Flex, Typography } from "@sampled-ui/base"
 
-import { RecommendedArticleFragment } from "../../../../generated/graphql";
-import { decodeHtmlEntities } from "../../../shared/helpers";
+import { RecommendedArticleFragment } from "../../../../generated/graphql"
+import { decodeHtmlEntities } from "../../../shared/helpers"
 
-import styles from "./Article.module.scss";
+import styles from "./Article.module.scss"
 
 interface ArticleRecommendationProps {
-  article: RecommendedArticleFragment;
+  article: RecommendedArticleFragment
 }
 
-const ArticleRecommendation: React.FC<ArticleRecommendationProps> = ({
+export const ArticleRecommendation: React.FC<ArticleRecommendationProps> = ({
   article,
 }) => {
   return (
@@ -29,7 +29,5 @@ const ArticleRecommendation: React.FC<ArticleRecommendationProps> = ({
         von {article.source.name}
       </Typography.Text>
     </Flex>
-  );
-};
-
-export default ArticleRecommendation;
+  )
+}

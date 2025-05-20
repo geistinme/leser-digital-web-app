@@ -1,22 +1,22 @@
-import React, { CSSProperties } from "react";
+import React, { CSSProperties } from "react"
 
-import classNames from "classnames";
+import classNames from "classnames"
 
-import { Article } from "../../../../generated/graphql";
-import PreloadImage from "../PreloadImage";
+import { Article } from "../../../../generated/graphql"
+import PreloadImage from "../PreloadImage"
 
-import styles from "./Article.module.scss";
+import styles from "./Article.module.scss"
 
 interface ArticleImageProps {
-  article: Pick<Article, "id" | "url" | "image">;
-  compact?: boolean;
-  onClick?: () => void;
-  height?: string;
-  width?: string;
-  style?: CSSProperties;
+  article: Pick<Article, "id" | "url" | "image">
+  compact?: boolean
+  onClick?: () => void
+  height?: string
+  width?: string
+  style?: CSSProperties
 }
 
-const ArticleImage: React.FC<ArticleImageProps> = ({
+export const ArticleImage: React.FC<ArticleImageProps> = ({
   article,
   compact,
   onClick,
@@ -24,8 +24,8 @@ const ArticleImage: React.FC<ArticleImageProps> = ({
   width,
   style,
 }) => {
-  const calculatedWidth = width ? width : compact ? "10rem" : "100%";
-  const calculatedHeight = height ? height : compact ? "10rem" : "20rem";
+  const calculatedWidth = width ? width : compact ? "10rem" : "100%"
+  const calculatedHeight = height ? height : compact ? "10rem" : "20rem"
 
   return (
     <a
@@ -46,7 +46,5 @@ const ArticleImage: React.FC<ArticleImageProps> = ({
         style={style}
       />
     </a>
-  );
-};
-
-export default ArticleImage;
+  )
+}

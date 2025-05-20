@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
-import { Divider, Flex, Spacing, Tabs, Typography } from "@sampled-ui/base"
+import { Divider, Flex, Header, Tabs, Typography } from "@sampled-ui/base"
 import { useInView } from "react-intersection-observer"
 import { useLocation, useNavigate } from "react-router"
 
@@ -126,13 +126,8 @@ export const HomePage: React.FC = () => {
   }, [feedQueryData?.feed, ref])
 
   return (
-    <Spacing gap="sm">
-      <title>Startseite</title>
-      <Flex
-        direction="column"
-        align="stretch"
-        style={{ width: "100%", paddingTop: "1rem", paddingBottom: "6rem" }}
-      >
+    <div>
+      <Header>
         <Tabs
           onSelect={(item) => {
             navigate(`?tab=${item.key}`)
@@ -144,7 +139,15 @@ export const HomePage: React.FC = () => {
             { title: "Artikel", key: "articles" },
             { title: "Kurzmeldungen", key: "breaking" },
           ]}
+          style={{ marginTop: "1rem", marginLeft: "0.5rem" }}
         />
+      </Header>
+      <title>Startseite</title>
+      <Flex
+        direction="column"
+        align="stretch"
+        style={{ width: "100%", paddingBottom: "6rem" }}
+      >
         <Divider />
         {empty}
         {loading}
@@ -155,6 +158,6 @@ export const HomePage: React.FC = () => {
           </Typography.Text>
         ) : null}
       </Flex>
-    </Spacing>
+    </div>
   )
 }

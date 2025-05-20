@@ -12,7 +12,7 @@ import { Page } from "./components/Page";
 import { AboutPage } from "./pages/AboutPage";
 import { AccountPage } from "./pages/AccountPage";
 import NotFoundPage from "./pages/Error/404Page";
-import { ExplorePage } from "./pages/ExplorePage";
+import { ExplorePage } from "./pages/Explore/ExplorePage";
 import { HomePage } from "./pages/Home/HomePage";
 
 export const router = createBrowserRouter([

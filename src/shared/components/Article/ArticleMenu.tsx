@@ -1,33 +1,37 @@
-import React from "react";
+import React from "react"
 
-import { Flex, useToast } from "@sampled-ui/base";
-import { Bookmark, Link } from "lucide-react";
+import { Flex, useToast } from "@sampled-ui/base"
+import { Bookmark, Link } from "lucide-react"
 
 import {
   ArticleActivityType,
   ArticleFeedFragment,
   useCreateArticleActivityMutation,
   useDeleteArticleActivityMutation,
-} from "../../../../generated/graphql";
-import { useColorScheme } from "../../../shared/hooks/colorScheme";
+} from "../../../../generated/graphql"
+import { useColorScheme } from "../../../shared/hooks/colorScheme"
 
-import styles from "./Article.module.scss";
+import styles from "./Article.module.scss"
 
 interface ArticleMenuProps {
-  activity?: ArticleFeedFragment["activity"] | null;
-  id: string;
-  url: string;
+  activity?: ArticleFeedFragment["activity"] | null
+  id: string
+  url: string
 }
 
-const ArticleMenu: React.FC<ArticleMenuProps> = ({ activity, id, url }) => {
-  const { colorScheme } = useColorScheme();
-  const { toast } = useToast();
+export const ArticleMenu: React.FC<ArticleMenuProps> = ({
+  activity,
+  id,
+  url,
+}) => {
+  const { colorScheme } = useColorScheme()
+  const { toast } = useToast()
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(url);
+    navigator.clipboard.writeText(url)
     toast({
       message: "Link wurde kopiert",
-    });
-  };
+    })
+  }
 
   const [createArticleActivity] = useCreateArticleActivityMutation({
     onCompleted: () =>
@@ -41,7 +45,7 @@ const ArticleMenu: React.FC<ArticleMenuProps> = ({ activity, id, url }) => {
       }),
     update: (cache, { data }) => {
       if (!data?.createArticleActivity) {
-        return;
+        return
       }
       cache.modify({
         id: cache.identify({
@@ -50,12 +54,12 @@ const ArticleMenu: React.FC<ArticleMenuProps> = ({ activity, id, url }) => {
         }),
         fields: {
           activity() {
-            return [activity, data.createArticleActivity];
+            return [activity, data.createArticleActivity]
           },
         },
-      });
+      })
     },
-  });
+  })
   const [deleteArticleActivity] = useDeleteArticleActivityMutation({
     onCompleted: () =>
       toast({
@@ -68,7 +72,7 @@ const ArticleMenu: React.FC<ArticleMenuProps> = ({ activity, id, url }) => {
       }),
     update: (cache, { data }) => {
       if (!data?.deleteArticleActivity) {
-        return;
+        return
       }
       cache.modify({
         id: cache.identify({
@@ -82,25 +86,25 @@ const ArticleMenu: React.FC<ArticleMenuProps> = ({ activity, id, url }) => {
                 activity.filter(
                   (a) => a?.id !== data.deleteArticleActivity?.id
                 ),
-              ];
+              ]
             } else {
-              return null;
+              return null
             }
           },
         },
-      });
+      })
     },
-  });
+  })
   const handleSaveArticle = async () => {
     const existing = activity?.find(
       (article) => article?.type === ArticleActivityType.SaveArticle
-    );
+    )
     if (existing) {
       deleteArticleActivity({
         variables: {
           id: existing.id,
         },
-      });
+      })
     } else {
       createArticleActivity({
         variables: {
@@ -109,9 +113,9 @@ const ArticleMenu: React.FC<ArticleMenuProps> = ({ activity, id, url }) => {
             articleId: id,
           },
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <Flex gap="sm">
@@ -138,7 +142,5 @@ const ArticleMenu: React.FC<ArticleMenuProps> = ({ activity, id, url }) => {
       />
       <Link size={20} className={styles.action} onClick={handleCopyLink} />
     </Flex>
-  );
-};
-
-export default ArticleMenu;
+  )
+}

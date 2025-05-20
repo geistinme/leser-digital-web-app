@@ -7,7 +7,7 @@ import { ArticleActivityType, ArticleFeedFragment, ArticleGridFragment } from ".
 import { decodeHtmlEntities } from "../../helpers"
 
 import styles from "./Article.module.scss"
-import ArticleImage from "./ArticleImage"
+import { ArticleImage } from "./ArticleImage"
 
 export const ArticleCompact: React.FC<{
   article: ArticleGridFragment | ArticleFeedFragment
