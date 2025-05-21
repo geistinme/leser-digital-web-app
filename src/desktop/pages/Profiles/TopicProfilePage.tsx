@@ -10,8 +10,8 @@ import {
   useArticlesQuery,
   useTopicQuery,
 } from "../../../../generated/graphql"
+import { SourceShowcase } from "../../../shared/components"
 import ArticleGrid from "../../components/Article/ArticleGrid"
-import { SourceShowcase } from "../../components/Source/SourceShowcase"
 
 interface TopicPageProps {}
 

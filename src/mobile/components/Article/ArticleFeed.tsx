@@ -10,10 +10,14 @@ import { ArticlePost } from "../../../shared/components"
 
 interface ArticleFeedProps {
   articles?: ArticleFeedFragment[] | null
+  compact?: boolean
   lastRef: (node: HTMLDivElement | null) => void
 }
 
-const ArticleFeed: React.FC<ArticleFeedProps> = ({ articles, lastRef }) => {
+const ArticleFeed: React.FC<ArticleFeedProps> = ({
+  articles,
+  lastRef,
+}) => {
   const { data: loggedInData } = useLoggedInQuery()
 
   return (

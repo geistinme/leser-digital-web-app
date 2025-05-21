@@ -3,11 +3,11 @@ import React, { useMemo } from "react"
 import { Column, Flex, Row } from "@sampled-ui/base"
 
 import {
-    SourceGridFragment,
-    TopicGridFragment,
-    UserSubscriptionFragment,
+  SourceGridFragment,
+  TopicGridFragment,
+  UserSubscriptionFragment,
 } from "../../../../generated/graphql"
-import SubscriptionGridItem from "../../../shared/components/Subscription/SubscriptionItem"
+import { SubscriptionItem } from "../../../shared/components"
 
 
 interface SubscriptionGridItem {
@@ -64,7 +64,7 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
             {row.map((source, i) => {
               return (
                 <Column key={`column-${i}`} span={12} style={{ height: "100%" }}>
-                  <SubscriptionGridItem
+                  <SubscriptionItem
                     source={source.source}
                     userSubscription={source.subscription}
                   />

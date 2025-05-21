@@ -46,6 +46,7 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
           <img
             src={source?.logo}
             style={{
+              maxWidth: "100%",
               maxHeight: "3rem",
               borderRadius: "0.5rem",
               filter: invert ? `brightness(0) invert(1)` : undefined,

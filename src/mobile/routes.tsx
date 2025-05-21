@@ -1,20 +1,21 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter } from "react-router"
 
-import { Auth, Private } from "../shared/components";
+import { Auth, Private } from "../shared/components"
 import {
   ForgotPasswordPage,
   LoginPage,
   SignupPage,
   VerifyPage,
-} from "../shared/pages/Auth";
+} from "../shared/pages/Auth"
 
-import { Page } from "./components/Page";
-import { AboutPage } from "./pages/AboutPage";
-import { AccountPage } from "./pages/AccountPage";
-import NotFoundPage from "./pages/Error/404Page";
-import { ExplorePage } from "./pages/Explore/ExplorePage";
-import FollowingPage from "./pages/Following/FollowingPage";
-import { HomePage } from "./pages/Home/HomePage";
+import { Page } from "./components/Page"
+import { AboutPage } from "./pages/AboutPage"
+import { AccountPage } from "./pages/AccountPage"
+import NotFoundPage from "./pages/Error/404Page"
+import { ExplorePage } from "./pages/Explore/ExplorePage"
+import FollowingPage from "./pages/Following/FollowingPage"
+import { HomePage } from "./pages/Home/HomePage"
+import SourcePage from "./pages/Profile/SourceProfilePage"
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
       { path: "/about", element: <AboutPage /> },
       { path: "/explore", element: <ExplorePage /> },
       { path: "/following", element: <FollowingPage /> },
+      { path: "/:source", element: <SourcePage /> },
       { path: "/me", element: <Private page={<AccountPage />} /> },
     ],
   },
@@ -40,4 +42,4 @@ export const router = createBrowserRouter([
       { path: "/auth/forgot-password", element: <ForgotPasswordPage /> },
     ],
   },
-]);
+])

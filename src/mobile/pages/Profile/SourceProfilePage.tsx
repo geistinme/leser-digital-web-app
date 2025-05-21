@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
-import { Flex, Spacing, Typography } from "@sampled-ui/base"
+import { Flex, Typography } from "@sampled-ui/base"
 import { useInView } from "react-intersection-observer"
 import { useParams } from "react-router"
 
 import {
-  ArticleGridFragment,
-  useArticlesQuery,
-  useSourceQuery,
+    ArticleGridFragment,
+    useArticlesQuery,
+    useSourceQuery,
 } from "../../../../generated/graphql"
-import { SourceShowcase } from "../../../shared/components"
-import ArticleGrid from "../../components/Article/ArticleGrid"
+import { SourceShowcase } from "../../../shared/components/Source/SourceShowcase"
+import ArticleFeed from "../../components/Article/ArticleFeed"
 
 interface SourcePageProps {}
 
@@ -75,7 +75,7 @@ const SourcePage: React.FC<SourcePageProps> = () => {
   const grid = useMemo(() => {
     if (articlesQueryData?.articles?.length) {
       return (
-        <ArticleGrid
+        <ArticleFeed
           articles={articlesQueryData.articles}
           compact
           lastRef={ref}
@@ -87,26 +87,24 @@ const SourcePage: React.FC<SourcePageProps> = () => {
   }, [articlesQueryData?.articles, ref])
 
   return (
-    <Flex direction="column" align="center" style={{ width: "100%" }}>
+    <Flex direction="column" align="center" gap="xl" style={{ width: "100%" }}>
       <title>{sourceQueryData?.source?.name}</title>
       {sourceQueryData?.source ? (
         <SourceShowcase source={sourceQueryData.source} />
       ) : null}
-      <Spacing gap="xl">
-        <Flex
-          direction="column"
-          align="center"
-          gap="lg"
-          style={{ maxWidth: "64rem", margin: "auto" }}
-        >
-          {grid}
-          {!hasMore ? (
-            <Typography.Text disabled bold style={{ textAlign: "center" }}>
-              Keine weiteren Artikel verfügbar.
-            </Typography.Text>
-          ) : null}
-        </Flex>
-      </Spacing>
+      <Flex
+        direction="column"
+        align="center"
+        gap="lg"
+        style={{ maxWidth: "64rem", margin: "auto" }}
+      >
+        {grid}
+        {!hasMore ? (
+          <Typography.Text disabled bold style={{ textAlign: "center" }}>
+            Keine weiteren Artikel verfügbar.
+          </Typography.Text>
+        ) : null}
+      </Flex>
     </Flex>
   )
 }
