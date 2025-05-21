@@ -1,0 +1,7 @@
+query mobileProfile {
+  loggedIn {
+    id
+    name
+    email
+  }
+}

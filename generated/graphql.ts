@@ -344,10 +344,10 @@ export type MyTopicActivityStatsQueryVariables = Exact<{ [key: string]: never; }
 
 export type MyTopicActivityStatsQuery = { __typename?: 'Query', myTopicActivityStats?: Array<{ __typename?: 'TopicActivityStat', views: number, topic: { __typename?: 'Topic', id: string, name: string } }> | null };
 
-export type MyProfileQueryVariables = Exact<{ [key: string]: never; }>;
+export type DesktopProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyProfileQuery = { __typename?: 'Query', loggedIn: { __typename?: 'User', id: string, name: string, email: string }, subscriptions?: Array<{ __typename?: 'Subscription', id: string }> | null, viewedArticles?: Array<{ __typename?: 'Article', id: string }> | null, savedArticles?: Array<{ __typename?: 'Article', id: string }> | null };
+export type DesktopProfileQuery = { __typename?: 'Query', loggedIn: { __typename?: 'User', id: string, name: string, email: string }, subscriptions?: Array<{ __typename?: 'Subscription', id: string }> | null, viewedArticles?: Array<{ __typename?: 'Article', id: string }> | null, savedArticles?: Array<{ __typename?: 'Article', id: string }> | null };
 
 export type UserProfileFragment = { __typename?: 'Query', subscriptions?: Array<{ __typename?: 'Subscription', id: string }> | null, viewedArticles?: Array<{ __typename?: 'Article', id: string }> | null, savedArticles?: Array<{ __typename?: 'Article', id: string }> | null };
 
@@ -464,6 +464,11 @@ export type TopicQueryVariables = Exact<{
 export type TopicQuery = { __typename?: 'Query', topic?: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string, articleCount?: number | null, subscribers?: number | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null } | null };
 
 export type TopicProfileFragment = { __typename?: 'Topic', id: string, category: ArticleCategory, name: string, articleCount?: number | null, subscribers?: number | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null };
+
+export type MobileProfileQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MobileProfileQuery = { __typename?: 'Query', loggedIn: { __typename?: 'User', id: string, name: string, email: string } };
 
 export type SendResetLinkMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -821,8 +826,8 @@ export type MyTopicActivityStatsQueryHookResult = ReturnType<typeof useMyTopicAc
 export type MyTopicActivityStatsLazyQueryHookResult = ReturnType<typeof useMyTopicActivityStatsLazyQuery>;
 export type MyTopicActivityStatsSuspenseQueryHookResult = ReturnType<typeof useMyTopicActivityStatsSuspenseQuery>;
 export type MyTopicActivityStatsQueryResult = Apollo.QueryResult<MyTopicActivityStatsQuery, MyTopicActivityStatsQueryVariables>;
-export const MyProfileDocument = gql`
-    query myProfile {
+export const DesktopProfileDocument = gql`
+    query desktopProfile {
   loggedIn {
     id
     name
@@ -833,36 +838,36 @@ export const MyProfileDocument = gql`
     ${UserProfileFragmentDoc}`;
 
 /**
- * __useMyProfileQuery__
+ * __useDesktopProfileQuery__
  *
- * To run a query within a React component, call `useMyProfileQuery` and pass it any options that fit your needs.
- * When your component renders, `useMyProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useDesktopProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDesktopProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useMyProfileQuery({
+ * const { data, loading, error } = useDesktopProfileQuery({
  *   variables: {
  *   },
  * });
  */
-export function useMyProfileQuery(baseOptions?: Apollo.QueryHookOptions<MyProfileQuery, MyProfileQueryVariables>) {
+export function useDesktopProfileQuery(baseOptions?: Apollo.QueryHookOptions<DesktopProfileQuery, DesktopProfileQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MyProfileQuery, MyProfileQueryVariables>(MyProfileDocument, options);
+        return Apollo.useQuery<DesktopProfileQuery, DesktopProfileQueryVariables>(DesktopProfileDocument, options);
       }
-export function useMyProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyProfileQuery, MyProfileQueryVariables>) {
+export function useDesktopProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DesktopProfileQuery, DesktopProfileQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MyProfileQuery, MyProfileQueryVariables>(MyProfileDocument, options);
+          return Apollo.useLazyQuery<DesktopProfileQuery, DesktopProfileQueryVariables>(DesktopProfileDocument, options);
         }
-export function useMyProfileSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MyProfileQuery, MyProfileQueryVariables>) {
+export function useDesktopProfileSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<DesktopProfileQuery, DesktopProfileQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<MyProfileQuery, MyProfileQueryVariables>(MyProfileDocument, options);
+          return Apollo.useSuspenseQuery<DesktopProfileQuery, DesktopProfileQueryVariables>(DesktopProfileDocument, options);
         }
-export type MyProfileQueryHookResult = ReturnType<typeof useMyProfileQuery>;
-export type MyProfileLazyQueryHookResult = ReturnType<typeof useMyProfileLazyQuery>;
-export type MyProfileSuspenseQueryHookResult = ReturnType<typeof useMyProfileSuspenseQuery>;
-export type MyProfileQueryResult = Apollo.QueryResult<MyProfileQuery, MyProfileQueryVariables>;
+export type DesktopProfileQueryHookResult = ReturnType<typeof useDesktopProfileQuery>;
+export type DesktopProfileLazyQueryHookResult = ReturnType<typeof useDesktopProfileLazyQuery>;
+export type DesktopProfileSuspenseQueryHookResult = ReturnType<typeof useDesktopProfileSuspenseQuery>;
+export type DesktopProfileQueryResult = Apollo.QueryResult<DesktopProfileQuery, DesktopProfileQueryVariables>;
 export const SavedArticlesDocument = gql`
     query savedArticles {
   savedArticles {
@@ -1434,6 +1439,47 @@ export type TopicQueryHookResult = ReturnType<typeof useTopicQuery>;
 export type TopicLazyQueryHookResult = ReturnType<typeof useTopicLazyQuery>;
 export type TopicSuspenseQueryHookResult = ReturnType<typeof useTopicSuspenseQuery>;
 export type TopicQueryResult = Apollo.QueryResult<TopicQuery, TopicQueryVariables>;
+export const MobileProfileDocument = gql`
+    query mobileProfile {
+  loggedIn {
+    id
+    name
+    email
+  }
+}
+    `;
+
+/**
+ * __useMobileProfileQuery__
+ *
+ * To run a query within a React component, call `useMobileProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMobileProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMobileProfileQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMobileProfileQuery(baseOptions?: Apollo.QueryHookOptions<MobileProfileQuery, MobileProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MobileProfileQuery, MobileProfileQueryVariables>(MobileProfileDocument, options);
+      }
+export function useMobileProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MobileProfileQuery, MobileProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MobileProfileQuery, MobileProfileQueryVariables>(MobileProfileDocument, options);
+        }
+export function useMobileProfileSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MobileProfileQuery, MobileProfileQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<MobileProfileQuery, MobileProfileQueryVariables>(MobileProfileDocument, options);
+        }
+export type MobileProfileQueryHookResult = ReturnType<typeof useMobileProfileQuery>;
+export type MobileProfileLazyQueryHookResult = ReturnType<typeof useMobileProfileLazyQuery>;
+export type MobileProfileSuspenseQueryHookResult = ReturnType<typeof useMobileProfileSuspenseQuery>;
+export type MobileProfileQueryResult = Apollo.QueryResult<MobileProfileQuery, MobileProfileQueryVariables>;
 export const SendResetLinkDocument = gql`
     mutation sendResetLink($email: String!) {
   sendResetLink(email: $email)

@@ -2,11 +2,11 @@ import React from "react"
 
 import { Flex, Spacing, Typography } from "@sampled-ui/base"
 
-import { useMyProfileQuery } from "../../../../generated/graphql"
-import UserActivity from "../../components/Profile/UserActivity"
+import { useDesktopProfileQuery } from "../../../../generated/graphql"
+import { UserActivity } from "../../../shared/components"
 
 export const AccountPage: React.FC = () => {
-  const { data: myProfileQueryData } = useMyProfileQuery()
+  const { data: desktopProfileQueryData } = useDesktopProfileQuery()
 
   return (
     <Spacing
@@ -14,17 +14,27 @@ export const AccountPage: React.FC = () => {
       style={{ width: "100%", maxWidth: "40rem", margin: "auto" }}
     >
       <title>Account</title>
-      <Flex direction="column" align="start" gap="lg" style={{ width: "100%", marginBottom: "2rem" }}>
-        <Flex direction="column" align="start" gap="sm" style={{ width: "100%" }}>
+      <Flex
+        direction="column"
+        align="start"
+        gap="lg"
+        style={{ width: "100%", marginBottom: "2rem" }}
+      >
+        <Flex
+          direction="column"
+          align="start"
+          gap="sm"
+          style={{ width: "100%" }}
+        >
           <Typography.Heading level={3}>
-            {myProfileQueryData?.loggedIn.name as string}
+            {desktopProfileQueryData?.loggedIn.name as string}
           </Typography.Heading>
           <Typography.Text variant="secondary">
-            {myProfileQueryData?.loggedIn.email}
+            {desktopProfileQueryData?.loggedIn.email}
           </Typography.Text>
         </Flex>
       </Flex>
-      <UserActivity profile={myProfileQueryData} />
+      <UserActivity profile={desktopProfileQueryData} />
     </Spacing>
   )
 }

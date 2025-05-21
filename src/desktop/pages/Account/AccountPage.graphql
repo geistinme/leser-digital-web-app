@@ -18,7 +18,7 @@ query myTopicActivityStats {
   }
 }
 
-query myProfile {
+query desktopProfile {
   loggedIn {
     id
     name

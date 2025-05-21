@@ -1,24 +1,24 @@
 import React from "react"
 
 import {
-    Flex,
-    HorizontalBarChart,
-    Statistic,
-    Typography,
+  Flex,
+  HorizontalBarChart,
+  Statistic,
+  Typography,
 } from "@sampled-ui/base"
 import { Eye } from "lucide-react"
 
 import {
-    useMySourceActivityStatsQuery,
-    useMyTopicActivityStatsQuery,
-    UserProfileFragment,
+  useMySourceActivityStatsQuery,
+  useMyTopicActivityStatsQuery,
+  UserProfileFragment,
 } from "../../../../generated/graphql"
 
 interface UserActivityProps {
   profile?: UserProfileFragment
 }
 
-const UserActivity: React.FC<UserActivityProps> = ({ profile }) => {
+export const UserActivity: React.FC<UserActivityProps> = ({ profile }) => {
   const { data: mySourceActivityStatsQueryData } =
     useMySourceActivityStatsQuery()
   const { data: myTopicActivityStatsQueryData } = useMyTopicActivityStatsQuery()
@@ -83,5 +83,3 @@ const UserActivity: React.FC<UserActivityProps> = ({ profile }) => {
     </Flex>
   )
 }
-
-export default UserActivity

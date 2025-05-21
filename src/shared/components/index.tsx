@@ -11,5 +11,6 @@ export { TextInput } from "./Form/TextInput"
 export { Verification } from "./Form/Verification"
 export { Private } from "./PrivatePage/Private"
 export { SourceShowcase } from "./Source/SourceShowcase"
+export { UserActivity } from "./Statistics/UserActivity"
 export { SubscriptionItem } from "./Subscription/SubscriptionItem"
 
