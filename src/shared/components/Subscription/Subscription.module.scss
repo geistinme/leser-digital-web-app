@@ -1,17 +1,10 @@
+@use "include-media" as *;
 @use "../../../styles/variables.scss" as *;
-
-.row {
-  height: 14rem;
-}
-
-.column {
-  height: 100%;
-}
 
 .item {
   position: relative;
-  height: calc(100% - $spacing-sm * 2);
-  width: calc(100% - $spacing-md * 2);
+  height: 100%;
+  width: 100%;
   cursor: pointer;
   border-radius: $border-radius-md;
   overflow: hidden;
@@ -105,5 +98,11 @@
     svg {
       stroke: $color-secondary;
     }
+  }
+}
+
+@include media(">phone", "<tablet") {
+  .item {
+    border-radius: $border-radius-xs;
   }
 }

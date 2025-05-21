@@ -13,6 +13,7 @@ import { AboutPage } from "./pages/AboutPage";
 import { AccountPage } from "./pages/AccountPage";
 import NotFoundPage from "./pages/Error/404Page";
 import { ExplorePage } from "./pages/Explore/ExplorePage";
+import FollowingPage from "./pages/Following/FollowingPage";
 import { HomePage } from "./pages/Home/HomePage";
 
 export const router = createBrowserRouter([
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
       { path: "/", element: <HomePage /> },
       { path: "/about", element: <AboutPage /> },
       { path: "/explore", element: <ExplorePage /> },
+      { path: "/following", element: <FollowingPage /> },
       { path: "/me", element: <Private page={<AccountPage />} /> },
     ],
   },
