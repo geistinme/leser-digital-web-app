@@ -5,10 +5,11 @@ import { Bookmark, Link } from "lucide-react"
 
 import {
   ArticleActivityType,
-  ArticleFeedFragment
+  ArticleFeedFragment,
+  useCreateArticleActivityMutation,
+  useDeleteArticleActivityMutation,
 } from "../../../../generated/graphql"
 import { useColorScheme } from "../../../shared/hooks/colorScheme"
-import { useToggleSaveArticle } from "../../hooks/Article/toggleSaveArticle"
 
 import styles from "./Article.module.scss"
 
@@ -32,10 +33,89 @@ export const ArticleMenu: React.FC<ArticleMenuProps> = ({
     })
   }
 
-  const toggleSaveArticle = useToggleSaveArticle({
-    activity,
-    id,
+  const [createArticleActivity] = useCreateArticleActivityMutation({
+    onCompleted: () =>
+      toast({
+        message: "Artikel gespeichert",
+        type: "success",
+      }),
+    onError: () =>
+      toast({
+        message: "Fehler beim Speichern des Artikels",
+      }),
+    update: (cache, { data }) => {
+      if (!data?.createArticleActivity) {
+        return
+      }
+      cache.modify({
+        id: cache.identify({
+          __typename: "Article",
+          id,
+        }),
+        fields: {
+          activity() {
+            return [activity, data.createArticleActivity]
+          },
+        },
+      })
+    },
   })
+  const [deleteArticleActivity] = useDeleteArticleActivityMutation({
+    onCompleted: () =>
+      toast({
+        message: "Artikel nicht mehr gespeichert",
+        type: "success",
+      }),
+    onError: () =>
+      toast({
+        message: "Fehler beim Un-Speichern des Artikels",
+      }),
+    update: (cache, { data }) => {
+      if (!data?.deleteArticleActivity) {
+        return
+      }
+      cache.modify({
+        id: cache.identify({
+          __typename: "Article",
+          id,
+        }),
+        fields: {
+          activity() {
+            if (activity) {
+              return [
+                activity.filter(
+                  (a) => a?.id !== data.deleteArticleActivity?.id
+                ),
+              ]
+            } else {
+              return null
+            }
+          },
+        },
+      })
+    },
+  })
+  const handleSaveArticle = async () => {
+    const existing = activity?.find(
+      (article) => article?.type === ArticleActivityType.SaveArticle
+    )
+    if (existing) {
+      deleteArticleActivity({
+        variables: {
+          id: existing.id,
+        },
+      })
+    } else {
+      createArticleActivity({
+        variables: {
+          data: {
+            type: ArticleActivityType.SaveArticle,
+            articleId: id,
+          },
+        },
+      })
+    }
+  }
 
   return (
     <Flex gap="sm">
@@ -58,7 +138,7 @@ export const ArticleMenu: React.FC<ArticleMenuProps> = ({
             ? "dodgerblue"
             : undefined
         }
-        onClick={toggleSaveArticle}
+        onClick={handleSaveArticle}
       />
       <Link size={20} className={styles.action} onClick={handleCopyLink} />
     </Flex>

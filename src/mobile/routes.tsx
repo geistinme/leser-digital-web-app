@@ -18,7 +18,6 @@ import { FollowingPage } from "./pages/Following/FollowingPage"
 import { HomePage } from "./pages/Home/HomePage"
 import { SourcePage } from "./pages/Profile/SourceProfilePage"
 import { TopicPage } from "./pages/Profile/TopicProfilePage"
-import { ReaderPage } from "./pages/Reader/ReaderPage"
 
 export const router = createBrowserRouter([
   {
@@ -32,7 +31,6 @@ export const router = createBrowserRouter([
       { path: "/following", element: <FollowingPage /> },
       { path: "/:source", element: <SourcePage /> },
       { path: "/t/:topic", element: <TopicPage /> },
-      { path: "/read/:article", element: <ReaderPage /> },
       { path: "/collection", element: <CollectionPage /> },
       { path: "/me", element: <Private page={<AccountPage />} /> },
     ],

@@ -188,7 +188,6 @@ export type PaginationInput = {
 
 export type Query = {
   __typename?: 'Query';
-  article?: Maybe<Article>;
   articleActivity?: Maybe<Array<ArticleActivity>>;
   articles?: Maybe<Array<Article>>;
   feed?: Maybe<Array<Article>>;
@@ -205,11 +204,6 @@ export type Query = {
   topics?: Maybe<Array<Topic>>;
   users?: Maybe<Array<Maybe<User>>>;
   viewedArticles?: Maybe<Array<Article>>;
-};
-
-
-export type QueryArticleArgs = {
-  id?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -475,13 +469,6 @@ export type MobileProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MobileProfileQuery = { __typename?: 'Query', loggedIn: { __typename?: 'User', id: string, name: string, email: string }, subscriptions?: Array<{ __typename?: 'Subscription', id: string }> | null, savedArticles?: Array<{ __typename?: 'Article', id: string }> | null };
-
-export type ArticleQueryVariables = Exact<{
-  id: Scalars['String']['input'];
-}>;
-
-
-export type ArticleQuery = { __typename?: 'Query', article?: { __typename?: 'Article', id: string, url: string, title: string, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null } | null };
 
 export type SendResetLinkMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -1499,52 +1486,6 @@ export type MobileProfileQueryHookResult = ReturnType<typeof useMobileProfileQue
 export type MobileProfileLazyQueryHookResult = ReturnType<typeof useMobileProfileLazyQuery>;
 export type MobileProfileSuspenseQueryHookResult = ReturnType<typeof useMobileProfileSuspenseQuery>;
 export type MobileProfileQueryResult = Apollo.QueryResult<MobileProfileQuery, MobileProfileQueryVariables>;
-export const ArticleDocument = gql`
-    query article($id: String!) {
-  article(id: $id) {
-    id
-    url
-    title
-    activity {
-      id
-      type
-    }
-  }
-}
-    `;
-
-/**
- * __useArticleQuery__
- *
- * To run a query within a React component, call `useArticleQuery` and pass it any options that fit your needs.
- * When your component renders, `useArticleQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useArticleQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useArticleQuery(baseOptions: Apollo.QueryHookOptions<ArticleQuery, ArticleQueryVariables> & ({ variables: ArticleQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, options);
-      }
-export function useArticleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, options);
-        }
-export function useArticleSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ArticleQuery, ArticleQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ArticleQuery, ArticleQueryVariables>(ArticleDocument, options);
-        }
-export type ArticleQueryHookResult = ReturnType<typeof useArticleQuery>;
-export type ArticleLazyQueryHookResult = ReturnType<typeof useArticleLazyQuery>;
-export type ArticleSuspenseQueryHookResult = ReturnType<typeof useArticleSuspenseQuery>;
-export type ArticleQueryResult = Apollo.QueryResult<ArticleQuery, ArticleQueryVariables>;
 export const SendResetLinkDocument = gql`
     mutation sendResetLink($email: String!) {
   sendResetLink(email: $email)
