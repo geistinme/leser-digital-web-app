@@ -160,10 +160,12 @@ export const HomePage: React.FC = () => {
             {empty}
             {loading}
             {feed}
-            {!hasMore ? (
-              <Typography.Text disabled bold style={{ textAlign: "center" }}>
-                Keine weiteren Artikel verfügbar.
-              </Typography.Text>
+            {!hasMore && feedQueryData?.feed?.length ? (
+              <Spacing gap="lg">
+                <Typography.Text disabled bold style={{ textAlign: "center" }}>
+                  Keine weiteren Artikel verfügbar.
+                </Typography.Text>
+              </Spacing>
             ) : null}
           </Flex>
         </Column>

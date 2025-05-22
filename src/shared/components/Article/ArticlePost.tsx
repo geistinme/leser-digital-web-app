@@ -14,10 +14,11 @@ import {
 } from "../../../../generated/graphql"
 import { decodeHtmlEntities } from "../../../shared/helpers"
 import { useCreateViewActivity } from "../../../shared/hooks/Article/createViewActivity"
+import { useReadArticle } from "../../hooks/Article/readArticle"
+import { useIsDevice } from "../../hooks/isDevice"
 
 import styles from "./Article.module.scss"
 
-import { useIsDevice } from "../../hooks/isDevice"
 import { ArticleImage, ArticleMenu } from "./"
 
 interface ArticlePostProps {
@@ -37,6 +38,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
   const { isMobile } = useIsDevice()
 
   const handleViewArticle = useCreateViewActivity()
+  const readArticle = useReadArticle()
 
   const header = (
     <Flex
@@ -93,7 +95,10 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
         article={article}
         height={compact ? compactImageDimensions?.height : undefined}
         width={compact ? compactImageDimensions?.width : undefined}
-        onClick={() => handleViewArticle({ article })}
+        onClick={() => {
+          readArticle(article)
+          handleViewArticle({ article })
+        }}
       />
       {!compact ? (
         <Flex gap="sm" className={styles.tags}>
@@ -122,11 +127,12 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
       <Spacing gap="sm" className={styles.content}>
         <Flex direction="column" align="start" gap="sm">
           {header}
-          <a
-            href={article.url}
-            target="_blank"
+          <div
             style={{ all: "unset" }}
-            onClick={() => handleViewArticle({ article })}
+            onClick={() => {
+              readArticle(article)
+              handleViewArticle({ article })
+            }}
           >
             <Typography.Text bold size="md" className={styles.title}>
               {decodeHtmlEntities(article.title)}
@@ -136,7 +142,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
                 {decodeHtmlEntities(article.description)}
               </Typography.Paragraph>
             ) : null}
-          </a>
+          </div>
           <Flex
             gap="sm"
             align="center"

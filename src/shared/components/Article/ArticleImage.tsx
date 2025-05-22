@@ -28,23 +28,13 @@ export const ArticleImage: React.FC<ArticleImageProps> = ({
   const calculatedHeight = height ? height : "20rem"
 
   return (
-    <a
-      href={article.url}
-      target="_blank"
+    <PreloadImage
       onClick={onClick}
-      style={{
-        all: "unset",
-        height: calculatedHeight,
-        width: calculatedWidth,
-      }}
-    >
-      <PreloadImage
-        src={article.image ?? undefined}
-        width={calculatedWidth}
-        height={calculatedHeight}
-        className={classNames(styles.image, { [styles.compact]: compact })}
-        style={style}
-      />
-    </a>
+      src={article.image ?? undefined}
+      width={calculatedWidth}
+      height={calculatedHeight}
+      className={classNames(styles.image, { [styles.compact]: compact })}
+      style={style}
+    />
   )
 }

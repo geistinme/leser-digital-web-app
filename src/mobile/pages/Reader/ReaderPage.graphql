@@ -1,0 +1,11 @@
+query article($id: String!) {
+  article(id: $id) {
+    id
+    url
+    title
+    activity {
+      id
+      type
+    }
+  }
+}
