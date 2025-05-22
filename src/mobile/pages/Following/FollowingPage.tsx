@@ -3,15 +3,15 @@ import React, { useMemo } from "react"
 import { Flex, Spacing, Typography } from "@sampled-ui/base"
 
 import {
-    useSourcesQuery,
-    useSubscriptionsQuery,
-    useTopicsQuery,
+  useSourcesQuery,
+  useSubscriptionsQuery,
+  useTopicsQuery,
 } from "../../../../generated/graphql"
 import SubscriptionGrid from "../../components/Subscription/SubscriptionGrid"
 
 interface FollowingPageProps {}
 
-const FollowingPage: React.FC<FollowingPageProps> = () => {
+export const FollowingPage: React.FC<FollowingPageProps> = () => {
   const { data: sourcesQueryData } = useSourcesQuery()
   const { data: topicsQueryData } = useTopicsQuery()
   const { data: userSubscriptionsQueryData } = useSubscriptionsQuery()
@@ -50,5 +50,3 @@ const FollowingPage: React.FC<FollowingPageProps> = () => {
     </Spacing>
   )
 }
-
-export default FollowingPage

@@ -15,7 +15,7 @@ import ArticleGrid from "../../components/Article/ArticleGrid"
 
 interface TopicPageProps {}
 
-const TopicPage: React.FC<TopicPageProps> = () => {
+export const TopicPage: React.FC<TopicPageProps> = () => {
   const { topic: topicKey } = useParams<{ topic: string }>()
 
   const { data: topicQueryData } = useTopicQuery({
@@ -105,5 +105,3 @@ const TopicPage: React.FC<TopicPageProps> = () => {
     </Flex>
   )
 }
-
-export default TopicPage

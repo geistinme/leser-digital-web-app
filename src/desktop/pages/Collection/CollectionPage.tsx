@@ -1,25 +1,25 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import {
-    Divider,
-    Flex,
-    Skeleton,
-    Spacing,
-    Tabs,
-    Typography,
+  Divider,
+  Flex,
+  Skeleton,
+  Spacing,
+  Tabs,
+  Typography,
 } from "@sampled-ui/base";
 import { useLocation, useNavigate } from "react-router";
 
 import {
-    useLoggedInQuery,
-    useSavedArticlesLazyQuery,
-    useViewedArticlesLazyQuery,
+  useLoggedInQuery,
+  useSavedArticlesLazyQuery,
+  useViewedArticlesLazyQuery,
 } from "../../../../generated/graphql";
 import ArticleList from "../../components/Article/ArticleList";
 
 interface CollectionPageProps {}
 
-const CollectionPage: React.FC<CollectionPageProps> = () => {
+export const CollectionPage: React.FC<CollectionPageProps> = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selected, setSelected] = useState(
@@ -132,5 +132,3 @@ const CollectionPage: React.FC<CollectionPageProps> = () => {
     </Spacing>
   );
 };
-
-export default CollectionPage;

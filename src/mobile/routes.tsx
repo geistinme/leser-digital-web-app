@@ -11,12 +11,12 @@ import {
 import { Page } from "./components/Page"
 import { AboutPage } from "./pages/AboutPage"
 import { AccountPage } from "./pages/AccountPage"
-import NotFoundPage from "./pages/Error/404Page"
+import { NotFoundPage } from "./pages/Error/404Page"
 import { ExplorePage } from "./pages/Explore/ExplorePage"
-import FollowingPage from "./pages/Following/FollowingPage"
+import { FollowingPage } from "./pages/Following/FollowingPage"
 import { HomePage } from "./pages/Home/HomePage"
-import SourcePage from "./pages/Profile/SourceProfilePage"
-import TopicProfilePage from "./pages/Profile/TopicProfilePage"
+import { SourcePage } from "./pages/Profile/SourceProfilePage"
+import { TopicPage } from "./pages/Profile/TopicProfilePage"
 
 export const router = createBrowserRouter([
   {
@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
       { path: "/explore", element: <ExplorePage /> },
       { path: "/following", element: <FollowingPage /> },
       { path: "/:source", element: <SourcePage /> },
-      { path: "/t/:topic", element: <TopicProfilePage /> },
+      { path: "/t/:topic", element: <TopicPage /> },
       { path: "/me", element: <Private page={<AccountPage />} /> },
     ],
   },

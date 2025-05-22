@@ -4,7 +4,7 @@ import { Link } from "react-router";
 
 import styles from "./404Page.module.scss";
 
-const NotFoundPage: React.FC = () => {
+export const NotFoundPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.message}>
@@ -15,5 +15,3 @@ const NotFoundPage: React.FC = () => {
     </div>
   );
 };
-
-export default NotFoundPage;

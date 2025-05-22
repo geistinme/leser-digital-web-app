@@ -12,13 +12,13 @@ import {
 import { Page } from "./components/Page"
 import { AboutPage } from "./pages/AboutPage"
 import { AccountPage } from "./pages/Account/AccountPage"
-import CollectionPage from "./pages/Collection/CollectionPage"
-import NotFoundPage from "./pages/Error/404Page"
+import { CollectionPage } from "./pages/Collection/CollectionPage"
+import { NotFoundPage } from "./pages/Error/404Page"
 import { ExplorePage } from "./pages/Explore/ExplorePage"
-import FollowingPage from "./pages/Following/FollowingPage"
+import { FollowingPage } from "./pages/Following/FollowingPage"
 import { HomePage } from "./pages/Home/HomePage"
-import SourcePage from "./pages/Profiles/SourceProfilePage"
-import TopicPage from "./pages/Profiles/TopicProfilePage"
+import { SourcePage } from "./pages/Profiles/SourceProfilePage"
+import { TopicPage } from "./pages/Profiles/TopicProfilePage"
 
 export const router = createBrowserRouter([
   {

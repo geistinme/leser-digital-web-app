@@ -5,17 +5,17 @@ import { useInView } from "react-intersection-observer"
 import { useParams } from "react-router"
 
 import {
-    ArticleCategory,
-    ArticleGridFragment,
-    useArticlesQuery,
-    useTopicQuery,
+  ArticleCategory,
+  ArticleGridFragment,
+  useArticlesQuery,
+  useTopicQuery,
 } from "../../../../generated/graphql"
 import { SourceShowcase } from "../../../shared/components"
 import ArticleFeed from "../../components/Article/ArticleFeed"
 
 interface TopicPageProps {}
 
-const TopicPage: React.FC<TopicPageProps> = () => {
+export const TopicPage: React.FC<TopicPageProps> = () => {
   const { topic: topicKey } = useParams<{ topic: string }>()
 
   const { data: topicQueryData } = useTopicQuery({
@@ -97,5 +97,3 @@ const TopicPage: React.FC<TopicPageProps> = () => {
     </Flex>
   )
 }
-
-export default TopicPage

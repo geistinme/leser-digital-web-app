@@ -1,10 +1,10 @@
-import React from "react";
+import React from "react"
 
-import { Link } from "react-router";
+import { Link } from "react-router"
 
-import styles from "./404Page.module.scss";
+import styles from "./404Page.module.scss"
 
-const NotFoundPage: React.FC = () => {
+export const NotFoundPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.message}>
@@ -13,7 +13,5 @@ const NotFoundPage: React.FC = () => {
         <Link to={"/"}>Return to home</Link>
       </div>
     </div>
-  );
-};
-
-export default NotFoundPage;
+  )
+}

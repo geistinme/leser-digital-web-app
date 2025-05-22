@@ -14,7 +14,7 @@ import ArticleGrid from "../../components/Article/ArticleGrid"
 
 interface SourcePageProps {}
 
-const SourcePage: React.FC<SourcePageProps> = () => {
+export const SourcePage: React.FC<SourcePageProps> = () => {
   const { source } = useParams<{ source: string }>()
 
   const { data: sourceQueryData } = useSourceQuery({
@@ -110,5 +110,3 @@ const SourcePage: React.FC<SourcePageProps> = () => {
     </Flex>
   )
 }
-
-export default SourcePage
