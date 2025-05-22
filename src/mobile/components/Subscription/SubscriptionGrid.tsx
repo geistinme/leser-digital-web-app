@@ -55,7 +55,7 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
     <Flex direction="column" style={{ width: "100%" }}>
       {gridRows?.map((row, index) => {
         return (
-          <Row key={`row-${index}`} style={{ height: "12rem" }}>
+          <Row key={`row-${index}`} style={{ height: "12rem", marginBottom: "0.0625rem" }} gap="0.0625rem">
             {row.map((source, i) => {
               return (
                 <Column
