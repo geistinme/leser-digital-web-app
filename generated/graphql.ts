@@ -188,6 +188,7 @@ export type PaginationInput = {
 
 export type Query = {
   __typename?: 'Query';
+  article?: Maybe<Article>;
   articleActivity?: Maybe<Array<ArticleActivity>>;
   articles?: Maybe<Array<Article>>;
   feed?: Maybe<Array<Article>>;
@@ -204,6 +205,11 @@ export type Query = {
   topics?: Maybe<Array<Topic>>;
   users?: Maybe<Array<Maybe<User>>>;
   viewedArticles?: Maybe<Array<Article>>;
+};
+
+
+export type QueryArticleArgs = {
+  id?: InputMaybe<Scalars['String']['input']>;
 };
 
 

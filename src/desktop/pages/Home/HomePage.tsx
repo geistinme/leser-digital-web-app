@@ -17,7 +17,7 @@ import {
   useFeedLazyQuery,
   useLoggedInQuery,
 } from "../../../../generated/graphql"
-import { useIsDevice } from "../../../shared/hooks/isDevice"
+import { breakpoints, useIsDevice } from "../../../shared/hooks/isDevice"
 import ArticleFeed from "../../components/Article/ArticleFeed"
 import LoadingArticleFeed from "../../components/Article/LoadingArticleFeed"
 import ExploreCallToAction from "../../components/CallToAction/ExploreCallToAction"
@@ -130,7 +130,7 @@ export const HomePage: React.FC = () => {
   }, [feedQueryData?.feed, ref])
 
   return (
-    <Spacing gap="xl">
+    <Spacing gap="xl" style={{ maxWidth: breakpoints.desktop, margin: "auto" }}>
       <title>Startseite</title>
       <Row columns={isTablet ? 12 : 24}>
         <Column span={isTablet ? 12 : 17}>
