@@ -184,6 +184,19 @@
     }
   }
 
+  .compact {
+    max-height: 8rem;
+
+    .image {
+      width: 8rem;
+      height: 8rem;
+    }
+
+    .content {
+      padding-left: $spacing-sm;
+    }
+  }
+
   .showcase {
     border-radius: initial;
   }

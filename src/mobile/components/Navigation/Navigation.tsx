@@ -20,7 +20,7 @@ const options = [
   },
   { label: "Search", path: "/explore", icon: <Compass /> },
   { label: "Following", path: "/following", icon: <Rss /> },
-  { label: "Saved", path: "/saved", icon: <Bookmark /> },
+  { label: "Saved", path: "/collection", icon: <Bookmark /> },
   { label: "Account", path: "/me", icon: <CircleUserRound /> },
 ]
 

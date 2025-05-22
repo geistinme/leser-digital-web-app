@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useMemo } from "react"
 
 import { Flex, Spacing, Tag, Typography } from "@sampled-ui/base"
 import classNames from "classnames"
@@ -17,6 +17,7 @@ import { useCreateViewActivity } from "../../../shared/hooks/Article/createViewA
 
 import styles from "./Article.module.scss"
 
+import { useIsDevice } from "../../hooks/isDevice"
 import { ArticleImage, ArticleMenu } from "./"
 
 interface ArticlePostProps {
@@ -33,6 +34,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
   ref,
 }) => {
   const navigate = useNavigate()
+  const { isMobile } = useIsDevice()
 
   const handleViewArticle = useCreateViewActivity()
 
@@ -48,7 +50,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
           onClick={() => navigate("/" + article.source.key)}
           className={styles.sourceLogo}
         />
-        {article.premium ? (
+        {article.premium && !isMobile ? (
           <Typography.Text size="xs" variant="warning" bold>
             Premium
           </Typography.Text>
@@ -64,18 +66,33 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
     </Flex>
   )
 
+  const compactImageDimensions = useMemo(() => {
+    if (isMobile && compact) {
+      return {
+        width: "8rem",
+        height: "8rem",
+      }
+    } else if (compact) {
+      return {
+        width: "10rem",
+        height: "10rem",
+      }
+    }
+  }, [compact, isMobile])
+
   return (
     <Flex
       direction={compact ? "row" : "column"}
       align="start"
-      gap="sm"
+      gap={isMobile && compact ? "xs" : "sm"}
       key={article.id}
       className={classNames(styles.article, { [styles.compact]: compact })}
       ref={ref as unknown as React.RefObject<HTMLDivElement>}
     >
       <ArticleImage
-        compact={compact}
         article={article}
+        height={compact ? compactImageDimensions?.height : undefined}
+        width={compact ? compactImageDimensions?.width : undefined}
         onClick={() => handleViewArticle({ article })}
       />
       {!compact ? (
@@ -126,14 +143,21 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
             justify="between"
             style={{ width: "100%" }}
           >
-            <Typography.Text
-              title={new Date(article.uploadedAt).toLocaleString()}
-              size="xs"
-              bold
-              disabled
-            >
-              {moment(article.uploadedAt).fromNow()}
-            </Typography.Text>
+            {!compact && (
+              <Typography.Text
+                title={new Date(article.uploadedAt).toLocaleString()}
+                size="xs"
+                bold
+                disabled
+              >
+                {moment(article.uploadedAt).fromNow()}
+              </Typography.Text>
+            )}
+            {article.premium && isMobile ? (
+              <Typography.Text size="xs" variant="warning" bold>
+                Premium
+              </Typography.Text>
+            ) : null}
             {article.views && !compact ? (
               <Flex gap="xs" align="center">
                 <Eye color="#ccc" size={18} />

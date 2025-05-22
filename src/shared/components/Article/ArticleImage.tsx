@@ -24,8 +24,8 @@ export const ArticleImage: React.FC<ArticleImageProps> = ({
   width,
   style,
 }) => {
-  const calculatedWidth = width ? width : compact ? "10rem" : "100%"
-  const calculatedHeight = height ? height : compact ? "10rem" : "20rem"
+  const calculatedWidth = width ? width : "100%"
+  const calculatedHeight = height ? height : "20rem"
 
   return (
     <a

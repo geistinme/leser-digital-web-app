@@ -11,6 +11,7 @@ import {
 import { Page } from "./components/Page"
 import { AboutPage } from "./pages/AboutPage"
 import { AccountPage } from "./pages/AccountPage"
+import { CollectionPage } from "./pages/Collection/CollectionPage"
 import { NotFoundPage } from "./pages/Error/404Page"
 import { ExplorePage } from "./pages/Explore/ExplorePage"
 import { FollowingPage } from "./pages/Following/FollowingPage"
@@ -30,6 +31,7 @@ export const router = createBrowserRouter([
       { path: "/following", element: <FollowingPage /> },
       { path: "/:source", element: <SourcePage /> },
       { path: "/t/:topic", element: <TopicPage /> },
+      { path: "/collection", element: <CollectionPage /> },
       { path: "/me", element: <Private page={<AccountPage />} /> },
     ],
   },
