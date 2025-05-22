@@ -16,6 +16,7 @@ import { ExplorePage } from "./pages/Explore/ExplorePage"
 import FollowingPage from "./pages/Following/FollowingPage"
 import { HomePage } from "./pages/Home/HomePage"
 import SourcePage from "./pages/Profile/SourceProfilePage"
+import TopicProfilePage from "./pages/Profile/TopicProfilePage"
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
       { path: "/explore", element: <ExplorePage /> },
       { path: "/following", element: <FollowingPage /> },
       { path: "/:source", element: <SourcePage /> },
+      { path: "/t/:topic", element: <TopicProfilePage /> },
       { path: "/me", element: <Private page={<AccountPage />} /> },
     ],
   },

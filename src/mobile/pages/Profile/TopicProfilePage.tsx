@@ -5,33 +5,28 @@ import { useInView } from "react-intersection-observer"
 import { useParams } from "react-router"
 
 import {
-  ArticleGridFragment,
-  useArticlesQuery,
-  useSourceQuery,
+    ArticleCategory,
+    ArticleGridFragment,
+    useArticlesQuery,
+    useTopicQuery,
 } from "../../../../generated/graphql"
-import { SourceShowcase } from "../../../shared/components/Source/SourceShowcase"
+import { SourceShowcase } from "../../../shared/components"
 import ArticleFeed from "../../components/Article/ArticleFeed"
 
-interface SourcePageProps {}
+interface TopicPageProps {}
 
-const SourcePage: React.FC<SourcePageProps> = () => {
-  const { source } = useParams<{ source: string }>()
+const TopicPage: React.FC<TopicPageProps> = () => {
+  const { topic: topicKey } = useParams<{ topic: string }>()
 
-  const { data: sourceQueryData } = useSourceQuery({
-    variables: { key: source as string },
+  const { data: topicQueryData } = useTopicQuery({
+    variables: { category: topicKey?.toUpperCase() as ArticleCategory },
   })
   const { data: articlesQueryData, fetchMore } = useArticlesQuery({
     variables: {
       pagination: { offset: 0, limit: 10 },
-      filter: { source },
+      filter: { topic: topicKey?.toUpperCase() as ArticleCategory },
     },
   })
-
-  useEffect(() => {
-    if (!!sourceQueryData && !sourceQueryData.source) {
-      throw new Error("Page not found")
-    }
-  }, [sourceQueryData])
 
   const [hasMore, setHasMore] = useState(true)
   const loadMore = useCallback(() => {
@@ -74,13 +69,7 @@ const SourcePage: React.FC<SourcePageProps> = () => {
 
   const feed = useMemo(() => {
     if (articlesQueryData?.articles?.length) {
-      return (
-        <ArticleFeed
-          articles={articlesQueryData.articles}
-          compact
-          lastRef={ref}
-        />
-      )
+      return <ArticleFeed articles={articlesQueryData.articles} lastRef={ref} />
     } else {
       return null
     }
@@ -88,9 +77,9 @@ const SourcePage: React.FC<SourcePageProps> = () => {
 
   return (
     <Flex direction="column" align="center" gap="xl" style={{ width: "100%" }}>
-      <title>{sourceQueryData?.source?.name}</title>
-      {sourceQueryData?.source ? (
-        <SourceShowcase source={sourceQueryData.source} />
+      <title>{topicQueryData?.topic?.name}</title>
+      {topicQueryData?.topic ? (
+        <SourceShowcase source={topicQueryData.topic} />
       ) : null}
       <Flex
         direction="column"
@@ -109,4 +98,4 @@ const SourcePage: React.FC<SourcePageProps> = () => {
   )
 }
 
-export default SourcePage
+export default TopicPage
