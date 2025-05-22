@@ -39,12 +39,13 @@ export const Auth: React.FC = () => {
       <Card
         style={{
           border: isMobile ? "initial" : undefined,
-          width: isMobile ? "calc(100% - 4rem - 2px)" : "100%",
+          width: isMobile ? "calc(100% - 2px)" : "100%",
+          height: isMobile ? "100%" : undefined,
           maxWidth: isMobile ? "initial" : "24rem",
           position: "absolute",
-          top: "50%",
+          top: "10%",
           left: "50%",
-          transform: "translate(-50%, -50%)",
+          transform: "translate(-50%, 0)",
         }}
       >
         <Spacing gap="xl">
