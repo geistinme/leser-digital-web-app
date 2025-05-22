@@ -103,6 +103,6 @@
 
 @include media(">phone", "<tablet") {
   .item {
-    border-radius: $border-radius-xs;
+    border-radius: initial;
   }
 }

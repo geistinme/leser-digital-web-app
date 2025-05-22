@@ -9,7 +9,6 @@ import {
 } from "../../../../generated/graphql"
 import { SubscriptionItem } from "../../../shared/components"
 
-
 interface SubscriptionGridItem {
   source: SourceGridFragment | TopicGridFragment
   subscription?: UserSubscriptionFragment
@@ -53,17 +52,17 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
   }, [sources, userSubscriptions])
 
   return (
-    <Flex direction="column" gap="sm" style={{ width: "100%" }}>
+    <Flex direction="column" style={{ width: "100%" }}>
       {gridRows?.map((row, index) => {
         return (
-          <Row
-            key={`row-${index}`}
-            style={{ height: "12rem" }}
-            gap={"0.5rem"}
-          >
+          <Row key={`row-${index}`} style={{ height: "12rem" }}>
             {row.map((source, i) => {
               return (
-                <Column key={`column-${i}`} span={12} style={{ height: "100%" }}>
+                <Column
+                  key={`column-${i}`}
+                  span={12}
+                  style={{ height: "100%" }}
+                >
                   <SubscriptionItem
                     source={source.source}
                     userSubscription={source.subscription}
