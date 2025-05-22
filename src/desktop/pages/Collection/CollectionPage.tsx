@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react"
 
 import {
   Divider,
@@ -7,45 +7,45 @@ import {
   Spacing,
   Tabs,
   Typography,
-} from "@sampled-ui/base";
-import { useLocation, useNavigate } from "react-router";
+} from "@sampled-ui/base"
+import { useLocation, useNavigate } from "react-router"
 
 import {
   useLoggedInQuery,
   useSavedArticlesLazyQuery,
   useViewedArticlesLazyQuery,
-} from "../../../../generated/graphql";
-import ArticleList from "../../components/Article/ArticleList";
+} from "../../../../generated/graphql"
+import ArticleList from "../../components/Article/ArticleList"
 
 interface CollectionPageProps {}
 
 export const CollectionPage: React.FC<CollectionPageProps> = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate = useNavigate()
+  const location = useLocation()
   const [selected, setSelected] = useState(
     new URLSearchParams(location.search).get("tab") ?? "saved"
-  );
+  )
 
-  const { data: loggedInQueryData } = useLoggedInQuery();
+  const { data: loggedInQueryData } = useLoggedInQuery()
   const [
     savedArticlesQuery,
     { data: savedArticlesQueryData, loading: loadingSavedArticles },
-  ] = useSavedArticlesLazyQuery({ fetchPolicy: "cache-and-network" });
+  ] = useSavedArticlesLazyQuery({ fetchPolicy: "cache-and-network" })
   const [
     viewedArticlesQuery,
     { data: viewedArticlesQueryData, loading: loadingViewedArticles },
-  ] = useViewedArticlesLazyQuery({ fetchPolicy: "cache-and-network" });
+  ] = useViewedArticlesLazyQuery({ fetchPolicy: "cache-and-network" })
 
   useEffect(() => {
-    const loggedIn = !!loggedInQueryData?.loggedIn;
+    const loggedIn = !!loggedInQueryData?.loggedIn
     if (loggedIn) {
       if (selected === "viewed") {
-        viewedArticlesQuery();
+        viewedArticlesQuery()
       } else {
-        savedArticlesQuery();
+        savedArticlesQuery()
       }
     }
-  }, [loggedInQueryData, savedArticlesQuery, selected, viewedArticlesQuery]);
+  }, [loggedInQueryData, savedArticlesQuery, selected, viewedArticlesQuery])
 
   const loading = useMemo(() => {
     if (loadingSavedArticles && loadingViewedArticles) {
@@ -60,11 +60,11 @@ export const CollectionPage: React.FC<CollectionPageProps> = () => {
           <Skeleton width="40rem" height="10rem" />
           <Skeleton width="40rem" height="10rem" />
         </Flex>
-      );
+      )
     } else {
-      return null;
+      return null
     }
-  }, [loadingSavedArticles, loadingViewedArticles]);
+  }, [loadingSavedArticles, loadingViewedArticles])
 
   const empty = useMemo(() => {
     if (
@@ -76,7 +76,7 @@ export const CollectionPage: React.FC<CollectionPageProps> = () => {
         <Typography.Text disabled bold style={{ textAlign: "center" }}>
           Keine gespeicherten Artikel gefunden
         </Typography.Text>
-      );
+      )
     } else if (
       (!viewedArticlesQueryData?.viewedArticles ||
         viewedArticlesQueryData?.viewedArticles?.length === 0) &&
@@ -86,15 +86,15 @@ export const CollectionPage: React.FC<CollectionPageProps> = () => {
         <Typography.Text disabled bold style={{ textAlign: "center" }}>
           Keine bisher angesehenen Artikel gefunden
         </Typography.Text>
-      );
+      )
     } else {
-      return null;
+      return null
     }
   }, [
     savedArticlesQueryData?.savedArticles,
     selected,
     viewedArticlesQueryData?.viewedArticles,
-  ]);
+  ])
 
   return (
     <Spacing gap="xl">
@@ -111,8 +111,8 @@ export const CollectionPage: React.FC<CollectionPageProps> = () => {
           ]}
           selected={selected}
           onSelect={(item) => {
-            setSelected(item.key);
-            navigate(`/collection?tab=${item.key}`, { replace: true });
+            setSelected(item.key)
+            navigate(`/collection?tab=${item.key}`, { replace: true })
           }}
         />
         <Divider
@@ -130,5 +130,5 @@ export const CollectionPage: React.FC<CollectionPageProps> = () => {
         ) : null}
       </Flex>
     </Spacing>
-  );
-};
+  )
+}

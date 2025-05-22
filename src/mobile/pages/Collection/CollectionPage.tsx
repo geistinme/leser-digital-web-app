@@ -1,12 +1,19 @@
 import React, { useEffect, useMemo, useState } from "react"
 
-import { Flex, Header, Skeleton, Tabs, Typography } from "@sampled-ui/base"
+import {
+  Flex,
+  Header,
+  Skeleton,
+  Spacing,
+  Tabs,
+  Typography,
+} from "@sampled-ui/base"
 import { useLocation, useNavigate } from "react-router"
 
 import {
-    useLoggedInQuery,
-    useSavedArticlesLazyQuery,
-    useViewedArticlesLazyQuery,
+  useLoggedInQuery,
+  useSavedArticlesLazyQuery,
+  useViewedArticlesLazyQuery,
 } from "../../../../generated/graphql"
 import ArticleList from "../../components/Article/ArticleList"
 
@@ -66,9 +73,11 @@ export const CollectionPage: React.FC<CollectionPageProps> = () => {
       selected === "saved"
     ) {
       return (
-        <Typography.Text disabled bold style={{ textAlign: "center" }}>
-          Keine gespeicherten Artikel gefunden
-        </Typography.Text>
+        <Spacing gap="md">
+          <Typography.Text disabled bold style={{ textAlign: "center" }}>
+            Keine gespeicherten Artikel gefunden
+          </Typography.Text>
+        </Spacing>
       )
     } else if (
       (!viewedArticlesQueryData?.viewedArticles ||
@@ -76,9 +85,11 @@ export const CollectionPage: React.FC<CollectionPageProps> = () => {
       selected === "viewed"
     ) {
       return (
-        <Typography.Text disabled bold style={{ textAlign: "center" }}>
-          Keine bisher angesehenen Artikel gefunden
-        </Typography.Text>
+        <Spacing gap="md">
+          <Typography.Text disabled bold style={{ textAlign: "center" }}>
+            Keine bisher angesehenen Artikel gefunden
+          </Typography.Text>
+        </Spacing>
       )
     } else {
       return null

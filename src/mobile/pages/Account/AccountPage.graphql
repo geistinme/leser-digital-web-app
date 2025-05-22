@@ -4,4 +4,10 @@ query mobileProfile {
     name
     email
   }
+  subscriptions {
+    id
+  }
+  savedArticles {
+    id
+  }
 }

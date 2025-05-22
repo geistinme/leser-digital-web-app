@@ -10,7 +10,7 @@ import {
 
 import { Page } from "./components/Page"
 import { AboutPage } from "./pages/AboutPage"
-import { AccountPage } from "./pages/AccountPage"
+import { AccountPage } from "./pages/Account/AccountPage"
 import { CollectionPage } from "./pages/Collection/CollectionPage"
 import { NotFoundPage } from "./pages/Error/404Page"
 import { ExplorePage } from "./pages/Explore/ExplorePage"

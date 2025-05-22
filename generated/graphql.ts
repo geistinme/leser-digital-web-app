@@ -468,7 +468,7 @@ export type TopicProfileFragment = { __typename?: 'Topic', id: string, category:
 export type MobileProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MobileProfileQuery = { __typename?: 'Query', loggedIn: { __typename?: 'User', id: string, name: string, email: string } };
+export type MobileProfileQuery = { __typename?: 'Query', loggedIn: { __typename?: 'User', id: string, name: string, email: string }, subscriptions?: Array<{ __typename?: 'Subscription', id: string }> | null, savedArticles?: Array<{ __typename?: 'Article', id: string }> | null };
 
 export type SendResetLinkMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -1445,6 +1445,12 @@ export const MobileProfileDocument = gql`
     id
     name
     email
+  }
+  subscriptions {
+    id
+  }
+  savedArticles {
+    id
   }
 }
     `;
