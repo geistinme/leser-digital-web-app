@@ -44,7 +44,7 @@ export const UserActivity: React.FC<UserActivityProps> = ({ profile }) => {
         />
       </Flex>
       <Flex direction="column" align="start" gap="md" style={{ width: "100%" }}>
-        <Typography.Text variant="secondary">Meine Lieblingsquellen</Typography.Text>
+        <Typography.Text disabled>Meine Lieblingsquellen</Typography.Text>
         <HorizontalBarChart
           axis={
             mySourceActivityStatsQueryData?.mySourceActivityStats?.map(
@@ -61,7 +61,7 @@ export const UserActivity: React.FC<UserActivityProps> = ({ profile }) => {
         />
       </Flex>
       <Flex direction="column" align="start" gap="md" style={{ width: "100%" }}>
-        <Typography.Text variant="secondary">Meine Lieblingsthemen</Typography.Text>
+        <Typography.Text disabled>Meine Lieblingsthemen</Typography.Text>
         <HorizontalBarChart
           axis={
             myTopicActivityStatsQueryData?.myTopicActivityStats?.map(

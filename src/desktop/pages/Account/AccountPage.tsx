@@ -29,7 +29,7 @@ export const AccountPage: React.FC = () => {
           <Typography.Heading level={3}>
             {desktopProfileQueryData?.loggedIn.name as string}
           </Typography.Heading>
-          <Typography.Text disabled>
+          <Typography.Text variant="secondary">
             {desktopProfileQueryData?.loggedIn.email}
           </Typography.Text>
         </Flex>
