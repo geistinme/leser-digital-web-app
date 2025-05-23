@@ -3,7 +3,11 @@ import classNames from "classnames"
 import moment from "moment"
 import { useNavigate } from "react-router"
 
-import { ArticleActivityType, ArticleFeedFragment, ArticleGridFragment } from "../../../../generated/graphql"
+import {
+  ArticleActivityType,
+  ArticleFeedFragment,
+  ArticleGridFragment,
+} from "../../../../generated/graphql"
 import { decodeHtmlEntities } from "../../helpers"
 
 import styles from "./Article.module.scss"

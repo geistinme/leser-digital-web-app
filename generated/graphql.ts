@@ -198,6 +198,7 @@ export type Query = {
   myTopicActivityStats?: Maybe<Array<TopicActivityStat>>;
   recommendedArticles?: Maybe<Array<Maybe<Article>>>;
   savedArticles?: Maybe<Array<Article>>;
+  search?: Maybe<SearchResult>;
   source?: Maybe<Source>;
   sources?: Maybe<Array<Source>>;
   subscriptions?: Maybe<Array<Subscription>>;
@@ -240,6 +241,12 @@ export type QuerySavedArticlesArgs = {
 };
 
 
+export type QuerySearchArgs = {
+  pagination?: InputMaybe<PaginationInput>;
+  query?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QuerySourceArgs = {
   key?: InputMaybe<Scalars['String']['input']>;
 };
@@ -258,6 +265,14 @@ export enum Role {
   Admin = 'ADMIN',
   User = 'USER'
 }
+
+/** Search result type */
+export type SearchResult = {
+  __typename?: 'SearchResult';
+  articles?: Maybe<Array<Article>>;
+  sources?: Maybe<Array<Source>>;
+  topics?: Maybe<Array<Topic>>;
+};
 
 export type Source = {
   __typename?: 'Source';
@@ -389,6 +404,14 @@ export type MostViewedArticlesQueryVariables = Exact<{
 
 
 export type MostViewedArticlesQuery = { __typename?: 'Query', mostViewedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
+
+export type SearchQueryVariables = Exact<{
+  query: Scalars['String']['input'];
+  pagination?: InputMaybe<PaginationInput>;
+}>;
+
+
+export type SearchQuery = { __typename?: 'Query', search?: { __typename?: 'SearchResult', articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null, sources?: Array<{ __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null, topics?: Array<{ __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null } | null };
 
 export type SourcesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1060,6 +1083,57 @@ export type MostViewedArticlesQueryHookResult = ReturnType<typeof useMostViewedA
 export type MostViewedArticlesLazyQueryHookResult = ReturnType<typeof useMostViewedArticlesLazyQuery>;
 export type MostViewedArticlesSuspenseQueryHookResult = ReturnType<typeof useMostViewedArticlesSuspenseQuery>;
 export type MostViewedArticlesQueryResult = Apollo.QueryResult<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>;
+export const SearchDocument = gql`
+    query search($query: String!, $pagination: PaginationInput) {
+  search(query: $query, pagination: $pagination) {
+    articles {
+      ...ArticleFeed
+    }
+    sources {
+      ...SourceGrid
+    }
+    topics {
+      ...TopicGrid
+    }
+  }
+}
+    ${ArticleFeedFragmentDoc}
+${SourceGridFragmentDoc}
+${TopicGridFragmentDoc}`;
+
+/**
+ * __useSearchQuery__
+ *
+ * To run a query within a React component, call `useSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useSearchQuery(baseOptions: Apollo.QueryHookOptions<SearchQuery, SearchQueryVariables> & ({ variables: SearchQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options);
+      }
+export function useSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchQuery, SearchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options);
+        }
+export function useSearchSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SearchQuery, SearchQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options);
+        }
+export type SearchQueryHookResult = ReturnType<typeof useSearchQuery>;
+export type SearchLazyQueryHookResult = ReturnType<typeof useSearchLazyQuery>;
+export type SearchSuspenseQueryHookResult = ReturnType<typeof useSearchSuspenseQuery>;
+export type SearchQueryResult = Apollo.QueryResult<SearchQuery, SearchQueryVariables>;
 export const SourcesDocument = gql`
     query sources {
   sources {

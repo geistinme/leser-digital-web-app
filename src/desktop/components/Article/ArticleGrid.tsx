@@ -44,8 +44,9 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
         }
       }
       if (
-        (index === 0 || index % 3 === 0) &&
-        row.filter((a) => !!a).length === 3
+        index === 0 ||
+        index % columns === 0 ||
+        allArticles[index] === undefined
       ) {
         return [...allRows, row]
       }
@@ -68,27 +69,33 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
           }
           gap={"1rem"}
         >
-          <Column span={8}>
-            <ArticleCompact
-              compact={compact}
-              article={row[0]}
-              onViewArticle={() => handleViewArticle({ article: row[0] })}
-            />
-          </Column>
-          <Column span={8}>
-            <ArticleCompact
-              compact={compact}
-              article={row[1]}
-              onViewArticle={() => handleViewArticle({ article: row[1] })}
-            />
-          </Column>
-          <Column span={8}>
-            <ArticleCompact
-              compact={compact}
-              article={row[2]}
-              onViewArticle={() => handleViewArticle({ article: row[2] })}
-            />
-          </Column>
+          {row[0] && (
+            <Column span={8}>
+              <ArticleCompact
+                compact={compact}
+                article={row[0]}
+                onViewArticle={() => handleViewArticle({ article: row[0] })}
+              />
+            </Column>
+          )}
+          {row[1] && (
+            <Column span={8}>
+              <ArticleCompact
+                compact={compact}
+                article={row[1]}
+                onViewArticle={() => handleViewArticle({ article: row[1] })}
+              />
+            </Column>
+          )}
+          {row[2] && (
+            <Column span={8}>
+              <ArticleCompact
+                compact={compact}
+                article={row[2]}
+                onViewArticle={() => handleViewArticle({ article: row[2] })}
+              />
+            </Column>
+          )}
         </Row>
       ))}
     </Flex>

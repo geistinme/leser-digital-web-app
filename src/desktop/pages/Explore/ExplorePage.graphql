@@ -3,3 +3,17 @@ query mostViewedArticles($pagination: PaginationInput) {
     ...ArticleFeed
   }
 }
+
+query search($query: String!, $pagination: PaginationInput) {
+  search(query: $query, pagination: $pagination) {
+    articles {
+      ...ArticleFeed
+    }
+    sources {
+      ...SourceGrid
+    }
+    topics {
+      ...TopicGrid
+    }
+  }
+}
