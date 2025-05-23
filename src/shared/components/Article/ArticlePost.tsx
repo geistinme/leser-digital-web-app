@@ -66,11 +66,15 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
     </Flex>
   )
 
-  const compactImageDimensions = useMemo(() => {
+  const imageDimensions = useMemo(() => {
     if (isMobile && compact) {
       return {
         width: "8rem",
         height: "8rem",
+      }
+    } else if (isMobile) {
+      return {
+        height: "14rem",
       }
     } else if (compact) {
       return {
@@ -91,8 +95,8 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
     >
       <ArticleImage
         article={article}
-        height={compact ? compactImageDimensions?.height : undefined}
-        width={compact ? compactImageDimensions?.width : undefined}
+        height={imageDimensions?.height}
+        width={imageDimensions?.width}
         onClick={() => handleViewArticle({ article })}
       />
       {!compact ? (

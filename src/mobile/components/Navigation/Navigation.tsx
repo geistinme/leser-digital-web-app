@@ -6,7 +6,7 @@ import {
   CircleUserRound,
   Compass,
   GalleryVertical,
-  Rss
+  Rss,
 } from "lucide-react"
 import { Link, useLocation } from "react-router"
 
@@ -41,7 +41,6 @@ const NavigationOption: React.FC<{
       className={cn(styles.option, { [styles.selected]: selected })}
     >
       {option.icon}
-      {/* <div className={styles.link}>{option.label}</div> */}
     </Link>
   )
 }

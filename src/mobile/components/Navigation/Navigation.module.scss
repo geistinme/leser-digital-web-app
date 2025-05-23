@@ -38,3 +38,9 @@
     color: $color-secondary;
   }
 }
+
+@media (display-mode: standalone) {
+  .container {
+    padding-bottom: 2.4rem;
+  }
+}
