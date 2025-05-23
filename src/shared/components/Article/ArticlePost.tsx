@@ -50,7 +50,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
           onClick={() => navigate("/" + article.source.key)}
           className={styles.sourceLogo}
         />
-        {article.premium && !isMobile ? (
+        {article.premium && !compact ? (
           <Typography.Text size="xs" variant="warning" bold>
             Premium
           </Typography.Text>
@@ -157,19 +157,21 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
                 {moment(article.uploadedAt).fromNow()}
               </Typography.Text>
             )}
-            {article.premium && isMobile ? (
-              <Typography.Text size="xs" variant="warning" bold>
-                Premium
-              </Typography.Text>
-            ) : null}
-            {article.views && !compact ? (
-              <Flex gap="xs" align="center">
-                <Eye color="#ccc" size={18} />
-                <Typography.Text size="xs" bold disabled>
-                  {article.views}
+            <Flex gap="sm">
+              {article.premium && compact && isMobile ? (
+                <Typography.Text size="xs" variant="warning" bold>
+                  Premium
                 </Typography.Text>
-              </Flex>
-            ) : null}
+              ) : null}
+              {article.views && !compact ? (
+                <Flex gap="xs" align="center">
+                  <Eye color="#ccc" size={18} />
+                  <Typography.Text size="xs" bold disabled>
+                    {article.views}
+                  </Typography.Text>
+                </Flex>
+              ) : null}
+            </Flex>
           </Flex>
         </Flex>
       </Spacing>
