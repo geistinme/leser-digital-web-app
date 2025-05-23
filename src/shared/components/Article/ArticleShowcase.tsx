@@ -6,6 +6,7 @@ import { useNavigate } from "react-router"
 import { ArticleFeedFragment } from "../../../../generated/graphql"
 import { decodeHtmlEntities } from "../../helpers"
 import { useCreateViewActivity } from "../../hooks/Article/createViewActivity"
+import { useIsDevice } from "../../hooks/isDevice"
 
 import styles from "./Article.module.scss"
 import { ArticleImage } from "./ArticleImage"
@@ -18,14 +19,14 @@ export const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
   article,
 }) => {
   const navigate = useNavigate()
-
+  const { isMobile } = useIsDevice()
   const handleViewArticle = useCreateViewActivity()
 
   return (
     <div className={styles.showcase}>
       <ArticleImage
         article={article}
-        height="40rem"
+        height={isMobile ? "28rem" : "40rem"}
         width="100%"
         style={{
           border: "initial",
@@ -56,10 +57,10 @@ export const ArticleShowcase: React.FC<ArticleShowcaseProps> = ({
               margin: "auto",
             }}
           >
-            <Typography.Heading level={4}>
+            <Typography.Heading level={isMobile ? 5 : 4}>
               {decodeHtmlEntities(article.title)}
             </Typography.Heading>
-            <Typography.Text size="md">
+            <Typography.Text size={isMobile ? "sm" :"md"}>
               {article.description
                 ? decodeHtmlEntities(article.description)
                 : null}
