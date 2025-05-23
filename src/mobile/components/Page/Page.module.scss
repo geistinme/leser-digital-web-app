@@ -12,12 +12,6 @@
   }
 }
 
-@media (display-mode: browser) {
-  .outlet {
-    padding-top: 44px;
-  }
-}
-
 @media (display-mode: standalone) {
   .outlet {
     padding-top: env(safe-area-inset-top);
