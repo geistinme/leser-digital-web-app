@@ -43,7 +43,7 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
       if (
         index === 0 ||
         index % columns === 0 ||
-        allSources[row.length + 1] === undefined
+        allSources[index] === undefined
       ) {
         return [...allRows, row]
       }
