@@ -72,7 +72,6 @@ export const TopicPage: React.FC<TopicPageProps> = () => {
       return (
         <ArticleGrid
           articles={articlesQueryData.articles}
-          compact
           lastRef={ref}
         />
       )

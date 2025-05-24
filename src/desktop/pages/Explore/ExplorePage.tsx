@@ -122,8 +122,7 @@ export const ExplorePage: React.FC = () => {
       >
         <Input
           placeholder="Suchen"
-          size="lg"
-          style={{ width: "20rem", alignSelf: "center" }}
+          style={{ width: "16rem", alignSelf: "center" }}
           defaultValue={searchParam ?? ""}
           onChange={(e) => {
             navigate(`/explore?search=${e.target.value}`, { replace: true })
