@@ -270,6 +270,9 @@ export enum Role {
 export type SearchResult = {
   __typename?: 'SearchResult';
   articles?: Maybe<Array<Article>>;
+  foundArticles?: Maybe<Scalars['Int']['output']>;
+  foundSources?: Maybe<Scalars['Int']['output']>;
+  foundTopics?: Maybe<Scalars['Int']['output']>;
   sources?: Maybe<Array<Source>>;
   topics?: Maybe<Array<Topic>>;
 };
@@ -411,7 +414,7 @@ export type SearchQueryVariables = Exact<{
 }>;
 
 
-export type SearchQuery = { __typename?: 'Query', search?: { __typename?: 'SearchResult', articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null, sources?: Array<{ __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null, topics?: Array<{ __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null } | null };
+export type SearchQuery = { __typename?: 'Query', search?: { __typename?: 'SearchResult', foundArticles?: number | null, foundSources?: number | null, foundTopics?: number | null, articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null, sources?: Array<{ __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null, topics?: Array<{ __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null } | null };
 
 export type SourcesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1089,12 +1092,15 @@ export const SearchDocument = gql`
     articles {
       ...ArticleFeed
     }
+    foundArticles
     sources {
       ...SourceGrid
     }
+    foundSources
     topics {
       ...TopicGrid
     }
+    foundTopics
   }
 }
     ${ArticleFeedFragmentDoc}

@@ -9,11 +9,14 @@ query search($query: String!, $pagination: PaginationInput) {
     articles {
       ...ArticleFeed
     }
+    foundArticles
     sources {
       ...SourceGrid
     }
+    foundSources
     topics {
       ...TopicGrid
     }
+    foundTopics
   }
 }

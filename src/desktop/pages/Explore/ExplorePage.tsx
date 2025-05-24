@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
-import { Flex, Input, Spacing, Typography } from "@sampled-ui/base"
-import { useInView } from "react-intersection-observer"
+import { Flex, Input, Spacing } from "@sampled-ui/base"
 import { useLocation, useNavigate } from "react-router"
 
 import {
@@ -11,7 +10,7 @@ import {
 } from "../../../../generated/graphql"
 import { ArticleShowcase } from "../../../shared/components"
 import ArticleGrid from "../../components/Article/ArticleGrid"
-import SubscriptionGrid from "../../components/Subscription/SubscriptionGrid"
+import SearchResults from "../../components/Search/SearchResults"
 
 export const ExplorePage: React.FC = () => {
   const navigate = useNavigate()
@@ -45,17 +44,6 @@ export const ExplorePage: React.FC = () => {
       setHasMore(true)
     }
   }, [search, searchParam])
-  const emptySearch = useMemo(() => {
-    return (
-      !searchData?.search?.articles?.length &&
-      !searchData?.search?.topics?.length &&
-      !searchData?.search?.sources?.length
-    )
-  }, [
-    searchData?.search?.articles?.length,
-    searchData?.search?.sources?.length,
-    searchData?.search?.topics?.length,
-  ])
 
   const loadMore = useCallback(() => {
     if (hasMore) {
@@ -83,11 +71,13 @@ export const ExplorePage: React.FC = () => {
             const next = Object.assign({}, prev, {
               search: {
                 articles: nextArticles,
+                foundArticles: prev?.search?.foundArticles ?? 0,
                 sources: prev?.search?.sources,
+                foundSources: prev?.search?.foundSources ?? 0,
                 topics: prev?.search?.topics,
+                foundTopics: prev?.search?.foundTopics ?? 0,
               },
             })
-            console.debug(next)
             return next
           }
           return prev
@@ -96,20 +86,31 @@ export const ExplorePage: React.FC = () => {
     }
   }, [hasMore, fetchMore, searchParam, searchData?.search?.articles?.length])
 
-  const { ref, inView } = useInView()
-  useEffect(() => {
-    if (inView && hasMore) {
-      loadMore()
+  const searchResults = useMemo(() => {
+    if (searchParam) {
+      return (
+        <SearchResults
+          articles={searchData?.search?.articles}
+          foundArticles={searchData?.search?.foundArticles ?? 0}
+          sources={searchData?.search?.sources}
+          foundSources={searchData?.search?.foundSources ?? 0}
+          topics={searchData?.search?.topics}
+          foundTopics={searchData?.search?.foundTopics ?? 0}
+          {...{ loadMore, hasMore }}
+        />
+      )
     }
-  }, [hasMore, inView, loadMore])
-
-  const articleSearchGrid = useMemo(() => {
-    if (searchData?.search?.articles?.length) {
-      return <ArticleGrid articles={searchData.search.articles} lastRef={ref} />
-    } else {
-      return null
-    }
-  }, [searchData?.search?.articles, ref])
+  }, [
+    hasMore,
+    loadMore,
+    searchData?.search?.articles,
+    searchData?.search?.foundArticles,
+    searchData?.search?.foundSources,
+    searchData?.search?.foundTopics,
+    searchData?.search?.sources,
+    searchData?.search?.topics,
+    searchParam,
+  ])
 
   return (
     <Spacing gap="xl">
@@ -134,29 +135,7 @@ export const ExplorePage: React.FC = () => {
         {allOtherArticles && !searchParam ? (
           <ArticleGrid articles={allOtherArticles} />
         ) : null}
-        {searchData?.search?.sources?.length ? (
-          <Flex direction="column" gap="lg" align="start">
-            <Typography.Heading level={4}>Quellen</Typography.Heading>
-            <SubscriptionGrid sources={searchData.search.sources} />
-          </Flex>
-        ) : null}
-        {searchData?.search?.topics?.length ? (
-          <Flex direction="column" gap="lg" align="start">
-            <Typography.Heading level={4}>Themen</Typography.Heading>
-            <SubscriptionGrid sources={searchData.search.topics} />
-          </Flex>
-        ) : null}
-        {searchData?.search?.articles?.length ? (
-          <Flex direction="column" gap="lg" align="start">
-            <Typography.Heading level={4}>Artikel</Typography.Heading>
-            {articleSearchGrid}
-          </Flex>
-        ) : null}
-        {searchParam && emptySearch ? (
-          <Typography.Text disabled bold style={{ textAlign: "center" }}>
-            Keine Artikel gefunden
-          </Typography.Text>
-        ) : null}
+        {searchResults}
       </Flex>
     </Spacing>
   )
