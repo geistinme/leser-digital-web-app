@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo } from "react"
 
-import { Flex, Typography } from "@sampled-ui/base"
+import { Flex, Spacing, Typography } from "@sampled-ui/base"
 import { useInView } from "react-intersection-observer"
 
 import {
-    ArticleFeedFragment,
-    SourceGridFragment,
-    TopicGridFragment,
+  ArticleFeedFragment,
+  SourceGridFragment,
+  TopicGridFragment,
 } from "../../../../generated/graphql"
 import ArticleFeed from "../Article/ArticleFeed"
 import SubscriptionGrid from "../Subscription/SubscriptionGrid"
@@ -52,28 +52,24 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   }, [articles, ref])
 
   return (
-    <Flex direction="column" align="stretch" gap="md">
+    <Flex direction="column" align="stretch">
       {sources?.length ? (
-        <Flex direction="column" gap="sm" align="start" key="sources">
-          <Typography.Text size="md" disabled>
-            {`Quellen (${foundSources ?? 0})`}
-          </Typography.Text>
-          <SubscriptionGrid sources={sources} />
-        </Flex>
-      ) : null}
-      {topics?.length ? (
-        <Flex direction="column" gap="sm" align="start" key="topics">
-          <Typography.Text size="md" disabled>
-            {`Themen (${foundTopics ?? 0})`}
-          </Typography.Text>
-          <SubscriptionGrid sources={topics} />
+        <Flex direction="column" align="start" key="sources">
+          <Spacing gap="md">
+            <Typography.Text size="md" disabled>
+              {`Quellen (${(foundSources ?? 0) + (foundTopics ?? 0)})`}
+            </Typography.Text>
+          </Spacing>
+          <SubscriptionGrid sources={[...(sources ?? []), ...(topics ?? [])]} />
         </Flex>
       ) : null}
       {articles?.length ? (
-        <Flex direction="column" gap="sm" align="start" key="articles">
-          <Typography.Text size="md" disabled>
-            {`Artikel (${foundArticles ?? 0})`}
-          </Typography.Text>
+        <Flex direction="column" align="start" key="articles">
+          <Spacing gap="md">
+            <Typography.Text size="md" disabled>
+              {`Artikel (${foundArticles ?? 0})`}
+            </Typography.Text>
+          </Spacing>
           {articleSearchGrid}
         </Flex>
       ) : null}

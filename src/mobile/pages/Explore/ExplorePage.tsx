@@ -156,18 +156,16 @@ export const ExplorePage: React.FC = () => {
   const searchResults = useMemo(() => {
     if (searchParam) {
       return (
-        <Spacing gap="md">
-          <SearchResults
-            articles={searchData?.search?.articles}
-            foundArticles={searchData?.search?.foundArticles ?? 0}
-            sources={searchData?.search?.sources}
-            foundSources={searchData?.search?.foundSources ?? 0}
-            topics={searchData?.search?.topics}
-            foundTopics={searchData?.search?.foundTopics ?? 0}
-            loadMore={loadMoreSearchResults}
-            hasMore={hasMoreSearchResults}
-          />
-        </Spacing>
+        <SearchResults
+          articles={searchData?.search?.articles}
+          foundArticles={searchData?.search?.foundArticles ?? 0}
+          sources={searchData?.search?.sources}
+          foundSources={searchData?.search?.foundSources ?? 0}
+          topics={searchData?.search?.topics}
+          foundTopics={searchData?.search?.foundTopics ?? 0}
+          loadMore={loadMoreSearchResults}
+          hasMore={hasMoreSearchResults}
+        />
       )
     }
   }, [

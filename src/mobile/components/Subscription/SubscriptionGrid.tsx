@@ -16,7 +16,7 @@ interface SubscriptionGridItem {
 
 interface SubscriptionGridProps {
   userSubscriptions?: UserSubscriptionFragment[] | null
-  sources: SourceGridFragment[] | TopicGridFragment[] | null
+  sources: (SourceGridFragment | TopicGridFragment)[] | null
 }
 
 const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
