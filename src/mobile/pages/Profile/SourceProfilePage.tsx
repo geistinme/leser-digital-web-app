@@ -96,7 +96,7 @@ export const SourcePage: React.FC<SourcePageProps> = () => {
         direction="column"
         align="center"
         gap="lg"
-        style={{ maxWidth: "64rem", margin: "auto" }}
+        style={{ width: "100%" }}
       >
         {feed}
         {!hasMore ? (

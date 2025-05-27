@@ -14,10 +14,10 @@ import {
 } from "../../../../generated/graphql"
 import { decodeHtmlEntities } from "../../../shared/helpers"
 import { useCreateViewActivity } from "../../../shared/hooks/Article/createViewActivity"
+import { useIsDevice } from "../../hooks/isDevice"
 
 import styles from "./Article.module.scss"
 
-import { useIsDevice } from "../../hooks/isDevice"
 import { ArticleImage, ArticleMenu } from "./"
 
 interface ArticlePostProps {
