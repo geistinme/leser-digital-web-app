@@ -126,13 +126,19 @@
 .sourceLogo {
   cursor: pointer;
   max-height: 1rem;
-  filter: brightness(0) opacity(0.3);
-  transition-property: filter;
-  transition-duration: $transition-fast;
+
+  img {
+    max-height: 1rem;
+    filter: brightness(0) opacity(0.3);
+    transition-property: filter;
+    transition-duration: $transition-fast;
+  }
 }
 
-.sourceLogo:hover {
-  filter: brightness(1) opacity(1);
+.sourceLogo {
+  img:hover {
+    filter: brightness(1) opacity(1);
+  }
 }
 
 .action {
@@ -182,10 +188,6 @@
     .tags {
       top: $spacing-sm;
       right: $spacing-sm;
-    }
-
-    .sourceLogo {
-      max-width: 9rem;
     }
   }
 

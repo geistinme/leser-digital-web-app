@@ -45,11 +45,12 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
       className={classNames(styles.header, { [styles.compact]: compact })}
     >
       <Flex gap="sm">
-        <img
-          src={article.source.logo}
-          onClick={() => navigate("/" + article.source.key)}
-          className={styles.sourceLogo}
-        />
+        <div className={styles.sourceLogo}>
+          <img
+            src={article.source.logo}
+            onClick={() => navigate("/" + article.source.key)}
+          />
+        </div>
         {article.premium && !compact ? (
           <Typography.Text size="xs" variant="warning" bold>
             Premium
