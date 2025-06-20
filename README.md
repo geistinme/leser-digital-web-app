@@ -1,6 +1,6 @@
-# React + TypeScript + Vite
+# LeserDigital Web App
 
-This is the LeserDigital Web App repository. It contains the desktop and mobile web application code.
+This is the React + TypeScript + Vite repository. It contains the desktop and mobile web application code.
 
 ## Development
 
