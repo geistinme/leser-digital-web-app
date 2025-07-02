@@ -19,6 +19,7 @@ export const ArticleCompact: React.FC<{
   compact?: boolean
 }> = ({ article, compact, onViewArticle }) => {
   const navigate = useNavigate()
+  
 
   return (
     <Flex direction="column" className={styles.grid}>

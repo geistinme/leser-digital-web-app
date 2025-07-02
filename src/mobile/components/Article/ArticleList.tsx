@@ -3,8 +3,8 @@ import React from "react"
 import { Flex } from "@sampled-ui/base"
 
 import {
-    ArticleListFragment,
-    useLoggedInQuery,
+  ArticleListFragment,
+  useLoggedInQuery,
 } from "../../../../generated/graphql"
 import { ArticlePost } from "../../../shared/components"
 import { useIsDevice } from "../../../shared/hooks/isDevice"
@@ -33,7 +33,7 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles }) => {
           article={article}
           key={article.id}
           loggedIn={!!loggedInQueryData?.loggedIn}
-          compact
+          list
         />
       ))}
     </Flex>

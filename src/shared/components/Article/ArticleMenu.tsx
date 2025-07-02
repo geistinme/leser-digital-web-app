@@ -1,7 +1,8 @@
 import React from "react"
 
 import { Flex, useToast } from "@sampled-ui/base"
-import { Bookmark, Link } from "lucide-react"
+import { Bookmark, Link, Trash } from "lucide-react"
+import { useLocation } from "react-router"
 
 import {
   ArticleActivityType,
@@ -24,14 +25,32 @@ export const ArticleMenu: React.FC<ArticleMenuProps> = ({
   id,
   url,
 }) => {
+  const location = useLocation()
+  const search = new URLSearchParams(location.search)
+  const tab = search.get("tab")
+
   const { colorScheme } = useColorScheme()
   const { toast } = useToast()
+
+  // Function to copy the article link to clipboard
   const handleCopyLink = () => {
     navigator.clipboard.writeText(url)
     toast({
       message: "Link wurde kopiert",
     })
   }
+
+  // Check if the article is already saved or viewed
+  const existingActivity = activity?.find((activity) => {
+    if (activity?.type === ArticleActivityType.SaveArticle && tab === "saved") {
+      return activity
+    } else if (
+      activity?.type === ArticleActivityType.ViewArticle &&
+      tab === "viewed"
+    ) {
+      return activity
+    }
+  })
 
   const [createArticleActivity] = useCreateArticleActivityMutation({
     onCompleted: () =>
@@ -141,6 +160,20 @@ export const ArticleMenu: React.FC<ArticleMenuProps> = ({
         onClick={handleSaveArticle}
       />
       <Link size={20} className={styles.action} onClick={handleCopyLink} />
+      {tab === "viewed" && existingActivity ? (
+        <Trash
+          className={styles.action}
+          color="var(--color-error)"
+          size={20}
+          onClick={() => {
+            deleteArticleActivity({
+              variables: {
+                id: existingActivity.id,
+              },
+            })
+          }}
+        />
+      ) : null}
     </Flex>
   )
 }

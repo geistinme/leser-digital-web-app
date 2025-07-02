@@ -22,14 +22,14 @@ import { ArticleImage, ArticleMenu } from "./"
 
 interface ArticlePostProps {
   article: ArticleFeedFragment | ArticleListFragment
-  compact?: boolean
+  list?: boolean
   loggedIn?: boolean
   ref?: (node: HTMLDivElement | null) => void
 }
 
 export const ArticlePost: React.FC<ArticlePostProps> = ({
   article,
-  compact,
+  list,
   loggedIn,
   ref,
 }) => {
@@ -42,7 +42,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
     <Flex
       gap="sm"
       justify="between"
-      className={classNames(styles.header, { [styles.compact]: compact })}
+      className={classNames(styles.header, { [styles.list]: list })}
     >
       <Flex gap="sm">
         <div className={styles.sourceLogo}>
@@ -51,7 +51,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
             onClick={() => navigate("/" + article.source.key)}
           />
         </div>
-        {article.premium && !compact ? (
+        {article.premium && !list ? (
           <Typography.Text size="xs" variant="warning" bold>
             Premium
           </Typography.Text>
@@ -68,30 +68,31 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
   )
 
   const imageDimensions = useMemo(() => {
-    if (isMobile && compact) {
+    if (isMobile && list) {
       return {
         width: "8rem",
         height: "8rem",
       }
     } else if (isMobile) {
       return {
-        height: "14rem",
+        // For mobile, we want the image height to be 4:3 and adjust with the width
+        height: "calc(100vw * 0.75)",
       }
-    } else if (compact) {
+    } else if (list) {
       return {
         width: "10rem",
         height: "10rem",
       }
     }
-  }, [compact, isMobile])
+  }, [list, isMobile])
 
   return (
     <Flex
-      direction={compact ? "row" : "column"}
+      direction={list ? "row" : "column"}
       align="start"
-      gap={isMobile && compact ? "xs" : "sm"}
+      gap={isMobile && list ? "xs" : "sm"}
       key={article.id}
-      className={classNames(styles.article, { [styles.compact]: compact })}
+      className={classNames(styles.article, { [styles.list]: list })}
       ref={ref as unknown as React.RefObject<HTMLDivElement>}
     >
       <ArticleImage
@@ -100,7 +101,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
         width={imageDimensions?.width}
         onClick={() => handleViewArticle({ article })}
       />
-      {!compact ? (
+      {!list ? (
         <Flex gap="sm" className={styles.tags}>
           {article.activity?.find(
             (a) => a.type === ArticleActivityType.ViewArticle
@@ -136,7 +137,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
             <Typography.Text bold size="md" className={styles.title}>
               {decodeHtmlEntities(article.title)}
             </Typography.Text>
-            {article.description && !compact ? (
+            {article.description && !list ? (
               <Typography.Paragraph className={styles.description}>
                 {decodeHtmlEntities(article.description)}
               </Typography.Paragraph>
@@ -148,7 +149,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
             justify="between"
             style={{ width: "100%" }}
           >
-            {!compact && (
+            {!list && (
               <Typography.Text
                 title={new Date(article.uploadedAt).toLocaleString()}
                 size="xs"
@@ -159,12 +160,12 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
               </Typography.Text>
             )}
             <Flex gap="sm">
-              {article.premium && compact && isMobile ? (
+              {article.premium && list && isMobile ? (
                 <Typography.Text size="xs" variant="warning" bold>
                   Premium
                 </Typography.Text>
               ) : null}
-              {article.views && !compact ? (
+              {article.views && !list ? (
                 <Flex gap="xs" align="center">
                   <Eye color="#ccc" size={18} />
                   <Typography.Text size="xs" bold disabled>

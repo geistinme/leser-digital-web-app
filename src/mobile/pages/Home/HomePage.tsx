@@ -31,7 +31,7 @@ export const HomePage: React.FC = () => {
             ? true
             : selectedTab === "articles"
             ? false
-            : true,
+            : undefined,
       },
     }
   }, [selectedTab])

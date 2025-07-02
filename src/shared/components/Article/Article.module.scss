@@ -143,6 +143,11 @@
 
 .action {
   cursor: pointer;
+  opacity: 0.6;
+}
+
+.action:hover {
+  opacity: 1;
 }
 
 .more {
@@ -173,6 +178,7 @@
   .article {
     padding: initial;
     border: initial;
+    max-width: 100%;
 
     .image {
       border-radius: initial;
@@ -180,8 +186,8 @@
     }
 
     .content {
-      width: calc(100% - 2rem);
-      padding: $spacing-xs $spacing-md;
+      width: calc(100% - 1.4rem);
+      padding: $spacing-xs 0.7rem;
       padding-bottom: $spacing-sm;
     }
 

@@ -34,7 +34,7 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles }) => {
           article={article}
           key={article.id}
           loggedIn={!!loggedInQueryData?.loggedIn}
-          compact
+          list
         />
       ))}
     </Flex>
