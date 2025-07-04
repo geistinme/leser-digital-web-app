@@ -84,9 +84,9 @@ export const TopicPage: React.FC<TopicPageProps> = () => {
     <Flex direction="column" align="center" style={{ width: "100%" }}>
       <title>{topicQueryData?.topic?.name}</title>
       {topicQueryData?.topic ? (
-        <SourceShowcase source={topicQueryData.topic} />
+        <SourceShowcase topic={topicQueryData.topic} />
       ) : null}
-      <Spacing gap="xl">
+      <Spacing gap="xl" style={{ width: "calc(100% - 4rem)" }}>
         <Flex
           direction="column"
           align="center"

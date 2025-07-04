@@ -1,12 +1,14 @@
 import React from "react"
 
-import { Button, Flex, Spacing, Typography } from "@sampled-ui/base"
+import { Button, Flex, Spacing, Tag, Typography } from "@sampled-ui/base"
+import { useNavigate } from "react-router"
 
 import {
   SourceDocument,
   SourceProfileFragment,
   TopicDocument,
   TopicProfileFragment,
+  useSearchTermsQuery,
 } from "../../../../generated/graphql"
 import { useInvertedLogo } from "../../../shared/hooks/Article/invertLogo"
 import { useToggleSubscription } from "../../../shared/hooks/Subscription/toggleSubscription"
@@ -14,17 +16,27 @@ import { useToggleSubscription } from "../../../shared/hooks/Subscription/toggle
 import styles from "./Source.module.scss"
 
 interface SourceShowcaseProps {
-  source: SourceProfileFragment | TopicProfileFragment
+  source?: SourceProfileFragment
+  topic?: TopicProfileFragment
 }
 
-export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
-  const isTopic = "category" in source
-  const invert = useInvertedLogo((source as SourceProfileFragment).key)
+export const SourceShowcase: React.FC<SourceShowcaseProps> = ({
+  source,
+  topic,
+}) => {
+  const navigate = useNavigate()
+  const invert = useInvertedLogo(source?.key)
 
   const { handleToggle } = useToggleSubscription({
-    createVariables: isTopic ? { topicId: source.id } : { sourceId: source.id },
-    subscription: source.isSubscribed,
-    refetchQueries: isTopic ? [TopicDocument] : [SourceDocument],
+    createVariables: topic ? { topicId: topic.id } : { sourceId: source?.id },
+    subscription: (source ?? topic)?.isSubscribed,
+    refetchQueries: topic ? [TopicDocument] : [SourceDocument],
+  })
+
+  const { data: searchTermsQueryData } = useSearchTermsQuery({
+    variables: topic
+      ? { topicId: topic.id, pagination: { offset: 0, limit: 15 } }
+      : { sourceId: source?.id, pagination: { offset: 0, limit: 15 } },
   })
 
   return (
@@ -34,13 +46,13 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
       direction="column"
       style={{
         width: "100%",
-        height: "14rem",
+        paddingTop: "5rem",
       }}
     >
       <Spacing gap="xl">
-        {isTopic ? (
+        {topic ? (
           <Typography.Heading level={2} className={styles.name}>
-            {source.name}
+            {topic.name}
           </Typography.Heading>
         ) : (
           <img
@@ -57,7 +69,7 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
       <Flex gap="md">
         <Flex gap="xs">
           <Typography.Text size="md" bold>
-            {source.subscribers}
+            {(source ?? topic)?.subscribers}
           </Typography.Text>
           <Typography.Text size="md" variant="secondary">
             Followers
@@ -65,22 +77,44 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({ source }) => {
         </Flex>
         <Flex gap="xs">
           <Typography.Text size="md" bold>
-            {source?.articleCount}
+            {(source ?? topic)?.articleCount}
           </Typography.Text>
           <Typography.Text size="md" variant="secondary">
             Articles
           </Typography.Text>
         </Flex>
       </Flex>
-      {source?.id ? (
+      {(source ?? topic)?.id ? (
         <Button
-          variant={source.isSubscribed ? "secondary" : "primary"}
+          variant={(source ?? topic)?.isSubscribed ? "secondary" : "primary"}
           style={{ minWidth: "6rem", marginTop: "1rem" }}
           onClick={handleToggle}
         >
-          {source.isSubscribed ? "Gefolgt" : "Folgen"}
+          {(source ?? topic)?.isSubscribed ? "Gefolgt" : "Folgen"}
         </Button>
       ) : null}
+      <Flex
+        gap="sm"
+        justify="center"
+        style={{ flexWrap: "wrap", margin: "2rem", maxWidth: "100%" }}
+      >
+        {searchTermsQueryData?.searchTerms?.length
+          ? searchTermsQueryData.searchTerms
+              .map((term) =>
+                term.term ? (
+                  <Tag
+                    label={term.term}
+                    variant="filled"
+                    size="lg"
+                    onClick={() => {
+                      navigate(`/explore?term=${term.id}`)
+                    }}
+                  />
+                ) : null
+              )
+              .filter(Boolean)
+          : null}
+      </Flex>
     </Flex>
   )
 }

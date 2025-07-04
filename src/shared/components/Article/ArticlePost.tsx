@@ -18,6 +18,7 @@ import { useIsDevice } from "../../hooks/isDevice"
 
 import styles from "./Article.module.scss"
 
+import { toHeaderCase } from "js-convert-case"
 import { ArticleImage, ArticleMenu } from "./"
 
 interface ArticlePostProps {
@@ -51,6 +52,10 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
             onClick={() => navigate("/" + article.source.key)}
           />
         </div>
+        {(article as ArticleFeedFragment).topic?.category !==
+          ArticleCategory.Unknown && list ? (
+          <Typography.Text disabled>{article.topic.name}</Typography.Text>
+        ) : null}
         {article.premium && !list ? (
           <Typography.Text size="xs" variant="warning" bold>
             Premium
@@ -101,30 +106,28 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
         width={imageDimensions?.width}
         onClick={() => handleViewArticle({ article })}
       />
-      {!list ? (
-        <Flex gap="sm" className={styles.tags}>
-          {article.activity?.find(
-            (a) => a.type === ArticleActivityType.ViewArticle
-          ) ? (
-            <Tag
-              size="sm"
-              variant="filled"
-              color="var(--color-accent)"
-              label="Gelesen"
-              className={classNames(styles.category)}
-            />
-          ) : (article as ArticleFeedFragment).topic.category !==
-            ArticleCategory.Unknown ? (
-            <Tag
-              size="sm"
-              variant="filled"
-              color="transparent"
-              label={(article as ArticleFeedFragment).topic.name}
-              className={classNames(styles.category)}
-            />
-          ) : null}
-        </Flex>
-      ) : null}
+      <Flex gap="sm" className={styles.tags}>
+        {article.activity?.find(
+          (a) => a.type === ArticleActivityType.ViewArticle
+        ) && !list ? (
+          <Tag
+            size="sm"
+            variant="filled"
+            color="var(--color-accent)"
+            label="Gelesen"
+            className={classNames(styles.category)}
+          />
+        ) : (article as ArticleFeedFragment).topic?.category !==
+            ArticleCategory.Unknown && !list ? (
+          <Tag
+            size="sm"
+            variant="filled"
+            color="transparent"
+            label={(article as ArticleFeedFragment).topic?.name}
+            className={classNames(styles.category)}
+          />
+        ) : null}
+      </Flex>
       <Spacing gap="sm" className={styles.content}>
         <Flex direction="column" align="start" gap="sm">
           {header}
@@ -143,6 +146,20 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
               </Typography.Paragraph>
             ) : null}
           </a>
+          {(article as ArticleFeedFragment).keywords?.length ? (
+            <Flex gap="sm">
+              {(article as ArticleFeedFragment).keywords?.map((keyword) => (
+                <Tag
+                  color="gainsboro"
+                  label={toHeaderCase(keyword)}
+                  className={styles.keyword}
+                  onClick={() => {
+                    navigate(`/explore?search=${keyword}`)
+                  }}
+                />
+              ))}
+            </Flex>
+          ) : null}
           <Flex
             gap="sm"
             align="center"

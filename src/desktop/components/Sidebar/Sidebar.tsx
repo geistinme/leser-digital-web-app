@@ -16,6 +16,7 @@ import {
   GalleryVertical,
   Menu as MenuIcon,
   Rss,
+  Settings,
 } from "lucide-react"
 import { Location, useLocation, useNavigate } from "react-router"
 
@@ -92,6 +93,14 @@ export const Sidebar: React.FC = () => {
       onClick: () => navigate("/me"),
     },
   ]
+  if (data?.loggedIn) {
+    items.push({
+      title: "Admin",
+      key: "/admin",
+      icon: <Settings size={24} />,
+      onClick: () => navigate("/admin"),
+    })
+  }
 
   const selected = useGetSelectedNavItem(items, location)
 

@@ -1,43 +1,22 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
-import { Flex, Input, Spacing } from "@sampled-ui/base"
+import { Flex } from "@sampled-ui/base"
 import { useInView } from "react-intersection-observer"
-import { useLocation, useNavigate } from "react-router"
+import { useLocation } from "react-router"
 
 import {
   ArticleFeedFragment,
-  useMostViewedArticlesQuery,
+  useMostInterestingArticlesQuery,
   useSearchLazyQuery,
 } from "../../../../generated/graphql"
-import { ArticleShowcase } from "../../../shared/components"
 import ArticleFeed from "../../components/Article/ArticleFeed"
 import SearchResults from "../../components/Search/SearchResults"
 
 export const ExplorePage: React.FC = () => {
-  const navigate = useNavigate()
-  const { data: mostViewedArticlesQueryData, fetchMore } =
-    useMostViewedArticlesQuery({
+  const { data: mostInterestingQueryData, fetchMore } =
+    useMostInterestingArticlesQuery({
       variables: { pagination: { offset: 0, limit: 10 } },
     })
-
-  const mostViewedArticle = useMemo(
-    () =>
-      mostViewedArticlesQueryData?.mostViewedArticles
-        ? mostViewedArticlesQueryData?.mostViewedArticles[0]
-        : null,
-    [mostViewedArticlesQueryData?.mostViewedArticles]
-  )
-
-  const allOtherArticles = useMemo(
-    () =>
-      mostViewedArticlesQueryData?.mostViewedArticles
-        ? mostViewedArticlesQueryData?.mostViewedArticles.slice(
-            1,
-            mostViewedArticlesQueryData.mostViewedArticles.length
-          )
-        : null,
-    [mostViewedArticlesQueryData?.mostViewedArticles]
-  )
 
   const [hasMore, setHasMore] = useState(true)
   const loadMore = useCallback(() => {
@@ -45,23 +24,23 @@ export const ExplorePage: React.FC = () => {
       fetchMore({
         variables: {
           pagination: {
-            offset: mostViewedArticlesQueryData?.mostViewedArticles?.length,
+            offset: mostInterestingQueryData?.mostInterestingArticles?.length,
             limit: 10,
           },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if ((fetchMoreResult.mostViewedArticles?.length ?? 0) < 10) {
+          if ((fetchMoreResult.mostInterestingArticles?.length ?? 0) < 10) {
             setHasMore(false)
           }
           if (
-            prev.mostViewedArticles &&
-            fetchMoreResult.mostViewedArticles &&
-            (fetchMoreResult.mostViewedArticles?.length ?? 0) > 0
+            prev.mostInterestingArticles &&
+            fetchMoreResult.mostInterestingArticles &&
+            (fetchMoreResult.mostInterestingArticles?.length ?? 0) > 0
           ) {
             return Object.assign({}, prev, {
               articles: [
-                ...prev.mostViewedArticles,
-                ...fetchMoreResult.mostViewedArticles,
+                ...prev.mostInterestingArticles,
+                ...fetchMoreResult.mostInterestingArticles,
               ] as ArticleFeedFragment[],
             })
           }
@@ -70,7 +49,7 @@ export const ExplorePage: React.FC = () => {
       })
     }
   }, [
-    mostViewedArticlesQueryData?.mostViewedArticles?.length,
+    mostInterestingQueryData?.mostInterestingArticles?.length,
     fetchMore,
     hasMore,
   ])
@@ -83,15 +62,21 @@ export const ExplorePage: React.FC = () => {
   }, [hasMore, inView, loadMore])
 
   const feed = useMemo(() => {
-    if (allOtherArticles?.length) {
-      return <ArticleFeed articles={allOtherArticles} lastRef={ref} />
+    if (mostInterestingQueryData?.mostInterestingArticles?.length) {
+      return (
+        <ArticleFeed
+          articles={mostInterestingQueryData.mostInterestingArticles}
+          lastRef={ref}
+        />
+      )
     } else {
       return null
     }
-  }, [allOtherArticles, ref])
+  }, [mostInterestingQueryData, ref])
 
   const location = useLocation()
   const searchParam = new URLSearchParams(location.search).get("search")
+  const termParam = new URLSearchParams(location.search).get("term")
   const [search, { data: searchData, fetchMore: fetchMoreSearch }] =
     useSearchLazyQuery()
   const [hasMoreSearchResults, setHasMoreSearchResults] = useState(true)
@@ -99,13 +84,14 @@ export const ExplorePage: React.FC = () => {
     if (searchParam) {
       search({
         variables: {
-          query: searchParam,
+          term: termParam ?? "",
+          query: searchParam ?? "",
           pagination: { offset: 0, limit: 10 },
         },
       })
       setHasMoreSearchResults(true)
     }
-  }, [search, searchParam])
+  }, [search, searchParam, termParam])
 
   const loadMoreSearchResults = useCallback(() => {
     if (hasMoreSearchResults) {
@@ -187,26 +173,7 @@ export const ExplorePage: React.FC = () => {
       style={{ width: "100%", marginBottom: "4rem" }}
     >
       <title>Entdecken</title>
-      <Spacing gap="md">
-        <Input
-          placeholder="Suchen"
-          size="sm"
-          style={{
-            width: "50%",
-            position: "relative",
-            left: "50%",
-            transform: "translateX(-50%)",
-          }}
-          defaultValue={searchParam ?? ""}
-          onChange={(e) => {
-            navigate(`/explore?search=${e.target.value}`, { replace: true })
-          }}
-        />
-      </Spacing>
-      {mostViewedArticle && !searchParam ? (
-        <ArticleShowcase article={mostViewedArticle} />
-      ) : null}
-      {allOtherArticles && !searchParam ? feed : null}
+      {mostInterestingQueryData && !searchParam ? feed : null}
       {searchResults}
     </Flex>
   )

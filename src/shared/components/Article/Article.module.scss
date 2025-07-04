@@ -13,8 +13,8 @@
   margin-bottom: $spacing-sm;
 }
 
-.article.compact {
-  max-width: 100%;
+.article.list {
+  max-width: 44rem;
   padding: initial;
   border: initial;
   margin-bottom: initial;
@@ -44,7 +44,7 @@
   width: 100%;
 }
 
-.header.compact {
+.header.list {
   width: 100%;
   padding: initial;
 }
@@ -163,6 +163,16 @@
   margin: initial;
 }
 
+.keyword {
+  cursor: pointer;
+  transition: background-color $transition-fast;
+}
+
+.keyword:hover {
+  color: $color-primary !important;
+  background-color: $color-background-dim !important;
+}
+
 @media (prefers-color-scheme: dark) {
   .sourceLogo {
     filter: brightness(0) invert(1);
@@ -171,6 +181,11 @@
   .sourceLogo:hover {
     filter: brightness(0) invert(1);
     opacity: 0.8;
+  }
+
+  .keyword:hover {
+    color: $color-secondary !important;
+    background-color: $color-background-dim !important;
   }
 }
 
@@ -197,7 +212,7 @@
     }
   }
 
-  .compact {
+  .list {
     max-height: 8rem;
 
     .image {

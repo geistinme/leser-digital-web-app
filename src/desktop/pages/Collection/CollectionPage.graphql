@@ -1,11 +1,11 @@
-query savedArticles {
-  savedArticles {
+query savedArticles($filter: ArticlesQueryFilter) {
+  savedArticles(filter: $filter) {
     ...ArticleList
   }
 }
 
-query viewedArticles {
-  viewedArticles {
+query viewedArticles($filter: ArticlesQueryFilter) {
+  viewedArticles(filter: $filter) {
     ...ArticleList
   }
 }
@@ -32,6 +32,10 @@ fragment ArticleList on Article {
   url
   premium
   uploadedAt
+  topic {
+    name
+    category
+  }
   source {
     id
     key
@@ -42,5 +46,6 @@ fragment ArticleList on Article {
     id
     type
   }
+  keywords
   views
 }

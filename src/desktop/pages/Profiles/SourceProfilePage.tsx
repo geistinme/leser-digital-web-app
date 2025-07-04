@@ -92,7 +92,7 @@ export const SourcePage: React.FC<SourcePageProps> = () => {
       {sourceQueryData?.source ? (
         <SourceShowcase source={sourceQueryData.source} />
       ) : null}
-      <Spacing gap="xl">
+      <Spacing gap="xl" style={{ width: "calc(100% - 4rem)" }}>
         <Flex
           direction="column"
           align="center"

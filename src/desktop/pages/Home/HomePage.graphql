@@ -39,6 +39,7 @@ fragment ArticleFeed on Article {
     id
     type
   }
+  keywords
   views
 }
 

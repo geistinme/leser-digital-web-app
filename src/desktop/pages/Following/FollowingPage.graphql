@@ -16,8 +16,12 @@ query subscriptions {
   }
 }
 
-mutation createSubscription($sourceId: String, $topicId: String) {
-  createSubscription(sourceId: $sourceId, topicId: $topicId) {
+mutation createSubscription(
+  $sourceId: String
+  $topicId: String
+  $termId: String
+) {
+  createSubscription(sourceId: $sourceId, topicId: $topicId, termId: $termId) {
     ...UserSubscription
   }
 }
@@ -53,12 +57,15 @@ fragment TopicGrid on Topic {
 
 fragment UserSubscription on Subscription {
   id
-  source {
+  searchTerm {
     id
-  }
-  topic {
-    id
-    category
+    term
+    source {
+      id
+    }
+    topic {
+      id
+    }
   }
   createdAt
 }

@@ -1,0 +1,30 @@
+query allSearchTerms(
+  $pagination: PaginationInput
+  $active: Boolean
+  $query: String
+) {
+  allSearchTerms(pagination: $pagination, active: $active, query: $query) {
+    ...AdminSearchTerm
+  }
+}
+
+mutation toggleSearchTerm($id: String!) {
+  toggleSearchTerm(id: $id) {
+    ...AdminSearchTerm
+  }
+}
+
+fragment AdminSearchTerm on SearchTerm {
+  id
+  term
+  active
+  source {
+    id
+    name
+  }
+  topic {
+    id
+    name
+  }
+  ranking
+}

@@ -5,7 +5,7 @@ import { Column, Flex, Row } from "@sampled-ui/base"
 import {
   SourceGridFragment,
   TopicGridFragment,
-  UserSubscriptionFragment,
+  UserSubscriptionFragment
 } from "../../../../generated/graphql"
 import SubscriptionGridItem from "../../../shared/components/Subscription/SubscriptionItem"
 
@@ -33,10 +33,10 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
             source: allSources[index + i],
             subscription: userSubscriptions?.find((s) => {
               return (
-                s.source?.id === allSources[index + i].id ||
-                s.topic?.id === allSources[index + i].id
+                s.searchTerm.source?.id === allSources[index + i].id ||
+                s.searchTerm.topic?.id === allSources[index + i].id
               )
-            }),
+            }) as UserSubscriptionFragment | undefined,
           })
         }
       }

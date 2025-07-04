@@ -2,8 +2,8 @@ import { useColorScheme } from "../colorScheme"
 
 const blackLogos = ["zeit", "manager", "tagesschau", "spiegel"]
 
-export const useInvertedLogo = (key: string) => {
+export const useInvertedLogo = (key?: string) => {
   const { colorScheme } = useColorScheme()
 
-  return blackLogos.includes(key) && colorScheme === "dark"
+  return key && blackLogos.includes(key) && colorScheme === "dark"
 }

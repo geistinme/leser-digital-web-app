@@ -27,6 +27,7 @@ export type Article = {
   editors: Array<Editor>;
   id: Scalars['ID']['output'];
   image?: Maybe<Scalars['String']['output']>;
+  keywords?: Maybe<Array<Scalars['String']['output']>>;
   premium: Scalars['Boolean']['output'];
   source: Source;
   title: Scalars['String']['output'];
@@ -93,11 +94,23 @@ export enum ArticleCategory {
   Weather = 'WEATHER'
 }
 
+/** Order articles by upload date */
+export enum ArticleOrder {
+  Newest = 'NEWEST',
+  Oldest = 'OLDEST'
+}
+
 export type ArticleQueryFilter = {
   editor?: InputMaybe<Scalars['String']['input']>;
   short?: InputMaybe<Scalars['Boolean']['input']>;
   source?: InputMaybe<Scalars['String']['input']>;
   topic?: InputMaybe<ArticleCategory>;
+};
+
+export type ArticlesQueryFilter = {
+  category?: InputMaybe<ArticleCategory>;
+  order?: InputMaybe<ArticleOrder>;
+  query?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateUserInput = {
@@ -129,6 +142,7 @@ export type Mutation = {
   resendVerificationCode?: Maybe<Scalars['Boolean']['output']>;
   resetPassword?: Maybe<Scalars['Boolean']['output']>;
   sendResetLink?: Maybe<Scalars['Boolean']['output']>;
+  toggleSearchTerm?: Maybe<SearchTerm>;
   verify?: Maybe<User>;
 };
 
@@ -139,8 +153,8 @@ export type MutationCreateArticleActivityArgs = {
 
 
 export type MutationCreateSubscriptionArgs = {
-  editorId?: InputMaybe<Scalars['String']['input']>;
   sourceId?: InputMaybe<Scalars['String']['input']>;
+  termId?: InputMaybe<Scalars['String']['input']>;
   topicId?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -177,6 +191,11 @@ export type MutationSendResetLinkArgs = {
 };
 
 
+export type MutationToggleSearchTermArgs = {
+  id?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationVerifyArgs = {
   code?: InputMaybe<Scalars['String']['input']>;
 };
@@ -188,17 +207,19 @@ export type PaginationInput = {
 
 export type Query = {
   __typename?: 'Query';
+  allSearchTerms?: Maybe<Array<SearchTerm>>;
   article?: Maybe<Article>;
-  articleActivity?: Maybe<Array<ArticleActivity>>;
   articles?: Maybe<Array<Article>>;
   feed?: Maybe<Array<Article>>;
   loggedIn: User;
-  mostViewedArticles?: Maybe<Array<Article>>;
+  mostInterestingArticles?: Maybe<Array<Article>>;
   mySourceActivityStats?: Maybe<Array<SourceActivityStat>>;
   myTopicActivityStats?: Maybe<Array<TopicActivityStat>>;
   recommendedArticles?: Maybe<Array<Maybe<Article>>>;
   savedArticles?: Maybe<Array<Article>>;
   search?: Maybe<SearchResult>;
+  searchTerm: SearchTerm;
+  searchTerms?: Maybe<Array<SearchTerm>>;
   source?: Maybe<Source>;
   sources?: Maybe<Array<Source>>;
   subscriptions?: Maybe<Array<Subscription>>;
@@ -209,13 +230,15 @@ export type Query = {
 };
 
 
-export type QueryArticleArgs = {
-  id?: InputMaybe<Scalars['String']['input']>;
+export type QueryAllSearchTermsArgs = {
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  pagination?: InputMaybe<PaginationInput>;
+  query?: InputMaybe<Scalars['String']['input']>;
 };
 
 
-export type QueryArticleActivityArgs = {
-  id: Scalars['String']['input'];
+export type QueryArticleArgs = {
+  id?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -231,19 +254,34 @@ export type QueryFeedArgs = {
 };
 
 
-export type QueryMostViewedArticlesArgs = {
+export type QueryMostInterestingArticlesArgs = {
   pagination?: InputMaybe<PaginationInput>;
 };
 
 
 export type QuerySavedArticlesArgs = {
-  source?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ArticlesQueryFilter>;
 };
 
 
 export type QuerySearchArgs = {
   pagination?: InputMaybe<PaginationInput>;
   query?: InputMaybe<Scalars['String']['input']>;
+  term?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QuerySearchTermArgs = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  term?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QuerySearchTermsArgs = {
+  pagination?: InputMaybe<PaginationInput>;
+  query?: InputMaybe<Scalars['String']['input']>;
+  sourceId?: InputMaybe<Scalars['String']['input']>;
+  topicId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -258,7 +296,7 @@ export type QueryTopicArgs = {
 
 
 export type QueryViewedArticlesArgs = {
-  source?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ArticlesQueryFilter>;
 };
 
 export enum Role {
@@ -275,6 +313,20 @@ export type SearchResult = {
   foundTopics?: Maybe<Scalars['Int']['output']>;
   sources?: Maybe<Array<Source>>;
   topics?: Maybe<Array<Topic>>;
+};
+
+export type SearchTerm = {
+  __typename?: 'SearchTerm';
+  active: Scalars['Boolean']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  isSubscribed?: Maybe<Subscription>;
+  ranking?: Maybe<Scalars['Int']['output']>;
+  source?: Maybe<Source>;
+  subscribers?: Maybe<Scalars['Int']['output']>;
+  term?: Maybe<Scalars['String']['output']>;
+  topic?: Maybe<Topic>;
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type Source = {
@@ -302,10 +354,8 @@ export type SourceActivityStat = {
 export type Subscription = {
   __typename?: 'Subscription';
   createdAt: Scalars['DateTime']['output'];
-  editor?: Maybe<Editor>;
   id: Scalars['ID']['output'];
-  source?: Maybe<Source>;
-  topic?: Maybe<Topic>;
+  searchTerm: SearchTerm;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -375,15 +425,37 @@ export type DesktopProfileQuery = { __typename?: 'Query', loggedIn: { __typename
 
 export type UserProfileFragment = { __typename?: 'Query', subscriptions?: Array<{ __typename?: 'Subscription', id: string }> | null, viewedArticles?: Array<{ __typename?: 'Article', id: string }> | null, savedArticles?: Array<{ __typename?: 'Article', id: string }> | null };
 
-export type SavedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
+export type AllSearchTermsQueryVariables = Exact<{
+  pagination?: InputMaybe<PaginationInput>;
+  active?: InputMaybe<Scalars['Boolean']['input']>;
+  query?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
-export type SavedArticlesQuery = { __typename?: 'Query', savedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, source: { __typename?: 'Source', id: string, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
+export type AllSearchTermsQuery = { __typename?: 'Query', allSearchTerms?: Array<{ __typename?: 'SearchTerm', id: string, term?: string | null, active: boolean, ranking?: number | null, source?: { __typename?: 'Source', id: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, name: string } | null }> | null };
 
-export type ViewedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
+export type ToggleSearchTermMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
 
 
-export type ViewedArticlesQuery = { __typename?: 'Query', viewedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, source: { __typename?: 'Source', id: string, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
+export type ToggleSearchTermMutation = { __typename?: 'Mutation', toggleSearchTerm?: { __typename?: 'SearchTerm', id: string, term?: string | null, active: boolean, ranking?: number | null, source?: { __typename?: 'Source', id: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, name: string } | null } | null };
+
+export type AdminSearchTermFragment = { __typename?: 'SearchTerm', id: string, term?: string | null, active: boolean, ranking?: number | null, source?: { __typename?: 'Source', id: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, name: string } | null };
+
+export type SavedArticlesQueryVariables = Exact<{
+  filter?: InputMaybe<ArticlesQueryFilter>;
+}>;
+
+
+export type SavedArticlesQuery = { __typename?: 'Query', savedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', name: string, category: ArticleCategory }, source: { __typename?: 'Source', id: string, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
+
+export type ViewedArticlesQueryVariables = Exact<{
+  filter?: InputMaybe<ArticlesQueryFilter>;
+}>;
+
+
+export type ViewedArticlesQuery = { __typename?: 'Query', viewedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', name: string, category: ArticleCategory }, source: { __typename?: 'Source', id: string, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
 
 export type CreateArticleActivityMutationVariables = Exact<{
   data: ArticleActivityInput;
@@ -399,22 +471,41 @@ export type DeleteArticleActivityMutationVariables = Exact<{
 
 export type DeleteArticleActivityMutation = { __typename?: 'Mutation', deleteArticleActivity?: { __typename?: 'ArticleActivity', id: string, type: ArticleActivityType } | null };
 
-export type ArticleListFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, source: { __typename?: 'Source', id: string, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
+export type ArticleListFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', name: string, category: ArticleCategory }, source: { __typename?: 'Source', id: string, key: string, name: string, logo: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
 
-export type MostViewedArticlesQueryVariables = Exact<{
+export type MostInterestingArticlesQueryVariables = Exact<{
   pagination?: InputMaybe<PaginationInput>;
 }>;
 
 
-export type MostViewedArticlesQuery = { __typename?: 'Query', mostViewedArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
+export type MostInterestingArticlesQuery = { __typename?: 'Query', mostInterestingArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
 
 export type SearchQueryVariables = Exact<{
-  query: Scalars['String']['input'];
+  query?: InputMaybe<Scalars['String']['input']>;
+  term?: InputMaybe<Scalars['String']['input']>;
+  pagination: PaginationInput;
+}>;
+
+
+export type SearchQuery = { __typename?: 'Query', search?: { __typename?: 'SearchResult', foundArticles?: number | null, foundSources?: number | null, foundTopics?: number | null, articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null, sources?: Array<{ __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null, topics?: Array<{ __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null } | null };
+
+export type SearchTermsQueryVariables = Exact<{
+  query?: InputMaybe<Scalars['String']['input']>;
+  sourceId?: InputMaybe<Scalars['String']['input']>;
+  topicId?: InputMaybe<Scalars['String']['input']>;
   pagination?: InputMaybe<PaginationInput>;
 }>;
 
 
-export type SearchQuery = { __typename?: 'Query', search?: { __typename?: 'SearchResult', foundArticles?: number | null, foundSources?: number | null, foundTopics?: number | null, articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null, sources?: Array<{ __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null, topics?: Array<{ __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null } | null };
+export type SearchTermsQuery = { __typename?: 'Query', searchTerms?: Array<{ __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, name: string } | null }> | null };
+
+export type SearchTermQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['String']['input']>;
+  term?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SearchTermQuery = { __typename?: 'Query', searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, ranking?: number | null, source?: { __typename?: 'Source', id: string, name: string, key: string } | null, topic?: { __typename?: 'Topic', id: string, name: string, category: ArticleCategory } | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null } };
 
 export type SourcesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -429,15 +520,16 @@ export type TopicsQuery = { __typename?: 'Query', topics?: Array<{ __typename: '
 export type SubscriptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SubscriptionsQuery = { __typename?: 'Query', subscriptions?: Array<{ __typename?: 'Subscription', id: string, createdAt: any, source?: { __typename?: 'Source', id: string } | null, topic?: { __typename?: 'Topic', id: string, category: ArticleCategory } | null }> | null };
+export type SubscriptionsQuery = { __typename?: 'Query', subscriptions?: Array<{ __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string } | null, topic?: { __typename?: 'Topic', id: string } | null } }> | null };
 
 export type CreateSubscriptionMutationVariables = Exact<{
   sourceId?: InputMaybe<Scalars['String']['input']>;
   topicId?: InputMaybe<Scalars['String']['input']>;
+  termId?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, createdAt: any, source?: { __typename?: 'Source', id: string } | null, topic?: { __typename?: 'Topic', id: string, category: ArticleCategory } | null } | null };
+export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string } | null, topic?: { __typename?: 'Topic', id: string } | null } } | null };
 
 export type DeleteSubscriptionMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -450,7 +542,7 @@ export type SourceGridFragment = { __typename: 'Source', id: string, key: string
 
 export type TopicGridFragment = { __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null };
 
-export type UserSubscriptionFragment = { __typename?: 'Subscription', id: string, createdAt: any, source?: { __typename?: 'Source', id: string } | null, topic?: { __typename?: 'Topic', id: string, category: ArticleCategory } | null };
+export type UserSubscriptionFragment = { __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string } | null, topic?: { __typename?: 'Topic', id: string } | null } };
 
 export type FeedQueryVariables = Exact<{
   pagination: PaginationInput;
@@ -458,7 +550,7 @@ export type FeedQueryVariables = Exact<{
 }>;
 
 
-export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
+export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
 
 export type ArticlesQueryVariables = Exact<{
   pagination: PaginationInput;
@@ -466,14 +558,14 @@ export type ArticlesQueryVariables = Exact<{
 }>;
 
 
-export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
+export type ArticlesQuery = { __typename?: 'Query', articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
 
 export type RecommendedArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type RecommendedArticlesQuery = { __typename?: 'Query', recommendedArticles?: Array<{ __typename?: 'Article', id: string, title: string, url: string, source: { __typename?: 'Source', id: string, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null } | null> | null };
 
-export type ArticleFeedFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
+export type ArticleFeedFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
 
 export type RecommendedArticleFragment = { __typename?: 'Article', id: string, title: string, url: string, source: { __typename?: 'Source', id: string, name: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
 
@@ -557,6 +649,22 @@ export const UserProfileFragmentDoc = gql`
   }
 }
     `;
+export const AdminSearchTermFragmentDoc = gql`
+    fragment AdminSearchTerm on SearchTerm {
+  id
+  term
+  active
+  source {
+    id
+    name
+  }
+  topic {
+    id
+    name
+  }
+  ranking
+}
+    `;
 export const ArticleListFragmentDoc = gql`
     fragment ArticleList on Article {
   id
@@ -566,6 +674,10 @@ export const ArticleListFragmentDoc = gql`
   url
   premium
   uploadedAt
+  topic {
+    name
+    category
+  }
   source {
     id
     key
@@ -576,6 +688,7 @@ export const ArticleListFragmentDoc = gql`
     id
     type
   }
+  keywords
   views
 }
     `;
@@ -607,12 +720,15 @@ export const TopicGridFragmentDoc = gql`
 export const UserSubscriptionFragmentDoc = gql`
     fragment UserSubscription on Subscription {
   id
-  source {
+  searchTerm {
     id
-  }
-  topic {
-    id
-    category
+    term
+    source {
+      id
+    }
+    topic {
+      id
+    }
   }
   createdAt
 }
@@ -641,6 +757,7 @@ export const ArticleFeedFragmentDoc = gql`
     id
     type
   }
+  keywords
   views
 }
     `;
@@ -900,9 +1017,84 @@ export type DesktopProfileQueryHookResult = ReturnType<typeof useDesktopProfileQ
 export type DesktopProfileLazyQueryHookResult = ReturnType<typeof useDesktopProfileLazyQuery>;
 export type DesktopProfileSuspenseQueryHookResult = ReturnType<typeof useDesktopProfileSuspenseQuery>;
 export type DesktopProfileQueryResult = Apollo.QueryResult<DesktopProfileQuery, DesktopProfileQueryVariables>;
+export const AllSearchTermsDocument = gql`
+    query allSearchTerms($pagination: PaginationInput, $active: Boolean, $query: String) {
+  allSearchTerms(pagination: $pagination, active: $active, query: $query) {
+    ...AdminSearchTerm
+  }
+}
+    ${AdminSearchTermFragmentDoc}`;
+
+/**
+ * __useAllSearchTermsQuery__
+ *
+ * To run a query within a React component, call `useAllSearchTermsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllSearchTermsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllSearchTermsQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *      active: // value for 'active'
+ *      query: // value for 'query'
+ *   },
+ * });
+ */
+export function useAllSearchTermsQuery(baseOptions?: Apollo.QueryHookOptions<AllSearchTermsQuery, AllSearchTermsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllSearchTermsQuery, AllSearchTermsQueryVariables>(AllSearchTermsDocument, options);
+      }
+export function useAllSearchTermsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllSearchTermsQuery, AllSearchTermsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllSearchTermsQuery, AllSearchTermsQueryVariables>(AllSearchTermsDocument, options);
+        }
+export function useAllSearchTermsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<AllSearchTermsQuery, AllSearchTermsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<AllSearchTermsQuery, AllSearchTermsQueryVariables>(AllSearchTermsDocument, options);
+        }
+export type AllSearchTermsQueryHookResult = ReturnType<typeof useAllSearchTermsQuery>;
+export type AllSearchTermsLazyQueryHookResult = ReturnType<typeof useAllSearchTermsLazyQuery>;
+export type AllSearchTermsSuspenseQueryHookResult = ReturnType<typeof useAllSearchTermsSuspenseQuery>;
+export type AllSearchTermsQueryResult = Apollo.QueryResult<AllSearchTermsQuery, AllSearchTermsQueryVariables>;
+export const ToggleSearchTermDocument = gql`
+    mutation toggleSearchTerm($id: String!) {
+  toggleSearchTerm(id: $id) {
+    ...AdminSearchTerm
+  }
+}
+    ${AdminSearchTermFragmentDoc}`;
+export type ToggleSearchTermMutationFn = Apollo.MutationFunction<ToggleSearchTermMutation, ToggleSearchTermMutationVariables>;
+
+/**
+ * __useToggleSearchTermMutation__
+ *
+ * To run a mutation, you first call `useToggleSearchTermMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useToggleSearchTermMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [toggleSearchTermMutation, { data, loading, error }] = useToggleSearchTermMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useToggleSearchTermMutation(baseOptions?: Apollo.MutationHookOptions<ToggleSearchTermMutation, ToggleSearchTermMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ToggleSearchTermMutation, ToggleSearchTermMutationVariables>(ToggleSearchTermDocument, options);
+      }
+export type ToggleSearchTermMutationHookResult = ReturnType<typeof useToggleSearchTermMutation>;
+export type ToggleSearchTermMutationResult = Apollo.MutationResult<ToggleSearchTermMutation>;
+export type ToggleSearchTermMutationOptions = Apollo.BaseMutationOptions<ToggleSearchTermMutation, ToggleSearchTermMutationVariables>;
 export const SavedArticlesDocument = gql`
-    query savedArticles {
-  savedArticles {
+    query savedArticles($filter: ArticlesQueryFilter) {
+  savedArticles(filter: $filter) {
     ...ArticleList
   }
 }
@@ -920,6 +1112,7 @@ export const SavedArticlesDocument = gql`
  * @example
  * const { data, loading, error } = useSavedArticlesQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *   },
  * });
  */
@@ -940,8 +1133,8 @@ export type SavedArticlesLazyQueryHookResult = ReturnType<typeof useSavedArticle
 export type SavedArticlesSuspenseQueryHookResult = ReturnType<typeof useSavedArticlesSuspenseQuery>;
 export type SavedArticlesQueryResult = Apollo.QueryResult<SavedArticlesQuery, SavedArticlesQueryVariables>;
 export const ViewedArticlesDocument = gql`
-    query viewedArticles {
-  viewedArticles {
+    query viewedArticles($filter: ArticlesQueryFilter) {
+  viewedArticles(filter: $filter) {
     ...ArticleList
   }
 }
@@ -959,6 +1152,7 @@ export const ViewedArticlesDocument = gql`
  * @example
  * const { data, loading, error } = useViewedArticlesQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *   },
  * });
  */
@@ -1046,49 +1240,49 @@ export function useDeleteArticleActivityMutation(baseOptions?: Apollo.MutationHo
 export type DeleteArticleActivityMutationHookResult = ReturnType<typeof useDeleteArticleActivityMutation>;
 export type DeleteArticleActivityMutationResult = Apollo.MutationResult<DeleteArticleActivityMutation>;
 export type DeleteArticleActivityMutationOptions = Apollo.BaseMutationOptions<DeleteArticleActivityMutation, DeleteArticleActivityMutationVariables>;
-export const MostViewedArticlesDocument = gql`
-    query mostViewedArticles($pagination: PaginationInput) {
-  mostViewedArticles(pagination: $pagination) {
+export const MostInterestingArticlesDocument = gql`
+    query mostInterestingArticles($pagination: PaginationInput) {
+  mostInterestingArticles(pagination: $pagination) {
     ...ArticleFeed
   }
 }
     ${ArticleFeedFragmentDoc}`;
 
 /**
- * __useMostViewedArticlesQuery__
+ * __useMostInterestingArticlesQuery__
  *
- * To run a query within a React component, call `useMostViewedArticlesQuery` and pass it any options that fit your needs.
- * When your component renders, `useMostViewedArticlesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useMostInterestingArticlesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMostInterestingArticlesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useMostViewedArticlesQuery({
+ * const { data, loading, error } = useMostInterestingArticlesQuery({
  *   variables: {
  *      pagination: // value for 'pagination'
  *   },
  * });
  */
-export function useMostViewedArticlesQuery(baseOptions?: Apollo.QueryHookOptions<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>) {
+export function useMostInterestingArticlesQuery(baseOptions?: Apollo.QueryHookOptions<MostInterestingArticlesQuery, MostInterestingArticlesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>(MostViewedArticlesDocument, options);
+        return Apollo.useQuery<MostInterestingArticlesQuery, MostInterestingArticlesQueryVariables>(MostInterestingArticlesDocument, options);
       }
-export function useMostViewedArticlesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>) {
+export function useMostInterestingArticlesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MostInterestingArticlesQuery, MostInterestingArticlesQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>(MostViewedArticlesDocument, options);
+          return Apollo.useLazyQuery<MostInterestingArticlesQuery, MostInterestingArticlesQueryVariables>(MostInterestingArticlesDocument, options);
         }
-export function useMostViewedArticlesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>) {
+export function useMostInterestingArticlesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MostInterestingArticlesQuery, MostInterestingArticlesQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>(MostViewedArticlesDocument, options);
+          return Apollo.useSuspenseQuery<MostInterestingArticlesQuery, MostInterestingArticlesQueryVariables>(MostInterestingArticlesDocument, options);
         }
-export type MostViewedArticlesQueryHookResult = ReturnType<typeof useMostViewedArticlesQuery>;
-export type MostViewedArticlesLazyQueryHookResult = ReturnType<typeof useMostViewedArticlesLazyQuery>;
-export type MostViewedArticlesSuspenseQueryHookResult = ReturnType<typeof useMostViewedArticlesSuspenseQuery>;
-export type MostViewedArticlesQueryResult = Apollo.QueryResult<MostViewedArticlesQuery, MostViewedArticlesQueryVariables>;
+export type MostInterestingArticlesQueryHookResult = ReturnType<typeof useMostInterestingArticlesQuery>;
+export type MostInterestingArticlesLazyQueryHookResult = ReturnType<typeof useMostInterestingArticlesLazyQuery>;
+export type MostInterestingArticlesSuspenseQueryHookResult = ReturnType<typeof useMostInterestingArticlesSuspenseQuery>;
+export type MostInterestingArticlesQueryResult = Apollo.QueryResult<MostInterestingArticlesQuery, MostInterestingArticlesQueryVariables>;
 export const SearchDocument = gql`
-    query search($query: String!, $pagination: PaginationInput) {
-  search(query: $query, pagination: $pagination) {
+    query search($query: String, $term: String, $pagination: PaginationInput!) {
+  search(query: $query, term: $term, pagination: $pagination) {
     articles {
       ...ArticleFeed
     }
@@ -1120,6 +1314,7 @@ ${TopicGridFragmentDoc}`;
  * const { data, loading, error } = useSearchQuery({
  *   variables: {
  *      query: // value for 'query'
+ *      term: // value for 'term'
  *      pagination: // value for 'pagination'
  *   },
  * });
@@ -1140,6 +1335,119 @@ export type SearchQueryHookResult = ReturnType<typeof useSearchQuery>;
 export type SearchLazyQueryHookResult = ReturnType<typeof useSearchLazyQuery>;
 export type SearchSuspenseQueryHookResult = ReturnType<typeof useSearchSuspenseQuery>;
 export type SearchQueryResult = Apollo.QueryResult<SearchQuery, SearchQueryVariables>;
+export const SearchTermsDocument = gql`
+    query searchTerms($query: String, $sourceId: String, $topicId: String, $pagination: PaginationInput) {
+  searchTerms(
+    query: $query
+    sourceId: $sourceId
+    topicId: $topicId
+    pagination: $pagination
+  ) {
+    id
+    term
+    source {
+      id
+      name
+    }
+    topic {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useSearchTermsQuery__
+ *
+ * To run a query within a React component, call `useSearchTermsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchTermsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchTermsQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      sourceId: // value for 'sourceId'
+ *      topicId: // value for 'topicId'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useSearchTermsQuery(baseOptions?: Apollo.QueryHookOptions<SearchTermsQuery, SearchTermsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchTermsQuery, SearchTermsQueryVariables>(SearchTermsDocument, options);
+      }
+export function useSearchTermsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchTermsQuery, SearchTermsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchTermsQuery, SearchTermsQueryVariables>(SearchTermsDocument, options);
+        }
+export function useSearchTermsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SearchTermsQuery, SearchTermsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchTermsQuery, SearchTermsQueryVariables>(SearchTermsDocument, options);
+        }
+export type SearchTermsQueryHookResult = ReturnType<typeof useSearchTermsQuery>;
+export type SearchTermsLazyQueryHookResult = ReturnType<typeof useSearchTermsLazyQuery>;
+export type SearchTermsSuspenseQueryHookResult = ReturnType<typeof useSearchTermsSuspenseQuery>;
+export type SearchTermsQueryResult = Apollo.QueryResult<SearchTermsQuery, SearchTermsQueryVariables>;
+export const SearchTermDocument = gql`
+    query searchTerm($id: String, $term: String) {
+  searchTerm(id: $id, term: $term) {
+    id
+    term
+    source {
+      id
+      name
+      key
+    }
+    topic {
+      id
+      name
+      category
+    }
+    isSubscribed {
+      id
+    }
+    ranking
+  }
+}
+    `;
+
+/**
+ * __useSearchTermQuery__
+ *
+ * To run a query within a React component, call `useSearchTermQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchTermQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchTermQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      term: // value for 'term'
+ *   },
+ * });
+ */
+export function useSearchTermQuery(baseOptions?: Apollo.QueryHookOptions<SearchTermQuery, SearchTermQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchTermQuery, SearchTermQueryVariables>(SearchTermDocument, options);
+      }
+export function useSearchTermLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchTermQuery, SearchTermQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchTermQuery, SearchTermQueryVariables>(SearchTermDocument, options);
+        }
+export function useSearchTermSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SearchTermQuery, SearchTermQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchTermQuery, SearchTermQueryVariables>(SearchTermDocument, options);
+        }
+export type SearchTermQueryHookResult = ReturnType<typeof useSearchTermQuery>;
+export type SearchTermLazyQueryHookResult = ReturnType<typeof useSearchTermLazyQuery>;
+export type SearchTermSuspenseQueryHookResult = ReturnType<typeof useSearchTermSuspenseQuery>;
+export type SearchTermQueryResult = Apollo.QueryResult<SearchTermQuery, SearchTermQueryVariables>;
 export const SourcesDocument = gql`
     query sources {
   sources {
@@ -1258,8 +1566,8 @@ export type SubscriptionsLazyQueryHookResult = ReturnType<typeof useSubscription
 export type SubscriptionsSuspenseQueryHookResult = ReturnType<typeof useSubscriptionsSuspenseQuery>;
 export type SubscriptionsQueryResult = Apollo.QueryResult<SubscriptionsQuery, SubscriptionsQueryVariables>;
 export const CreateSubscriptionDocument = gql`
-    mutation createSubscription($sourceId: String, $topicId: String) {
-  createSubscription(sourceId: $sourceId, topicId: $topicId) {
+    mutation createSubscription($sourceId: String, $topicId: String, $termId: String) {
+  createSubscription(sourceId: $sourceId, topicId: $topicId, termId: $termId) {
     ...UserSubscription
   }
 }
@@ -1281,6 +1589,7 @@ export type CreateSubscriptionMutationFn = Apollo.MutationFunction<CreateSubscri
  *   variables: {
  *      sourceId: // value for 'sourceId'
  *      topicId: // value for 'topicId'
+ *      termId: // value for 'termId'
  *   },
  * });
  */

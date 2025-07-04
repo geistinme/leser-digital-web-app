@@ -1,52 +1,67 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
-import { Flex, Input, Spacing } from "@sampled-ui/base"
+import {
+  Button,
+  Column,
+  Flex,
+  Row,
+  Spacing,
+  Typography,
+} from "@sampled-ui/base"
+import { BarChart, XIcon } from "lucide-react"
+import { useInView } from "react-intersection-observer"
 import { useLocation, useNavigate } from "react-router"
 
 import {
   ArticleGridFragment,
-  useMostViewedArticlesQuery,
+  SearchTermDocument,
+  useMostInterestingArticlesQuery,
   useSearchLazyQuery,
+  useSearchTermLazyQuery,
 } from "../../../../generated/graphql"
-import { ArticleShowcase } from "../../../shared/components"
+import { useToggleSubscription } from "../../../shared/hooks/Subscription/toggleSubscription"
 import ArticleGrid from "../../components/Article/ArticleGrid"
+import SearchBar from "../../components/Search/SearchBar"
 import SearchResults from "../../components/Search/SearchResults"
 
 export const ExplorePage: React.FC = () => {
+  const { data: mostInterestingQueryData, fetchMore: fetchMoreSuggested } =
+    useMostInterestingArticlesQuery()
+
   const navigate = useNavigate()
-  const { data } = useMostViewedArticlesQuery()
-
-  const mostViewedArticle = useMemo(
-    () => (data?.mostViewedArticles ? data?.mostViewedArticles[0] : null),
-    [data?.mostViewedArticles]
-  )
-
-  const allOtherArticles = useMemo(
-    () =>
-      data?.mostViewedArticles
-        ? data?.mostViewedArticles.slice(1, data.mostViewedArticles.length)
-        : null,
-    [data?.mostViewedArticles]
-  )
-
   const location = useLocation()
   const searchParam = new URLSearchParams(location.search).get("search")
+  const termParam = new URLSearchParams(location.search).get("term")
+
   const [search, { data: searchData, fetchMore }] = useSearchLazyQuery()
-  const [hasMore, setHasMore] = useState(true)
+  const [hasMoreSuggested, setHasMoreSuggested] = useState(true)
+  const [hasMoreResults, setHasMoreResults] = useState(true)
+
+  const [searchTerm, { data: searchTermData }] = useSearchTermLazyQuery({
+    variables: { id: termParam ?? "", term: searchParam ?? "" },
+  })
+
   useEffect(() => {
-    if (searchParam) {
+    if (searchParam || termParam) {
       search({
         variables: {
           query: searchParam,
+          term: termParam ?? "",
           pagination: { offset: 0, limit: 10 },
         },
+      }).then((results) => {
+        if ((results.data?.search?.articles?.length ?? 0) < 10) {
+          setHasMoreResults(false)
+        }
       })
-      setHasMore(true)
+      searchTerm({ variables: { id: termParam, term: searchParam } })
+    } else {
+      setHasMoreResults(true)
     }
-  }, [search, searchParam])
+  }, [search, searchParam, searchTerm, termParam])
 
-  const loadMore = useCallback(() => {
-    if (hasMore) {
+  const loadMoreResults = useCallback(() => {
+    if (hasMoreResults) {
       fetchMore({
         variables: {
           query: searchParam,
@@ -57,7 +72,7 @@ export const ExplorePage: React.FC = () => {
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if ((fetchMoreResult.search?.articles?.length ?? 0) < 10) {
-            setHasMore(false)
+            setHasMoreResults(false)
           }
           if (
             prev.search?.articles &&
@@ -84,33 +99,102 @@ export const ExplorePage: React.FC = () => {
         },
       })
     }
-  }, [hasMore, fetchMore, searchParam, searchData?.search?.articles?.length])
+  }, [
+    hasMoreResults,
+    fetchMore,
+    searchParam,
+    searchData?.search?.articles?.length,
+  ])
 
-  const searchResults = useMemo(() => {
-    if (searchParam) {
-      return (
-        <SearchResults
-          articles={searchData?.search?.articles}
-          foundArticles={searchData?.search?.foundArticles ?? 0}
-          sources={searchData?.search?.sources}
-          foundSources={searchData?.search?.foundSources ?? 0}
-          topics={searchData?.search?.topics}
-          foundTopics={searchData?.search?.foundTopics ?? 0}
-          {...{ loadMore, hasMore }}
-        />
-      )
+  const loadMoreSuggested = useCallback(() => {
+    if (hasMoreSuggested) {
+      fetchMoreSuggested({
+        variables: {
+          query: searchParam,
+          pagination: {
+            offset: mostInterestingQueryData?.mostInterestingArticles?.length,
+            limit: 10,
+          },
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if ((fetchMoreResult.mostInterestingArticles?.length ?? 0) < 10) {
+            setHasMoreSuggested(false)
+          }
+          if (
+            prev.mostInterestingArticles &&
+            fetchMoreResult.mostInterestingArticles &&
+            (fetchMoreResult.mostInterestingArticles?.length ?? 0) > 0
+          ) {
+            return Object.assign({}, prev, {
+              mostInterestingArticles: [
+                ...prev.mostInterestingArticles,
+                ...fetchMoreResult.mostInterestingArticles,
+              ],
+            })
+          }
+          return prev
+        },
+      })
     }
   }, [
-    hasMore,
-    loadMore,
-    searchData?.search?.articles,
-    searchData?.search?.foundArticles,
-    searchData?.search?.foundSources,
-    searchData?.search?.foundTopics,
-    searchData?.search?.sources,
-    searchData?.search?.topics,
+    fetchMoreSuggested,
+    hasMoreSuggested,
+    mostInterestingQueryData?.mostInterestingArticles?.length,
     searchParam,
   ])
+
+  const { ref: lastSuggestedRef, inView: lastSuggestedRefInView } = useInView()
+  useEffect(() => {
+    if (lastSuggestedRefInView && hasMoreSuggested) {
+      loadMoreSuggested()
+    }
+  }, [hasMoreSuggested, lastSuggestedRefInView, loadMoreSuggested])
+
+  const searchResults = useMemo(() => {
+    return searchParam || termParam ? (
+      <SearchResults
+        articles={searchData?.search?.articles}
+        foundArticles={searchData?.search?.foundArticles ?? 0}
+        sources={searchData?.search?.sources}
+        foundSources={searchData?.search?.foundSources ?? 0}
+        topics={searchData?.search?.topics}
+        foundTopics={searchData?.search?.foundTopics ?? 0}
+        {...{ loadMore: loadMoreResults, hasMore: hasMoreResults }}
+      />
+    ) : null
+  }, [
+    hasMoreResults,
+    loadMoreResults,
+    searchData?.search,
+    searchParam,
+    termParam,
+  ])
+
+  const searchBar = useMemo(() => {
+    return (
+      <SearchBar
+        search={(query) => {
+          search({
+            variables: {
+              query,
+              term: termParam ?? "",
+              pagination: { offset: 0, limit: 10 },
+            },
+          }).then((results) => {
+            if ((results.data?.search?.articles?.length ?? 0) < 10) {
+              setHasMoreResults(true)
+            }
+          })
+        }}
+      />
+    )
+  }, [search, termParam])
+
+  const { handleToggle } = useToggleSubscription({
+    createVariables: { termId: searchTermData?.searchTerm?.id },
+    subscription: searchTermData?.searchTerm?.isSubscribed,
+    refetchQueries: [SearchTermDocument],
+  })
 
   return (
     <Spacing gap="xl">
@@ -121,21 +205,131 @@ export const ExplorePage: React.FC = () => {
         align="stretch"
         style={{ width: "100%", maxWidth: "64rem", margin: "auto" }}
       >
-        <Input
-          placeholder="Suchen"
-          style={{ width: "16rem", alignSelf: "center" }}
-          defaultValue={searchParam ?? ""}
-          onChange={(e) => {
-            navigate(`/explore?search=${e.target.value}`, { replace: true })
-          }}
-        />
-        {mostViewedArticle && !searchParam ? (
-          <ArticleShowcase article={mostViewedArticle} />
+        <Row>
+          <Column span={8}></Column>
+          <Column span={8}>{searchBar}</Column>
+        </Row>
+        {searchTermData?.searchTerm?.source ||
+        searchTermData?.searchTerm?.topic ? (
+          <Flex gap="md" direction="column">
+            <Typography.Text size="xl">
+              {searchTermData?.searchTerm?.term ?? ""}
+            </Typography.Text>
+            <Flex>
+              <BarChart size={16} />
+              <Typography.Text>
+                {searchTermData.searchTerm?.ranking} mal erwähnt
+              </Typography.Text>
+            </Flex>
+            <Flex gap="xs">
+              <Typography.Link
+                onClick={() => {
+                  if (searchTermData?.searchTerm?.source?.key) {
+                    navigate(`/${searchTermData?.searchTerm?.source?.key}`)
+                  } else if (searchTermData?.searchTerm?.topic?.category) {
+                    navigate(
+                      `/t/${searchTermData?.searchTerm?.topic?.category}`
+                    )
+                  }
+                }}
+              >
+                in{" "}
+                {(
+                  searchTermData?.searchTerm?.source ||
+                  searchTermData?.searchTerm?.topic
+                )?.name ?? ""}
+              </Typography.Link>
+              <Typography.Link
+                style={{ height: "1rem" }}
+                onClick={() => {
+                  if (searchTermData?.searchTerm?.term) {
+                    const newParam = new URLSearchParams()
+                    newParam.set("search", searchTermData.searchTerm?.term)
+                    navigate(`/explore?${newParam.toString()}`)
+                  } else {
+                    navigate("/explore")
+                  }
+                }}
+              >
+                <XIcon size={16} />
+              </Typography.Link>
+            </Flex>
+            {searchTermData?.searchTerm?.id ? (
+              <Button
+                variant={
+                  searchTermData.searchTerm?.isSubscribed
+                    ? "secondary"
+                    : "primary"
+                }
+                style={{ minWidth: "6rem", marginTop: "1rem" }}
+                onClick={handleToggle}
+              >
+                {searchTermData.searchTerm?.isSubscribed ? "Gefolgt" : "Folgen"}
+              </Button>
+            ) : null}
+          </Flex>
         ) : null}
-        {allOtherArticles && !searchParam ? (
-          <ArticleGrid articles={allOtherArticles} />
+        {searchTermData?.searchTerm &&
+        !(
+          searchTermData?.searchTerm?.source ||
+          searchTermData?.searchTerm?.topic
+        ) ? (
+          <Flex gap="md" direction="column">
+            <Typography.Text size="xl">
+              {searchParam ?? termParam}
+            </Typography.Text>
+            <Flex>
+              <BarChart size={16} />
+              <Typography.Text>
+                {(searchData?.search?.foundArticles ?? 0) +
+                  (searchData?.search?.foundSources ?? 0) +
+                  (searchData?.search?.foundTopics ?? 0)}{" "}
+                mal erwähnt
+              </Typography.Text>
+            </Flex>
+            {searchTermData?.searchTerm?.id ? (
+              <Button
+                variant={
+                  searchTermData.searchTerm?.isSubscribed
+                    ? "secondary"
+                    : "primary"
+                }
+                style={{ minWidth: "6rem", marginTop: "1rem" }}
+                onClick={handleToggle}
+              >
+                {searchTermData.searchTerm?.isSubscribed ? "Gefolgt" : "Folgen"}
+              </Button>
+            ) : null}
+          </Flex>
         ) : null}
-        {searchResults}
+        {(searchData?.search?.articles?.length &&
+          searchParam &&
+          !searchTermData?.searchTerm) ||
+        (termParam && !searchTermData?.searchTerm) ? (
+          <Flex gap="md" direction="column">
+            <Typography.Text size="xl">
+              {searchParam ?? termParam}
+            </Typography.Text>
+            <Flex>
+              <BarChart size={16} />
+              <Typography.Text>
+                {(searchData?.search?.foundArticles ?? 0) +
+                  (searchData?.search?.foundSources ?? 0) +
+                  (searchData?.search?.foundTopics ?? 0)}{" "}
+                mal erwähnt
+              </Typography.Text>
+            </Flex>
+          </Flex>
+        ) : null}
+        {mostInterestingQueryData?.mostInterestingArticles?.length &&
+        !searchParam &&
+        !termParam ? (
+          <ArticleGrid
+            articles={mostInterestingQueryData.mostInterestingArticles}
+            lastRef={lastSuggestedRef}
+          />
+        ) : null}
+        {searchParam || termParam ? searchResults : null}
       </Flex>
     </Spacing>
   )

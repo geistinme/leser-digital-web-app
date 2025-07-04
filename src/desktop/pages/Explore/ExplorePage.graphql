@@ -1,11 +1,11 @@
-query mostViewedArticles($pagination: PaginationInput) {
-  mostViewedArticles(pagination: $pagination) {
+query mostInterestingArticles($pagination: PaginationInput) {
+  mostInterestingArticles(pagination: $pagination) {
     ...ArticleFeed
   }
 }
 
-query search($query: String!, $pagination: PaginationInput) {
-  search(query: $query, pagination: $pagination) {
+query search($query: String, $term: String, $pagination: PaginationInput!) {
+  search(query: $query, term: $term, pagination: $pagination) {
     articles {
       ...ArticleFeed
     }
@@ -18,5 +18,51 @@ query search($query: String!, $pagination: PaginationInput) {
       ...TopicGrid
     }
     foundTopics
+  }
+}
+
+query searchTerms(
+  $query: String
+  $sourceId: String
+  $topicId: String
+  $pagination: PaginationInput
+) {
+  searchTerms(
+    query: $query
+    sourceId: $sourceId
+    topicId: $topicId
+    pagination: $pagination
+  ) {
+    id
+    term
+    source {
+      id
+      name
+    }
+    topic {
+      id
+      name
+    }
+  }
+}
+
+query searchTerm($id: String, $term: String) {
+  searchTerm(id: $id, term: $term) {
+    id
+    term
+    source {
+      id
+      name
+      key
+    }
+    topic {
+      id
+      name
+      category
+    }
+    isSubscribed {
+      id
+    }
+    ranking
   }
 }
