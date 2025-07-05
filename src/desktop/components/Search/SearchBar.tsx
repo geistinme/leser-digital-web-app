@@ -1,14 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
 import { Input, Menu } from "@sampled-ui/base"
-import { toHeaderCase } from "js-convert-case"
 import { useInView } from "react-intersection-observer"
 import { useLocation, useNavigate } from "react-router"
 
 import { useSearchTermsLazyQuery } from "../../../../generated/graphql"
 
 interface SearchBarProps {
-  search?: (query: string) => void
+  search?: (query: string) => Promise<void>
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ search }) => {
@@ -23,7 +22,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ search }) => {
   useEffect(() => {
     if (searchParam) {
       if (search) {
-        search(searchParam)
         searchTerms({
           variables: {
             query: searchParam,
@@ -44,6 +42,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ search }) => {
           }
         })
       }
+    } else {
+      searchTerms({})
     }
   }, [search, searchParam, searchTerms])
 
@@ -114,13 +114,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ search }) => {
         items={
           searchTermsData?.searchTerms?.map((searchTerm, index) => ({
             title:
-              toHeaderCase(searchTerm.term!.trim()) +
-              (searchTerm.source
-                ? ` (${toHeaderCase(searchTerm.source.name)})`
-                : "") +
-              (searchTerm.topic
-                ? ` (${toHeaderCase(searchTerm.topic.name)})`
-                : ""),
+              searchTerm.term!.trim() +
+              (searchTerm.source ? ` (${searchTerm.source.name})` : "") +
+              (searchTerm.topic ? ` (${searchTerm.topic.name})` : ""),
             key: `${searchTerm.term}-${searchTerm.id}`.trim(),
             ref:
               index === (searchTermsData?.searchTerms?.length ?? 0) - 1
@@ -135,7 +131,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ search }) => {
           if (term?.source?.id || term?.topic?.id) {
             navigateToSearchTerm(term.id)
           } else {
-            navigateToSearch(toHeaderCase(term?.term ?? ""))
+            navigateToSearch(term?.term ?? "")
           }
         }}
         alignment="bottom"

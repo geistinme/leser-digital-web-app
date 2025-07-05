@@ -16,7 +16,7 @@ import {
   ArticleGridFragment,
   SearchTermDocument,
   useMostInterestingArticlesQuery,
-  useSearchLazyQuery,
+  useSearchQuery,
   useSearchTermLazyQuery,
 } from "../../../../generated/graphql"
 import { useToggleSubscription } from "../../../shared/hooks/Subscription/toggleSubscription"
@@ -33,7 +33,13 @@ export const ExplorePage: React.FC = () => {
   const searchParam = new URLSearchParams(location.search).get("search")
   const termParam = new URLSearchParams(location.search).get("term")
 
-  const [search, { data: searchData, fetchMore }] = useSearchLazyQuery()
+  const { data: searchData, fetchMore } = useSearchQuery({
+    variables: {
+      query: searchParam ?? "",
+      term: termParam ?? "",
+      pagination: { offset: 0, limit: 10 },
+    },
+  })
   const [hasMoreSuggested, setHasMoreSuggested] = useState(true)
   const [hasMoreResults, setHasMoreResults] = useState(true)
 
@@ -43,22 +49,11 @@ export const ExplorePage: React.FC = () => {
 
   useEffect(() => {
     if (searchParam || termParam) {
-      search({
-        variables: {
-          query: searchParam,
-          term: termParam ?? "",
-          pagination: { offset: 0, limit: 10 },
-        },
-      }).then((results) => {
-        if ((results.data?.search?.articles?.length ?? 0) < 10) {
-          setHasMoreResults(false)
-        }
-      })
       searchTerm({ variables: { id: termParam, term: searchParam } })
     } else {
       setHasMoreResults(true)
     }
-  }, [search, searchParam, searchTerm, termParam])
+  }, [searchParam, searchTerm, termParam])
 
   const loadMoreResults = useCallback(() => {
     if (hasMoreResults) {
@@ -170,26 +165,6 @@ export const ExplorePage: React.FC = () => {
     termParam,
   ])
 
-  const searchBar = useMemo(() => {
-    return (
-      <SearchBar
-        search={(query) => {
-          search({
-            variables: {
-              query,
-              term: termParam ?? "",
-              pagination: { offset: 0, limit: 10 },
-            },
-          }).then((results) => {
-            if ((results.data?.search?.articles?.length ?? 0) < 10) {
-              setHasMoreResults(true)
-            }
-          })
-        }}
-      />
-    )
-  }, [search, termParam])
-
   const { handleToggle } = useToggleSubscription({
     createVariables: { termId: searchTermData?.searchTerm?.id },
     subscription: searchTermData?.searchTerm?.isSubscribed,
@@ -207,10 +182,13 @@ export const ExplorePage: React.FC = () => {
       >
         <Row>
           <Column span={8}></Column>
-          <Column span={8}>{searchBar}</Column>
+          <Column span={8}>
+            <SearchBar />
+          </Column>
         </Row>
-        {searchTermData?.searchTerm?.source ||
-        searchTermData?.searchTerm?.topic ? (
+        {termParam &&
+        (searchTermData?.searchTerm?.source ||
+          searchTermData?.searchTerm?.topic) ? (
           <Flex gap="md" direction="column">
             <Typography.Text size="xl">
               {searchTermData?.searchTerm?.term ?? ""}
@@ -269,7 +247,8 @@ export const ExplorePage: React.FC = () => {
             ) : null}
           </Flex>
         ) : null}
-        {searchTermData?.searchTerm &&
+        {searchParam &&
+        searchTermData?.searchTerm &&
         !(
           searchTermData?.searchTerm?.source ||
           searchTermData?.searchTerm?.topic

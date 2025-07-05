@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
 import { Input, Menu } from "@sampled-ui/base"
-import { toSentenceCase } from "js-convert-case"
 import { useInView } from "react-intersection-observer"
 import { useLocation, useNavigate } from "react-router"
 
@@ -16,7 +15,7 @@ const AdminSearchBar: React.FC<AdminSearchBarProps> = ({ search }) => {
   const location = useLocation()
   const searchParam = new URLSearchParams(location.search).get("search")
   const tabParam = new URLSearchParams(location.search).get("tab")
-  const active = tabParam === "active"
+  const active = tabParam === "active" || tabParam === null
 
   const [allSearchTerms, { data: searchTermsData, fetchMore: fetchMoreTerms }] =
     useAllSearchTermsLazyQuery()
@@ -91,13 +90,9 @@ const AdminSearchBar: React.FC<AdminSearchBarProps> = ({ search }) => {
         items={
           searchTermsData?.allSearchTerms?.map((searchTerm, index) => ({
             title:
-              toSentenceCase(searchTerm.term!.trim()) +
-              (searchTerm.source
-                ? ` (${toSentenceCase(searchTerm.source.name)})`
-                : "") +
-              (searchTerm.topic
-                ? ` (${toSentenceCase(searchTerm.topic.name)})`
-                : ""),
+              searchTerm.term!.trim() +
+              (searchTerm.source ? ` (${searchTerm.source.name})` : "") +
+              (searchTerm.topic ? ` (${searchTerm.topic.name})` : ""),
             key: `${searchTerm.term}-${searchTerm.id}`.trim(),
             ref:
               index === (searchTermsData?.allSearchTerms?.length ?? 0) - 1

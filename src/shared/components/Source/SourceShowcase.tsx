@@ -1,6 +1,6 @@
 import React from "react"
 
-import { Button, Flex, Spacing, Tag, Typography } from "@sampled-ui/base"
+import { Button, Flex, Spacing, Typography } from "@sampled-ui/base"
 import { useNavigate } from "react-router"
 
 import {
@@ -94,22 +94,22 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({
         </Button>
       ) : null}
       <Flex
-        gap="sm"
         justify="center"
-        style={{ flexWrap: "wrap", margin: "2rem", maxWidth: "100%" }}
+        style={{ flexWrap: "wrap", margin: "2rem", maxWidth: "40rem" }}
       >
         {searchTermsQueryData?.searchTerms?.length
           ? searchTermsQueryData.searchTerms
               .map((term) =>
                 term.term ? (
-                  <Tag
-                    label={term.term}
-                    variant="filled"
-                    size="lg"
+                  <Button
+                    key={term.id}
                     onClick={() => {
                       navigate(`/explore?term=${term.id}`)
                     }}
-                  />
+                    ghost
+                  >
+                    {term.term}
+                  </Button>
                 ) : null
               )
               .filter(Boolean)

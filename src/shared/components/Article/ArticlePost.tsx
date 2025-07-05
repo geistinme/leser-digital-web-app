@@ -18,7 +18,6 @@ import { useIsDevice } from "../../hooks/isDevice"
 
 import styles from "./Article.module.scss"
 
-import { toHeaderCase } from "js-convert-case"
 import { ArticleImage, ArticleMenu } from "./"
 
 interface ArticlePostProps {
@@ -151,7 +150,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
               {(article as ArticleFeedFragment).keywords?.map((keyword) => (
                 <Tag
                   color="gainsboro"
-                  label={toHeaderCase(keyword)}
+                  label={keyword}
                   className={styles.keyword}
                   onClick={() => {
                     navigate(`/explore?search=${keyword}`)

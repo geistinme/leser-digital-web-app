@@ -7,7 +7,6 @@ import React, {
 } from "react"
 
 import { Button, Flex, Spacing, Typography } from "@sampled-ui/base"
-import { toHeaderCase } from "js-convert-case"
 import { Check, XIcon } from "lucide-react"
 import { useInView } from "react-intersection-observer"
 import { useLocation, useNavigate } from "react-router"
@@ -162,15 +161,13 @@ const SearchTermList: React.FC<{
                     if (term.source?.name || term.topic?.name) {
                       navigate(`/explore?term=${term.id}`)
                     } else {
-                      navigate(`/explore?term=${term.term}`)
+                      navigate(`/explore?search=${term.term}`)
                     }
                   }}
                 >
                   {term.term!.trim() +
-                    (term.source
-                      ? ` (${toHeaderCase(term.source.name)})`
-                      : "") +
-                    (term.topic ? ` (${toHeaderCase(term.topic.name)})` : "")}
+                    (term.source ? ` (${term.source.name})` : "") +
+                    (term.topic ? ` (${term.topic.name})` : "")}
                 </Typography.Link>
                 {term.source?.name ? (
                   <Typography.Text disabled size="md" bold></Typography.Text>
