@@ -153,7 +153,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
                   label={keyword}
                   className={styles.keyword}
                   onClick={() => {
-                    navigate(`/explore?search=${keyword}`)
+                    navigate(`/search?search=${keyword}`)
                   }}
                 />
               ))}

@@ -10,6 +10,7 @@ import {
 } from "../shared/pages/Auth"
 
 import { Page } from "./components/Page"
+import PageWithSearch from "./components/Page/PageWithSearch"
 import { AboutPage } from "./pages/AboutPage"
 import { AccountPage } from "./pages/Account/AccountPage"
 import AdminPage from "./pages/AdminPage/AdminPage"
@@ -20,6 +21,7 @@ import { FollowingPage } from "./pages/Following/FollowingPage"
 import { HomePage } from "./pages/Home/HomePage"
 import { SourcePage } from "./pages/Profiles/SourceProfilePage"
 import { TopicPage } from "./pages/Profiles/TopicProfilePage"
+import { SearchPage } from "./pages/Search/SearchPage"
 
 export const router = createBrowserRouter([
   {
@@ -28,13 +30,42 @@ export const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
     children: [
       { path: "/", element: <HomePage /> },
-      { path: "/:source", element: <SourcePage /> },
-      { path: "/t/:topic", element: <TopicPage /> },
+      {
+        path: "/:source",
+        element: (
+          <PageWithSearch>
+            <SourcePage />
+          </PageWithSearch>
+        ),
+      },
+      {
+        path: "/t/:topic",
+        element: (
+          <PageWithSearch>
+            <TopicPage />
+          </PageWithSearch>
+        ),
+      },
       { path: "/me", element: <Private page={<AccountPage />} /> },
       { path: "/collection", element: <Private page={<CollectionPage />} /> },
-      { path: "/about", element: <AboutPage /> },
-      { path: "/explore", element: <ExplorePage /> },
       { path: "/following", element: <Private page={<FollowingPage />} /> },
+      {
+        path: "/explore",
+        element: (
+          <PageWithSearch>
+            <ExplorePage />
+          </PageWithSearch>
+        ),
+      },
+      {
+        path: "/search",
+        element: (
+          <PageWithSearch>
+            <SearchPage />
+          </PageWithSearch>
+        ),
+      },
+      { path: "/about", element: <AboutPage /> },
       { path: "/admin", element: <AdminPage /> },
     ],
   },

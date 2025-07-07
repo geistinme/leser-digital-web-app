@@ -4,31 +4,25 @@ import { Flex, Typography } from "@sampled-ui/base"
 import { useInView } from "react-intersection-observer"
 
 import {
-    ArticleGridFragment,
-    SourceGridFragment,
-    TopicGridFragment,
+  ArticleGridFragment,
+  SourceGridFragment,
+  TopicGridFragment,
 } from "../../../../generated/graphql"
 import ArticleGrid from "../Article/ArticleGrid"
 import SubscriptionGrid from "../Subscription/SubscriptionGrid"
 
 interface SearchResultsProps {
   articles?: ArticleGridFragment[] | null
-  foundArticles?: number | null
   sources?: SourceGridFragment[] | null
-  foundSources?: number | null
   topics?: TopicGridFragment[] | null
-  foundTopics?: number | null
   loadMore: () => void
   hasMore: boolean
 }
 
 const SearchResults: React.FC<SearchResultsProps> = ({
   articles,
-  foundArticles,
   sources,
-  foundSources,
   topics,
-  foundTopics,
   hasMore,
   loadMore,
 }) => {
@@ -52,27 +46,13 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   }, [articles, ref])
 
   return [
-    sources?.length ? (
-      <Flex direction="column" gap="lg" align="start" key="sources">
-        <Typography.Text size="lg" disabled>
-          {`Quellen (${foundSources ?? 0})`}
-        </Typography.Text>
-        <SubscriptionGrid sources={sources} />
-      </Flex>
-    ) : null,
-    topics?.length ? (
+    topics?.length || sources?.length ? (
       <Flex direction="column" gap="lg" align="start" key="topics">
-        <Typography.Text size="lg" disabled>
-          {`Themen (${foundTopics ?? 0})`}
-        </Typography.Text>
-        <SubscriptionGrid sources={topics} />
+        <SubscriptionGrid sources={[...(topics ?? []), ...(sources ?? [])]} />
       </Flex>
     ) : null,
     articles?.length ? (
       <Flex direction="column" gap="lg" align="start" key="articles">
-        <Typography.Text size="lg" disabled>
-          {`Artikel (${foundArticles ?? 0})`}
-        </Typography.Text>
         {articleSearchGrid}
       </Flex>
     ) : null,

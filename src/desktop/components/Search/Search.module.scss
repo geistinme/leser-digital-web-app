@@ -1,0 +1,73 @@
+@use "../../../styles/variables" as *;
+
+.search {
+  width: 16rem;
+  border-color: $color-primary !important;
+}
+
+.bar:hover {
+  background-color: $color-background-dim;
+}
+
+.bar {
+  cursor: pointer;
+  position: fixed;
+  z-index: 3;
+  transform: translateX(-50%);
+  left: calc(50% + 7.5rem);
+  top: $spacing-xl;
+  width: fit-content;
+  backdrop-filter: blur(10px);
+  background-color: rgba($color: #000000, $alpha: 0.1);
+  border-radius: $border-radius-sm;
+  transition-property: background-color;
+  transition-duration: $transition-fast;
+}
+
+.term {
+  width: 64rem;
+  margin: auto;
+}
+
+.termBackground {
+  position: sticky;
+  z-index: 0;
+  transform-origin: top left;
+  transform: scale(3) translateX(-.75rem);
+  color: $color-secondary;
+  max-width: calc((100% / 4) - 28rem);
+  opacity: 0.2;
+  filter: blur(2px);
+}
+
+.activeTerm {
+  z-index: 1;
+  cursor: pointer;
+  color: $color-secondary;
+}
+
+.relatedTerm {
+  cursor: pointer;
+  opacity: 0;
+  animation: fadeIn 1s;
+  animation-delay: 1s;
+  animation-fill-mode: forwards;
+  color: $color-secondary;
+  font-weight: light;
+  transition-property: color;
+}
+
+.relatedTerm:hover {
+  transform: translateX(1rem);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}

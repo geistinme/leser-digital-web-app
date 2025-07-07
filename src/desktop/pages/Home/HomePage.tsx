@@ -14,8 +14,11 @@ import { useLocation, useNavigate } from "react-router"
 
 import {
   ArticleFeedFragment,
+  FeedQuery as FeedQueryType,
+  MostInterestingArticlesQuery,
   useFeedLazyQuery,
   useLoggedInQuery,
+  useMostInterestingArticlesLazyQuery,
 } from "../../../../generated/graphql"
 import { breakpoints, useIsDevice } from "../../../shared/hooks/isDevice"
 import ArticleFeed from "../../components/Article/ArticleFeed"
@@ -33,8 +36,17 @@ export const HomePage: React.FC = () => {
   const { data: loggedInQueryData } = useLoggedInQuery()
   const [
     feedQuery,
-    { data: feedQueryData, loading: loadingArticles, fetchMore },
+    { data: feedQueryData, loading: loadingArticles, fetchMore: fetchMoreFeed },
   ] = useFeedLazyQuery()
+  const [
+    mostInterestingArticles,
+    {
+      data: mostInterestingArticlesData,
+      loading: loadingInterestingArticles,
+      fetchMore: fetchMoreMostInterestingArticles,
+    },
+  ] = useMostInterestingArticlesLazyQuery()
+
   useEffect(() => {
     const initialQueryVariables = {
       pagination: { offset: 0, limit: 10 },
@@ -52,16 +64,23 @@ export const HomePage: React.FC = () => {
         variables: initialQueryVariables,
         fetchPolicy: "network-only",
       })
+      setHasMore(true)
     } else {
-      feedQuery({
-        variables: initialQueryVariables,
+      mostInterestingArticles({
+        variables: {
+          pagination: { offset: 0, limit: 10 },
+        },
       })
+      setHasMore(true)
     }
-  }, [feedQuery, loggedInQueryData, selectedTab])
+  }, [feedQuery, loggedInQueryData, mostInterestingArticles, selectedTab])
 
   const [hasMore, setHasMore] = useState(true)
   const loadMore = useCallback(() => {
-    if (hasMore && !loadingArticles) {
+    const fetchMore = loggedInQueryData?.loggedIn
+      ? fetchMoreFeed
+      : fetchMoreMostInterestingArticles
+    if (hasMore && !loadingArticles && !loadingInterestingArticles) {
       fetchMore({
         variables: {
           pagination: {
@@ -70,26 +89,44 @@ export const HomePage: React.FC = () => {
           },
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if ((fetchMoreResult.feed?.length ?? 0) < 10) {
+          if (
+            ((
+              ((fetchMoreResult as FeedQueryType).feed) ||
+              (fetchMoreResult as MostInterestingArticlesQuery)
+                .mostInterestingArticles
+            )?.length ?? 0) < 10
+          ) {
             setHasMore(false)
           }
+          const prevFeed =
+            (prev as FeedQueryType).feed ||
+            (prev as MostInterestingArticlesQuery)?.mostInterestingArticles
+          const newFeed =
+            (((fetchMoreResult as FeedQueryType).feed) ||
+            (fetchMoreResult as MostInterestingArticlesQuery)
+              .mostInterestingArticles) ?? []
           if (
-            prev.feed &&
-            fetchMoreResult.feed &&
-            (fetchMoreResult.feed?.length ?? 0) > 0
+            prevFeed &&
+            (fetchMoreResult as FeedQueryType).feed &&
+            ((fetchMoreResult as FeedQueryType).feed?.length ?? 0) > 0
           ) {
             return Object.assign({}, prev, {
-              feed: [
-                ...prev.feed,
-                ...fetchMoreResult.feed,
-              ] as ArticleFeedFragment[],
+              feed: [...prevFeed, ...newFeed] as ArticleFeedFragment[],
             })
           }
           return prev
         },
       })
     }
-  }, [feedQueryData?.feed?.length, fetchMore, hasMore, loadingArticles])
+  }, [
+    feedQueryData?.feed?.length,
+    fetchMoreFeed,
+    fetchMoreMostInterestingArticles,
+    hasMore,
+    loadingArticles,
+    loadingInterestingArticles,
+    loggedInQueryData?.loggedIn,
+  ])
 
   const { ref, inView } = useInView()
   useEffect(() => {
@@ -124,10 +161,25 @@ export const HomePage: React.FC = () => {
   const feed = useMemo(() => {
     if (feedQueryData?.feed?.length) {
       return <ArticleFeed articles={feedQueryData.feed} lastRef={ref} />
+    } else if (
+      !loggedInQueryData?.loggedIn &&
+      mostInterestingArticlesData?.mostInterestingArticles?.length
+    ) {
+      return (
+        <ArticleFeed
+          articles={mostInterestingArticlesData.mostInterestingArticles}
+          lastRef={ref}
+        />
+      )
     } else {
       return null
     }
-  }, [feedQueryData?.feed, ref])
+  }, [
+    feedQueryData?.feed,
+    loggedInQueryData?.loggedIn,
+    mostInterestingArticlesData?.mostInterestingArticles,
+    ref,
+  ])
 
   return (
     <Spacing gap="xl" style={{ maxWidth: breakpoints.desktop, margin: "auto" }}>

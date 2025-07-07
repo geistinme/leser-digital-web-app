@@ -1,16 +1,22 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
-import { Input, Menu } from "@sampled-ui/base"
+import { Flex, Input, Menu } from "@sampled-ui/base"
 import { useInView } from "react-intersection-observer"
 import { useLocation, useNavigate } from "react-router"
 
-import { useSearchTermsLazyQuery } from "../../../../generated/graphql"
+import {
+  SearchTerm,
+  useSearchTermsLazyQuery,
+} from "../../../../generated/graphql"
+
+import styles from "./Search.module.scss"
 
 interface SearchBarProps {
   search?: (query: string) => Promise<void>
+  term?: SearchTerm
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ search }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ search, term }) => {
   const navigate = useNavigate()
   const location = useLocation()
   const searchParam = new URLSearchParams(location.search).get("search")
@@ -42,10 +48,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ search }) => {
           }
         })
       }
+    } else if (!searchParam && term?.term) {
+      searchTerms({ variables: { query: term.id } })
     } else {
-      searchTerms({})
+      searchTerms()
     }
-  }, [search, searchParam, searchTerms])
+  }, [search, searchParam, searchTerms, term?.id, term?.term])
 
   const loadMoreTerms = useCallback(() => {
     if (hasMoreTerms) {
@@ -95,63 +103,74 @@ const SearchBar: React.FC<SearchBarProps> = ({ search }) => {
     (id: string) => {
       const newParam = new URLSearchParams()
       newParam.set("term", id)
-      navigate(`${location.pathname}?${newParam.toString()}`)
+      navigate(`/search?${newParam.toString()}`)
     },
-    [location.pathname, navigate]
+    [navigate]
   )
   const navigateToSearch = useCallback(
     (id: string) => {
       const newParam = new URLSearchParams()
       newParam.set("search", id)
-      navigate(`${location.pathname}?${newParam.toString()}`)
+      navigate(`/search?${newParam.toString()}`)
     },
-    [location.pathname, navigate]
+    [navigate]
   )
+
+  const [searchValue, setSearchValue] = useState<string>("")
 
   const searchBar = useMemo(() => {
     return (
-      <Menu
-        items={
-          searchTermsData?.searchTerms?.map((searchTerm, index) => ({
-            title:
-              searchTerm.term!.trim() +
-              (searchTerm.source ? ` (${searchTerm.source.name})` : "") +
-              (searchTerm.topic ? ` (${searchTerm.topic.name})` : ""),
-            key: `${searchTerm.term}-${searchTerm.id}`.trim(),
-            ref:
-              index === (searchTermsData?.searchTerms?.length ?? 0) - 1
-                ? lastMenuItemRef
-                : undefined,
-          })) ?? []
-        }
-        onSelect={(item) => {
-          const term = searchTermsData?.searchTerms?.find(
-            (term) => term.id === item.key.substring(item.key.indexOf("-") + 1)
-          )
-          if (term?.source?.id || term?.topic?.id) {
-            navigateToSearchTerm(term.id)
-          } else {
-            navigateToSearch(term?.term ?? "")
+      <Flex justify="center" className={styles.bar}>
+        <Menu
+          size="sm"
+          items={
+            searchTermsData?.searchTerms?.map((searchTerm, index) => ({
+              title:
+                searchTerm.term!.trim() +
+                (searchTerm.source ? ` (${searchTerm.source.name})` : "") +
+                (searchTerm.topic ? ` (${searchTerm.topic.name})` : ""),
+              key: `${searchTerm.term}-${searchTerm.id}`.trim(),
+              ref:
+                index === (searchTermsData?.searchTerms?.length ?? 0) - 1
+                  ? lastMenuItemRef
+                  : undefined,
+            })) ?? []
           }
-        }}
-        alignment="bottom"
-      >
-        <Input
-          placeholder="Suchen"
-          style={{ width: "calc(100% - 1.5rem)", alignSelf: "center" }}
-          value={searchParam ?? ""}
-          onChange={(e) => {
-            const query = e.target.value
-            if (!query) {
-              const newParam = new URLSearchParams(location.search)
-              newParam.delete("search")
-              navigate(`/explore?${newParam.toString()}`, { replace: true })
+          onSelect={(item) => {
+            const term = searchTermsData?.searchTerms?.find(
+              (term) =>
+                term.id === item.key.substring(item.key.indexOf("-") + 1)
+            )
+            setSearchValue(term?.term ?? "")
+            if (term?.source?.id || term?.topic?.id) {
+              navigateToSearchTerm(term.id)
             } else {
-              navigateToSearch(query)
+              navigateToSearch(term?.term ?? "")
             }
           }}
-        />
-      </Menu>
+          alignment="bottom"
+        >
+          <Input
+            size="lg"
+            className={styles.search}
+            placeholder="Suchen"
+            value={searchValue}
+            onChange={(e) => {
+              e.preventDefault()
+              const query = e.target.value
+              if (!query) {
+                const newParam = new URLSearchParams(location.search)
+                newParam.delete("search")
+                setSearchValue("")
+                navigate(`/search?${newParam.toString()}`, { replace: true })
+              } else {
+                setSearchValue(query)
+                navigateToSearch(query)
+              }
+            }}
+          />
+        </Menu>
+      </Flex>
     )
   }, [
     lastMenuItemRef,
@@ -159,8 +178,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ search }) => {
     navigate,
     navigateToSearch,
     navigateToSearchTerm,
-    searchParam,
     searchTermsData?.searchTerms,
+    searchValue,
+    term?.term,
   ])
 
   return searchBar

@@ -1,5 +1,6 @@
 import { Flex, Spacing, Tag, Typography } from "@sampled-ui/base"
 import classNames from "classnames"
+import { Text } from "lucide-react"
 import moment from "moment"
 import { useNavigate } from "react-router"
 
@@ -19,7 +20,6 @@ export const ArticleCompact: React.FC<{
   compact?: boolean
 }> = ({ article, compact, onViewArticle }) => {
   const navigate = useNavigate()
-  
 
   return (
     <Flex direction="column" className={styles.grid}>
@@ -50,6 +50,27 @@ export const ArticleCompact: React.FC<{
           />
         )}
       </Flex>
+      {article.description ? (
+        <a
+          href={article.url}
+          target="_blank"
+          onClick={onViewArticle}
+          className={styles.imageOverlay}
+        >
+          <Spacing gap="sm">
+            <Flex
+              align="center"
+              justify="center"
+              className={styles.hasDescription}
+            >
+              <Text size={16} />
+            </Flex>
+            <Typography.Text className={styles.description}>
+              {article.description}
+            </Typography.Text>
+          </Spacing>
+        </a>
+      ) : null}
       <Spacing
         gap="sm"
         style={{

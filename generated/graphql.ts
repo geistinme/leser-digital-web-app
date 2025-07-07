@@ -218,7 +218,7 @@ export type Query = {
   recommendedArticles?: Maybe<Array<Maybe<Article>>>;
   savedArticles?: Maybe<Array<Article>>;
   search?: Maybe<SearchResult>;
-  searchTerm: SearchTerm;
+  searchTerm?: Maybe<SearchTerm>;
   searchTerms?: Maybe<Array<SearchTerm>>;
   source?: Maybe<Source>;
   sources?: Maybe<Array<Source>>;
@@ -480,33 +480,6 @@ export type MostInterestingArticlesQueryVariables = Exact<{
 
 export type MostInterestingArticlesQuery = { __typename?: 'Query', mostInterestingArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
 
-export type SearchQueryVariables = Exact<{
-  query?: InputMaybe<Scalars['String']['input']>;
-  term?: InputMaybe<Scalars['String']['input']>;
-  pagination: PaginationInput;
-}>;
-
-
-export type SearchQuery = { __typename?: 'Query', search?: { __typename?: 'SearchResult', foundArticles?: number | null, foundSources?: number | null, foundTopics?: number | null, articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null, sources?: Array<{ __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null, topics?: Array<{ __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null } | null };
-
-export type SearchTermsQueryVariables = Exact<{
-  query?: InputMaybe<Scalars['String']['input']>;
-  sourceId?: InputMaybe<Scalars['String']['input']>;
-  topicId?: InputMaybe<Scalars['String']['input']>;
-  pagination?: InputMaybe<PaginationInput>;
-}>;
-
-
-export type SearchTermsQuery = { __typename?: 'Query', searchTerms?: Array<{ __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, name: string } | null }> | null };
-
-export type SearchTermQueryVariables = Exact<{
-  id?: InputMaybe<Scalars['String']['input']>;
-  term?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type SearchTermQuery = { __typename?: 'Query', searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, ranking?: number | null, source?: { __typename?: 'Source', id: string, name: string, key: string } | null, topic?: { __typename?: 'Topic', id: string, name: string, category: ArticleCategory } | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null } };
-
 export type SourcesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -578,7 +551,7 @@ export type SourceQuery = { __typename?: 'Query', source?: { __typename?: 'Sourc
 
 export type SourceProfileFragment = { __typename?: 'Source', id: string, key: string, name: string, logo: string, articleCount?: number | null, subscribers?: number | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null };
 
-export type ArticleGridFragment = { __typename?: 'Article', id: string, title: string, uploadedAt: any, image?: string | null, url: string, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
+export type ArticleGridFragment = { __typename?: 'Article', id: string, title: string, description?: string | null, uploadedAt: any, image?: string | null, url: string, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null };
 
 export type TopicQueryVariables = Exact<{
   category: ArticleCategory;
@@ -588,6 +561,35 @@ export type TopicQueryVariables = Exact<{
 export type TopicQuery = { __typename?: 'Query', topic?: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string, articleCount?: number | null, subscribers?: number | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null } | null };
 
 export type TopicProfileFragment = { __typename?: 'Topic', id: string, category: ArticleCategory, name: string, articleCount?: number | null, subscribers?: number | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null };
+
+export type SearchQueryVariables = Exact<{
+  query?: InputMaybe<Scalars['String']['input']>;
+  term?: InputMaybe<Scalars['String']['input']>;
+  pagination: PaginationInput;
+}>;
+
+
+export type SearchQuery = { __typename?: 'Query', search?: { __typename?: 'SearchResult', foundArticles?: number | null, foundSources?: number | null, foundTopics?: number | null, articles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null, sources?: Array<{ __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null, topics?: Array<{ __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null } | null };
+
+export type SearchTermsQueryVariables = Exact<{
+  query?: InputMaybe<Scalars['String']['input']>;
+  sourceId?: InputMaybe<Scalars['String']['input']>;
+  topicId?: InputMaybe<Scalars['String']['input']>;
+  pagination?: InputMaybe<PaginationInput>;
+}>;
+
+
+export type SearchTermsQuery = { __typename?: 'Query', searchTerms?: Array<{ __typename?: 'SearchTerm', id: string, term?: string | null, active: boolean, ranking?: number | null, source?: { __typename?: 'Source', id: string, key: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string } | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null };
+
+export type SearchMenuItemFragment = { __typename?: 'SearchTerm', id: string, term?: string | null, active: boolean, ranking?: number | null, source?: { __typename?: 'Source', id: string, key: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string } | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null };
+
+export type SearchTermQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['String']['input']>;
+  term?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SearchTermQuery = { __typename?: 'Query', searchTerm?: { __typename?: 'SearchTerm', id: string, term?: string | null, active: boolean, ranking?: number | null, source?: { __typename?: 'Source', id: string, key: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string } | null, isSubscribed?: { __typename?: 'Subscription', id: string } | null } | null };
 
 export type MobileProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -793,6 +795,7 @@ export const ArticleGridFragmentDoc = gql`
     fragment ArticleGrid on Article {
   id
   title
+  description
   uploadedAt
   image
   url
@@ -812,6 +815,27 @@ export const TopicProfileFragmentDoc = gql`
   isSubscribed {
     id
   }
+}
+    `;
+export const SearchMenuItemFragmentDoc = gql`
+    fragment SearchMenuItem on SearchTerm {
+  id
+  term
+  active
+  source {
+    id
+    key
+    name
+  }
+  topic {
+    id
+    category
+    name
+  }
+  isSubscribed {
+    id
+  }
+  ranking
 }
     `;
 export const LoggedInDocument = gql`
@@ -1280,174 +1304,6 @@ export type MostInterestingArticlesQueryHookResult = ReturnType<typeof useMostIn
 export type MostInterestingArticlesLazyQueryHookResult = ReturnType<typeof useMostInterestingArticlesLazyQuery>;
 export type MostInterestingArticlesSuspenseQueryHookResult = ReturnType<typeof useMostInterestingArticlesSuspenseQuery>;
 export type MostInterestingArticlesQueryResult = Apollo.QueryResult<MostInterestingArticlesQuery, MostInterestingArticlesQueryVariables>;
-export const SearchDocument = gql`
-    query search($query: String, $term: String, $pagination: PaginationInput!) {
-  search(query: $query, term: $term, pagination: $pagination) {
-    articles {
-      ...ArticleFeed
-    }
-    foundArticles
-    sources {
-      ...SourceGrid
-    }
-    foundSources
-    topics {
-      ...TopicGrid
-    }
-    foundTopics
-  }
-}
-    ${ArticleFeedFragmentDoc}
-${SourceGridFragmentDoc}
-${TopicGridFragmentDoc}`;
-
-/**
- * __useSearchQuery__
- *
- * To run a query within a React component, call `useSearchQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchQuery({
- *   variables: {
- *      query: // value for 'query'
- *      term: // value for 'term'
- *      pagination: // value for 'pagination'
- *   },
- * });
- */
-export function useSearchQuery(baseOptions: Apollo.QueryHookOptions<SearchQuery, SearchQueryVariables> & ({ variables: SearchQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options);
-      }
-export function useSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchQuery, SearchQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options);
-        }
-export function useSearchSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SearchQuery, SearchQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options);
-        }
-export type SearchQueryHookResult = ReturnType<typeof useSearchQuery>;
-export type SearchLazyQueryHookResult = ReturnType<typeof useSearchLazyQuery>;
-export type SearchSuspenseQueryHookResult = ReturnType<typeof useSearchSuspenseQuery>;
-export type SearchQueryResult = Apollo.QueryResult<SearchQuery, SearchQueryVariables>;
-export const SearchTermsDocument = gql`
-    query searchTerms($query: String, $sourceId: String, $topicId: String, $pagination: PaginationInput) {
-  searchTerms(
-    query: $query
-    sourceId: $sourceId
-    topicId: $topicId
-    pagination: $pagination
-  ) {
-    id
-    term
-    source {
-      id
-      name
-    }
-    topic {
-      id
-      name
-    }
-  }
-}
-    `;
-
-/**
- * __useSearchTermsQuery__
- *
- * To run a query within a React component, call `useSearchTermsQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchTermsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchTermsQuery({
- *   variables: {
- *      query: // value for 'query'
- *      sourceId: // value for 'sourceId'
- *      topicId: // value for 'topicId'
- *      pagination: // value for 'pagination'
- *   },
- * });
- */
-export function useSearchTermsQuery(baseOptions?: Apollo.QueryHookOptions<SearchTermsQuery, SearchTermsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchTermsQuery, SearchTermsQueryVariables>(SearchTermsDocument, options);
-      }
-export function useSearchTermsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchTermsQuery, SearchTermsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchTermsQuery, SearchTermsQueryVariables>(SearchTermsDocument, options);
-        }
-export function useSearchTermsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SearchTermsQuery, SearchTermsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<SearchTermsQuery, SearchTermsQueryVariables>(SearchTermsDocument, options);
-        }
-export type SearchTermsQueryHookResult = ReturnType<typeof useSearchTermsQuery>;
-export type SearchTermsLazyQueryHookResult = ReturnType<typeof useSearchTermsLazyQuery>;
-export type SearchTermsSuspenseQueryHookResult = ReturnType<typeof useSearchTermsSuspenseQuery>;
-export type SearchTermsQueryResult = Apollo.QueryResult<SearchTermsQuery, SearchTermsQueryVariables>;
-export const SearchTermDocument = gql`
-    query searchTerm($id: String, $term: String) {
-  searchTerm(id: $id, term: $term) {
-    id
-    term
-    source {
-      id
-      name
-      key
-    }
-    topic {
-      id
-      name
-      category
-    }
-    isSubscribed {
-      id
-    }
-    ranking
-  }
-}
-    `;
-
-/**
- * __useSearchTermQuery__
- *
- * To run a query within a React component, call `useSearchTermQuery` and pass it any options that fit your needs.
- * When your component renders, `useSearchTermQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSearchTermQuery({
- *   variables: {
- *      id: // value for 'id'
- *      term: // value for 'term'
- *   },
- * });
- */
-export function useSearchTermQuery(baseOptions?: Apollo.QueryHookOptions<SearchTermQuery, SearchTermQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchTermQuery, SearchTermQueryVariables>(SearchTermDocument, options);
-      }
-export function useSearchTermLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchTermQuery, SearchTermQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchTermQuery, SearchTermQueryVariables>(SearchTermDocument, options);
-        }
-export function useSearchTermSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SearchTermQuery, SearchTermQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<SearchTermQuery, SearchTermQueryVariables>(SearchTermDocument, options);
-        }
-export type SearchTermQueryHookResult = ReturnType<typeof useSearchTermQuery>;
-export type SearchTermLazyQueryHookResult = ReturnType<typeof useSearchTermLazyQuery>;
-export type SearchTermSuspenseQueryHookResult = ReturnType<typeof useSearchTermSuspenseQuery>;
-export type SearchTermQueryResult = Apollo.QueryResult<SearchTermQuery, SearchTermQueryVariables>;
 export const SourcesDocument = gql`
     query sources {
   sources {
@@ -1834,6 +1690,150 @@ export type TopicQueryHookResult = ReturnType<typeof useTopicQuery>;
 export type TopicLazyQueryHookResult = ReturnType<typeof useTopicLazyQuery>;
 export type TopicSuspenseQueryHookResult = ReturnType<typeof useTopicSuspenseQuery>;
 export type TopicQueryResult = Apollo.QueryResult<TopicQuery, TopicQueryVariables>;
+export const SearchDocument = gql`
+    query search($query: String, $term: String, $pagination: PaginationInput!) {
+  search(query: $query, term: $term, pagination: $pagination) {
+    articles {
+      ...ArticleFeed
+    }
+    foundArticles
+    sources {
+      ...SourceGrid
+    }
+    foundSources
+    topics {
+      ...TopicGrid
+    }
+    foundTopics
+  }
+}
+    ${ArticleFeedFragmentDoc}
+${SourceGridFragmentDoc}
+${TopicGridFragmentDoc}`;
+
+/**
+ * __useSearchQuery__
+ *
+ * To run a query within a React component, call `useSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      term: // value for 'term'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useSearchQuery(baseOptions: Apollo.QueryHookOptions<SearchQuery, SearchQueryVariables> & ({ variables: SearchQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options);
+      }
+export function useSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchQuery, SearchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options);
+        }
+export function useSearchSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SearchQuery, SearchQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options);
+        }
+export type SearchQueryHookResult = ReturnType<typeof useSearchQuery>;
+export type SearchLazyQueryHookResult = ReturnType<typeof useSearchLazyQuery>;
+export type SearchSuspenseQueryHookResult = ReturnType<typeof useSearchSuspenseQuery>;
+export type SearchQueryResult = Apollo.QueryResult<SearchQuery, SearchQueryVariables>;
+export const SearchTermsDocument = gql`
+    query searchTerms($query: String, $sourceId: String, $topicId: String, $pagination: PaginationInput) {
+  searchTerms(
+    query: $query
+    sourceId: $sourceId
+    topicId: $topicId
+    pagination: $pagination
+  ) {
+    ...SearchMenuItem
+  }
+}
+    ${SearchMenuItemFragmentDoc}`;
+
+/**
+ * __useSearchTermsQuery__
+ *
+ * To run a query within a React component, call `useSearchTermsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchTermsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchTermsQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      sourceId: // value for 'sourceId'
+ *      topicId: // value for 'topicId'
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useSearchTermsQuery(baseOptions?: Apollo.QueryHookOptions<SearchTermsQuery, SearchTermsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchTermsQuery, SearchTermsQueryVariables>(SearchTermsDocument, options);
+      }
+export function useSearchTermsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchTermsQuery, SearchTermsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchTermsQuery, SearchTermsQueryVariables>(SearchTermsDocument, options);
+        }
+export function useSearchTermsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SearchTermsQuery, SearchTermsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchTermsQuery, SearchTermsQueryVariables>(SearchTermsDocument, options);
+        }
+export type SearchTermsQueryHookResult = ReturnType<typeof useSearchTermsQuery>;
+export type SearchTermsLazyQueryHookResult = ReturnType<typeof useSearchTermsLazyQuery>;
+export type SearchTermsSuspenseQueryHookResult = ReturnType<typeof useSearchTermsSuspenseQuery>;
+export type SearchTermsQueryResult = Apollo.QueryResult<SearchTermsQuery, SearchTermsQueryVariables>;
+export const SearchTermDocument = gql`
+    query searchTerm($id: String, $term: String) {
+  searchTerm(id: $id, term: $term) {
+    ...SearchMenuItem
+  }
+}
+    ${SearchMenuItemFragmentDoc}`;
+
+/**
+ * __useSearchTermQuery__
+ *
+ * To run a query within a React component, call `useSearchTermQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchTermQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchTermQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      term: // value for 'term'
+ *   },
+ * });
+ */
+export function useSearchTermQuery(baseOptions?: Apollo.QueryHookOptions<SearchTermQuery, SearchTermQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchTermQuery, SearchTermQueryVariables>(SearchTermDocument, options);
+      }
+export function useSearchTermLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchTermQuery, SearchTermQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchTermQuery, SearchTermQueryVariables>(SearchTermDocument, options);
+        }
+export function useSearchTermSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SearchTermQuery, SearchTermQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchTermQuery, SearchTermQueryVariables>(SearchTermDocument, options);
+        }
+export type SearchTermQueryHookResult = ReturnType<typeof useSearchTermQuery>;
+export type SearchTermLazyQueryHookResult = ReturnType<typeof useSearchTermLazyQuery>;
+export type SearchTermSuspenseQueryHookResult = ReturnType<typeof useSearchTermSuspenseQuery>;
+export type SearchTermQueryResult = Apollo.QueryResult<SearchTermQuery, SearchTermQueryVariables>;
 export const MobileProfileDocument = gql`
     query mobileProfile {
   loggedIn {

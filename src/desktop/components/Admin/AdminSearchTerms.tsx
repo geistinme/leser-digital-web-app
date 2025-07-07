@@ -159,9 +159,9 @@ const SearchTermList: React.FC<{
                   size="md"
                   onClick={() => {
                     if (term.source?.name || term.topic?.name) {
-                      navigate(`/explore?term=${term.id}`)
+                      navigate(`/search?term=${term.id}`)
                     } else {
-                      navigate(`/explore?search=${term.term}`)
+                      navigate(`/search?search=${term.term}`)
                     }
                   }}
                 >

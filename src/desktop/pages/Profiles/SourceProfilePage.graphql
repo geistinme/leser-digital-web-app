@@ -19,6 +19,7 @@ fragment SourceProfile on Source {
 fragment ArticleGrid on Article {
   id
   title
+  description
   uploadedAt
   image
   url

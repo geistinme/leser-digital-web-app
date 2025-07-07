@@ -66,6 +66,51 @@
   border-radius: $border-radius-sm;
 }
 
+.grid {
+  .imageOverlay {
+    all: unset;
+    position: absolute;
+    width: 100%;
+    height: 12rem;
+    color: $color-secondary;
+    overflow: hidden;
+    border-radius: $border-radius-sm;
+    transition-property: backdrop-filter background-color;
+    transition-duration: $transition-fast;
+    transition-timing-function: $transition-function;
+  }
+
+  .hasDescription {
+    position: absolute;
+    top: $spacing-sm;
+    left: $spacing-sm;
+    width: 2rem;
+    height: 2rem;
+    background-color: $color-background-dim;
+    border-radius: $border-radius-sm;
+  }
+
+  .description {
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: $transition-fast;
+    transition-timing-function: $transition-function;
+  }
+
+  .imageOverlay:hover {
+    backdrop-filter: blur(5px) brightness(0.4);
+    background-color: $color-background-dim;
+
+    .hasDescription {
+      opacity: 0;
+    }
+
+    .description {
+      opacity: 1;
+    }
+  }
+}
+
 .tags {
   position: absolute;
   top: $spacing-lg;
@@ -81,7 +126,6 @@
   cursor: pointer;
   backdrop-filter: brightness(0.8) blur(5px);
   -webkit-backdrop-filter: brightness(0.8) blur(5px);
-  transition: backdrop-filter $transition-fast;
 }
 
 .showcase {

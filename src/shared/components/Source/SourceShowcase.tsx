@@ -104,7 +104,7 @@ export const SourceShowcase: React.FC<SourceShowcaseProps> = ({
                   <Button
                     key={term.id}
                     onClick={() => {
-                      navigate(`/explore?term=${term.id}`)
+                      navigate(`/search?term=${term.id}`)
                     }}
                     ghost
                   >
