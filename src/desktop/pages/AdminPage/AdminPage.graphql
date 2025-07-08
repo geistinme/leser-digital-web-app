@@ -28,3 +28,13 @@ fragment AdminSearchTerm on SearchTerm {
   }
   ranking
 }
+
+query searchTermStatistics {
+  searchTermStatistics {
+    totalTerms
+    activeTerms
+    rankedTerms
+    rankedArticles
+    totalArticles
+  }
+}

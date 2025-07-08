@@ -219,6 +219,7 @@ export type Query = {
   savedArticles?: Maybe<Array<Article>>;
   search?: Maybe<SearchResult>;
   searchTerm?: Maybe<SearchTerm>;
+  searchTermStatistics?: Maybe<SearchTermStatistics>;
   searchTerms?: Maybe<Array<SearchTerm>>;
   source?: Maybe<Source>;
   sources?: Maybe<Array<Source>>;
@@ -339,6 +340,16 @@ export type SearchTerm = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
+export type SearchTermStatistics = {
+  __typename?: 'SearchTermStatistics';
+  activeTerms: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
+  rankedArticles: Scalars['Int']['output'];
+  rankedTerms: Scalars['Int']['output'];
+  totalArticles: Scalars['Int']['output'];
+  totalTerms: Scalars['Int']['output'];
+};
+
 export type Source = {
   __typename?: 'Source';
   articleCount?: Maybe<Scalars['Int']['output']>;
@@ -452,6 +463,11 @@ export type ToggleSearchTermMutationVariables = Exact<{
 export type ToggleSearchTermMutation = { __typename?: 'Mutation', toggleSearchTerm?: { __typename?: 'SearchTerm', id: string, term?: string | null, active: boolean, ranking?: number | null, source?: { __typename?: 'Source', id: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, name: string } | null } | null };
 
 export type AdminSearchTermFragment = { __typename?: 'SearchTerm', id: string, term?: string | null, active: boolean, ranking?: number | null, source?: { __typename?: 'Source', id: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, name: string } | null };
+
+export type SearchTermStatisticsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SearchTermStatisticsQuery = { __typename?: 'Query', searchTermStatistics?: { __typename?: 'SearchTermStatistics', totalTerms: number, activeTerms: number, rankedTerms: number, rankedArticles: number, totalArticles: number } | null };
 
 export type SavedArticlesQueryVariables = Exact<{
   filter?: InputMaybe<ArticlesQueryFilter>;
@@ -1133,6 +1149,49 @@ export function useToggleSearchTermMutation(baseOptions?: Apollo.MutationHookOpt
 export type ToggleSearchTermMutationHookResult = ReturnType<typeof useToggleSearchTermMutation>;
 export type ToggleSearchTermMutationResult = Apollo.MutationResult<ToggleSearchTermMutation>;
 export type ToggleSearchTermMutationOptions = Apollo.BaseMutationOptions<ToggleSearchTermMutation, ToggleSearchTermMutationVariables>;
+export const SearchTermStatisticsDocument = gql`
+    query searchTermStatistics {
+  searchTermStatistics {
+    totalTerms
+    activeTerms
+    rankedTerms
+    rankedArticles
+    totalArticles
+  }
+}
+    `;
+
+/**
+ * __useSearchTermStatisticsQuery__
+ *
+ * To run a query within a React component, call `useSearchTermStatisticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchTermStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchTermStatisticsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSearchTermStatisticsQuery(baseOptions?: Apollo.QueryHookOptions<SearchTermStatisticsQuery, SearchTermStatisticsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchTermStatisticsQuery, SearchTermStatisticsQueryVariables>(SearchTermStatisticsDocument, options);
+      }
+export function useSearchTermStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchTermStatisticsQuery, SearchTermStatisticsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchTermStatisticsQuery, SearchTermStatisticsQueryVariables>(SearchTermStatisticsDocument, options);
+        }
+export function useSearchTermStatisticsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SearchTermStatisticsQuery, SearchTermStatisticsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchTermStatisticsQuery, SearchTermStatisticsQueryVariables>(SearchTermStatisticsDocument, options);
+        }
+export type SearchTermStatisticsQueryHookResult = ReturnType<typeof useSearchTermStatisticsQuery>;
+export type SearchTermStatisticsLazyQueryHookResult = ReturnType<typeof useSearchTermStatisticsLazyQuery>;
+export type SearchTermStatisticsSuspenseQueryHookResult = ReturnType<typeof useSearchTermStatisticsSuspenseQuery>;
+export type SearchTermStatisticsQueryResult = Apollo.QueryResult<SearchTermStatisticsQuery, SearchTermStatisticsQueryVariables>;
 export const SavedArticlesDocument = gql`
     query savedArticles($filter: ArticlesQueryFilter) {
   savedArticles(filter: $filter) {

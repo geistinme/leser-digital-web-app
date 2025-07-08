@@ -4,7 +4,7 @@ import { Layout } from "@sampled-ui/base"
 import { Outlet, useLocation, useNavigate } from "react-router"
 import { hideSplashScreen } from "vite-plugin-splash-screen/runtime"
 
-import { useLoggedInQuery } from "../../../../generated/graphql"
+import { Role, useLoggedInQuery } from "../../../../generated/graphql"
 import { Sidebar } from "../Sidebar"
 
 export const Page: React.FC = () => {
@@ -29,6 +29,27 @@ export const Page: React.FC = () => {
       inner.current.scrollTo(0, 0)
     }
   }, [location.pathname, inner])
+
+  if (
+    data?.loggedIn?.role !== Role.Admin &&
+    location.pathname.startsWith("/admin")
+  ) {
+    return (
+      <Layout style={{ height: "100vh" }}>
+        <Sidebar />
+        <Layout
+          style={{
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <h1>Access Denied</h1>
+        </Layout>
+      </Layout>
+    )
+  }
 
   return (
     <Layout style={{ height: "100vh" }}>
