@@ -3,6 +3,7 @@ query loggedIn {
     id
     email
     name
+    role
     verified
   }
 }

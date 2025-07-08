@@ -411,7 +411,7 @@ export type VerificationCode = {
 export type LoggedInQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LoggedInQuery = { __typename?: 'Query', loggedIn: { __typename?: 'User', id: string, email: string, name: string, verified: boolean } };
+export type LoggedInQuery = { __typename?: 'Query', loggedIn: { __typename?: 'User', id: string, email: string, name: string, role: Role, verified: boolean } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -860,6 +860,7 @@ export const LoggedInDocument = gql`
     id
     email
     name
+    role
     verified
   }
 }

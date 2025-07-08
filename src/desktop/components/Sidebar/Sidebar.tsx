@@ -21,6 +21,7 @@ import {
 import { Location, useLocation, useNavigate } from "react-router"
 
 import {
+  Role,
   useLoggedInQuery,
   useLogoutMutation,
 } from "../../../../generated/graphql"
@@ -93,7 +94,7 @@ export const Sidebar: React.FC = () => {
       onClick: () => navigate("/me"),
     },
   ]
-  if (data?.loggedIn) {
+  if (data?.loggedIn && data.loggedIn.role === Role.Admin) {
     items.push({
       title: "Admin",
       key: "/admin",
