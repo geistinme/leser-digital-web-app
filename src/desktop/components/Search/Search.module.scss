@@ -36,7 +36,7 @@
   transform-origin: top left;
   transform: scale(3) translateX(-.75rem);
   color: $color-secondary;
-  max-width: calc((100% / 4) - 28rem);
+  max-width: calc((60%) - 28rem);
   opacity: 0.2;
   filter: blur(2px);
 }
