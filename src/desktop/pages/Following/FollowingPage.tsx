@@ -16,10 +16,10 @@ interface FollowingPageProps {}
 
 export const FollowingPage: React.FC<FollowingPageProps> = () => {
   const { data: sourcesQueryData } = useSourcesQuery({
-    variables: { pagination: { limit: 8 } },
+    variables: { pagination: { limit: 4 } },
   })
   const { data: topicsQueryData } = useTopicsQuery({
-    variables: { pagination: { limit: 8 } },
+    variables: { pagination: { limit: 4 } },
   })
   const { data: userSubscriptionsQueryData } = useSubscriptionsQuery()
 
