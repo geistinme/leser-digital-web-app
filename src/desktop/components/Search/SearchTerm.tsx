@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 
-import { Button, Flex, Typography } from "@sampled-ui/base"
+import { Button, Flex, Skeleton, Typography } from "@sampled-ui/base"
 import { BarChart, XIcon } from "lucide-react"
 import { useLocation, useNavigate } from "react-router"
 
@@ -142,10 +142,14 @@ export const SearchTerm: React.FC<SearchTermProps> = ({
               </Button>
             ) : null}
           </Flex>
-          <Flex gap="xs">
-            <BarChart size={16} />
-            <Typography.Text>{term?.ranking} mal erwähnt</Typography.Text>
-          </Flex>
+          {term.ranking ? (
+            <Flex gap="xs">
+              <BarChart size={16} />
+              <Typography.Text>{term?.ranking} mal erwähnt</Typography.Text>
+            </Flex>
+          ) : (
+            <Skeleton />
+          )}
           <Flex gap="xs">
             <Typography.Link
               onClick={() => {
@@ -196,15 +200,19 @@ export const SearchTerm: React.FC<SearchTermProps> = ({
               </Button>
             ) : null}
           </Flex>
-          <Flex gap="xs">
-            <BarChart size={16} />
-            <Typography.Text>
-              {(search?.foundArticles ?? 0) +
-                (search?.foundSources ?? 0) +
-                (search?.foundTopics ?? 0)}{" "}
-              mal erwähnt
-            </Typography.Text>
-          </Flex>
+          {search?.articles ? (
+            <Flex gap="xs">
+              <BarChart size={16} />
+              <Typography.Text>
+                {(search?.foundArticles ?? 0) +
+                  (search?.foundSources ?? 0) +
+                  (search?.foundTopics ?? 0)}{" "}
+                mal erwähnt
+              </Typography.Text>
+            </Flex>
+          ) : (
+            <Skeleton />
+          )}
         </Flex>
       )
     }
@@ -230,19 +238,23 @@ export const SearchTerm: React.FC<SearchTermProps> = ({
       )
     }
 
-    if (search?.articles?.length && searchParam && !term) {
+    if (searchParam && !term) {
       return (
         <Flex gap="md" direction="column" key={searchParam}>
           <Typography.Text size="xl">{searchParam}</Typography.Text>
-          <Flex>
-            <BarChart size={16} />
-            <Typography.Text>
-              {(search?.foundArticles ?? 0) +
-                (search?.foundSources ?? 0) +
-                (search?.foundTopics ?? 0)}{" "}
-              mal erwähnt
-            </Typography.Text>
-          </Flex>
+          {search?.articles ? (
+            <Flex gap="xs">
+              <BarChart size={16} />
+              <Typography.Text>
+                {(search?.foundArticles ?? 0) +
+                  (search?.foundSources ?? 0) +
+                  (search?.foundTopics ?? 0)}{" "}
+                mal erwähnt
+              </Typography.Text>
+            </Flex>
+          ) : (
+            <Skeleton />
+          )}
         </Flex>
       )
     }
@@ -250,7 +262,7 @@ export const SearchTerm: React.FC<SearchTermProps> = ({
     handleToggle,
     navigate,
     relatedTerms,
-    search?.articles?.length,
+    search?.articles,
     search?.foundArticles,
     search?.foundSources,
     search?.foundTopics,

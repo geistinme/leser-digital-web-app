@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react"
 
-import { Flex, Typography } from "@sampled-ui/base"
+import { Flex } from "@sampled-ui/base"
 import { useInView } from "react-intersection-observer"
 
 import {
@@ -34,10 +34,6 @@ const SearchResults: React.FC<SearchResultsProps> = ({
     }
   }, [hasMore, inView, loadMore])
 
-  const emptySearch = useMemo(() => {
-    return !articles?.length && !topics?.length && !sources?.length
-  }, [articles?.length, sources?.length, topics?.length])
-
   const articleSearchGrid = useMemo(() => {
     if (articles?.length) {
       return <ArticleGrid articles={articles} lastRef={ref} />
@@ -61,16 +57,6 @@ const SearchResults: React.FC<SearchResultsProps> = ({
       <Flex direction="column" gap="lg" align="start" key="articles">
         {articleSearchGrid}
       </Flex>
-    ) : null,
-    emptySearch ? (
-      <Typography.Text
-        disabled
-        bold
-        style={{ textAlign: "center" }}
-        key="empty"
-      >
-        Keine Artikel gefunden
-      </Typography.Text>
     ) : null,
   ]
 }

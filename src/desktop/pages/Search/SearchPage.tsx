@@ -18,7 +18,11 @@ export const SearchPage: React.FC<SearchPageProps> = () => {
   const searchParam = new URLSearchParams(location.search).get("search")
   const termParam = new URLSearchParams(location.search).get("term")
 
-  const { data: searchData, fetchMore } = useSearchQuery({
+  const {
+    data: searchData,
+    loading,
+    fetchMore,
+  } = useSearchQuery({
     variables: {
       query: searchParam ?? "",
       term: termParam ?? "",
@@ -80,7 +84,7 @@ export const SearchPage: React.FC<SearchPageProps> = () => {
   ])
 
   const searchResults = useMemo(() => {
-    return searchParam || termParam ? (
+    return (searchParam || termParam) && !loading ? (
       <SearchResults
         articles={searchData?.search?.articles}
         sources={searchData?.search?.sources}
@@ -91,7 +95,10 @@ export const SearchPage: React.FC<SearchPageProps> = () => {
   }, [
     hasMoreResults,
     loadMoreResults,
-    searchData?.search,
+    loading,
+    searchData?.search?.articles,
+    searchData?.search?.sources,
+    searchData?.search?.topics,
     searchParam,
     termParam,
   ])
