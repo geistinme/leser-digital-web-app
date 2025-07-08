@@ -33,7 +33,6 @@ query searchTermStatistics {
   searchTermStatistics {
     totalTerms
     activeTerms
-    rankedTerms
     rankedArticles
     totalArticles
   }

@@ -345,7 +345,6 @@ export type SearchTermStatistics = {
   activeTerms: Scalars['Int']['output'];
   id: Scalars['String']['output'];
   rankedArticles: Scalars['Int']['output'];
-  rankedTerms: Scalars['Int']['output'];
   totalArticles: Scalars['Int']['output'];
   totalTerms: Scalars['Int']['output'];
 };
@@ -467,7 +466,7 @@ export type AdminSearchTermFragment = { __typename?: 'SearchTerm', id: string, t
 export type SearchTermStatisticsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SearchTermStatisticsQuery = { __typename?: 'Query', searchTermStatistics?: { __typename?: 'SearchTermStatistics', totalTerms: number, activeTerms: number, rankedTerms: number, rankedArticles: number, totalArticles: number } | null };
+export type SearchTermStatisticsQuery = { __typename?: 'Query', searchTermStatistics?: { __typename?: 'SearchTermStatistics', totalTerms: number, activeTerms: number, rankedArticles: number, totalArticles: number } | null };
 
 export type SavedArticlesQueryVariables = Exact<{
   filter?: InputMaybe<ArticlesQueryFilter>;
@@ -1154,7 +1153,6 @@ export const SearchTermStatisticsDocument = gql`
   searchTermStatistics {
     totalTerms
     activeTerms
-    rankedTerms
     rankedArticles
     totalArticles
   }
