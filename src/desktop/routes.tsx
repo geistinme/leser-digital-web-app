@@ -18,6 +18,7 @@ import { CollectionPage } from "./pages/Collection/CollectionPage"
 import { NotFoundPage } from "./pages/Error/404Page"
 import { ExplorePage } from "./pages/Explore/ExplorePage"
 import { FollowingPage } from "./pages/Following/FollowingPage"
+import SourcesOrTopicsPage from "./pages/Following/SourcesOrTopicsPage"
 import { HomePage } from "./pages/Home/HomePage"
 import { SourcePage } from "./pages/Profiles/SourceProfilePage"
 import { TopicPage } from "./pages/Profiles/TopicProfilePage"
@@ -49,6 +50,8 @@ export const router = createBrowserRouter([
       { path: "/me", element: <Private page={<AccountPage />} /> },
       { path: "/collection", element: <Private page={<CollectionPage />} /> },
       { path: "/following", element: <Private page={<FollowingPage />} /> },
+      { path: "/following/sources", element: <Private page={<SourcesOrTopicsPage />} /> },
+      { path: "/following/topics", element: <Private page={<SourcesOrTopicsPage />} /> },
       {
         path: "/explore",
         element: (

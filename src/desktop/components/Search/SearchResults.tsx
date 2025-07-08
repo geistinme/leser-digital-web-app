@@ -7,6 +7,7 @@ import {
   ArticleGridFragment,
   SourceGridFragment,
   TopicGridFragment,
+  useSubscriptionsQuery,
 } from "../../../../generated/graphql"
 import ArticleGrid from "../Article/ArticleGrid"
 import SubscriptionGrid from "../Subscription/SubscriptionGrid"
@@ -45,10 +46,15 @@ const SearchResults: React.FC<SearchResultsProps> = ({
     }
   }, [articles, ref])
 
+  const { data: userSubscriptionsData } = useSubscriptionsQuery()
+
   return [
     topics?.length || sources?.length ? (
       <Flex direction="column" gap="lg" align="start" key="topics">
-        <SubscriptionGrid sources={[...(topics ?? []), ...(sources ?? [])]} />
+        <SubscriptionGrid
+          sources={[...(topics ?? []), ...(sources ?? [])]}
+          userSubscriptions={userSubscriptionsData?.subscriptions}
+        />
       </Flex>
     ) : null,
     articles?.length ? (

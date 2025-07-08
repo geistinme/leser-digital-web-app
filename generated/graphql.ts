@@ -290,8 +290,18 @@ export type QuerySourceArgs = {
 };
 
 
+export type QuerySourcesArgs = {
+  pagination?: InputMaybe<PaginationInput>;
+};
+
+
 export type QueryTopicArgs = {
   category: ArticleCategory;
+};
+
+
+export type QueryTopicsArgs = {
+  pagination?: InputMaybe<PaginationInput>;
 };
 
 
@@ -480,12 +490,16 @@ export type MostInterestingArticlesQueryVariables = Exact<{
 
 export type MostInterestingArticlesQuery = { __typename?: 'Query', mostInterestingArticles?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
 
-export type SourcesQueryVariables = Exact<{ [key: string]: never; }>;
+export type SourcesQueryVariables = Exact<{
+  pagination?: InputMaybe<PaginationInput>;
+}>;
 
 
 export type SourcesQuery = { __typename?: 'Query', sources?: Array<{ __typename: 'Source', id: string, key: string, name: string, logo: string, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null };
 
-export type TopicsQueryVariables = Exact<{ [key: string]: never; }>;
+export type TopicsQueryVariables = Exact<{
+  pagination?: InputMaybe<PaginationInput>;
+}>;
 
 
 export type TopicsQuery = { __typename?: 'Query', topics?: Array<{ __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null }> | null };
@@ -493,7 +507,7 @@ export type TopicsQuery = { __typename?: 'Query', topics?: Array<{ __typename: '
 export type SubscriptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SubscriptionsQuery = { __typename?: 'Query', subscriptions?: Array<{ __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string } | null, topic?: { __typename?: 'Topic', id: string } | null } }> | null };
+export type SubscriptionsQuery = { __typename?: 'Query', subscriptions?: Array<{ __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, name: string } | null } }> | null };
 
 export type CreateSubscriptionMutationVariables = Exact<{
   sourceId?: InputMaybe<Scalars['String']['input']>;
@@ -502,7 +516,7 @@ export type CreateSubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string } | null, topic?: { __typename?: 'Topic', id: string } | null } } | null };
+export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, name: string } | null } } | null };
 
 export type DeleteSubscriptionMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -515,7 +529,7 @@ export type SourceGridFragment = { __typename: 'Source', id: string, key: string
 
 export type TopicGridFragment = { __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null };
 
-export type UserSubscriptionFragment = { __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string } | null, topic?: { __typename?: 'Topic', id: string } | null } };
+export type UserSubscriptionFragment = { __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, name: string } | null } };
 
 export type FeedQueryVariables = Exact<{
   pagination: PaginationInput;
@@ -727,9 +741,11 @@ export const UserSubscriptionFragmentDoc = gql`
     term
     source {
       id
+      name
     }
     topic {
       id
+      name
     }
   }
   createdAt
@@ -1305,8 +1321,8 @@ export type MostInterestingArticlesLazyQueryHookResult = ReturnType<typeof useMo
 export type MostInterestingArticlesSuspenseQueryHookResult = ReturnType<typeof useMostInterestingArticlesSuspenseQuery>;
 export type MostInterestingArticlesQueryResult = Apollo.QueryResult<MostInterestingArticlesQuery, MostInterestingArticlesQueryVariables>;
 export const SourcesDocument = gql`
-    query sources {
-  sources {
+    query sources($pagination: PaginationInput) {
+  sources(pagination: $pagination) {
     ...SourceGrid
   }
 }
@@ -1324,6 +1340,7 @@ export const SourcesDocument = gql`
  * @example
  * const { data, loading, error } = useSourcesQuery({
  *   variables: {
+ *      pagination: // value for 'pagination'
  *   },
  * });
  */
@@ -1344,8 +1361,8 @@ export type SourcesLazyQueryHookResult = ReturnType<typeof useSourcesLazyQuery>;
 export type SourcesSuspenseQueryHookResult = ReturnType<typeof useSourcesSuspenseQuery>;
 export type SourcesQueryResult = Apollo.QueryResult<SourcesQuery, SourcesQueryVariables>;
 export const TopicsDocument = gql`
-    query topics {
-  topics {
+    query topics($pagination: PaginationInput) {
+  topics(pagination: $pagination) {
     ...TopicGrid
   }
 }
@@ -1363,6 +1380,7 @@ export const TopicsDocument = gql`
  * @example
  * const { data, loading, error } = useTopicsQuery({
  *   variables: {
+ *      pagination: // value for 'pagination'
  *   },
  * });
  */

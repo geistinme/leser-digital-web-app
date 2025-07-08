@@ -1,11 +1,11 @@
-import React, { useMemo } from "react"
+import React, { RefObject, useMemo } from "react"
 
 import { Column, Flex, Row } from "@sampled-ui/base"
 
 import {
   SourceGridFragment,
   TopicGridFragment,
-  UserSubscriptionFragment
+  UserSubscriptionFragment,
 } from "../../../../generated/graphql"
 import SubscriptionGridItem from "../../../shared/components/Subscription/SubscriptionItem"
 
@@ -17,11 +17,13 @@ interface SubscriptionGridItem {
 interface SubscriptionGridProps {
   userSubscriptions?: UserSubscriptionFragment[] | null
   sources: (SourceGridFragment | TopicGridFragment)[] | null
+  lastRef?: (node?: Element | null) => void
 }
 
 const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
   sources,
   userSubscriptions,
+  lastRef,
 }) => {
   const gridRows = useMemo(() => {
     return sources?.reduce((allRows, _currentSource, index, allSources) => {
@@ -55,10 +57,19 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
     <Flex direction="column" gap="lg" style={{ width: "100%" }}>
       {gridRows?.map((row, index) => {
         return (
-          <Row key={`row-${index}`} style={{ height: "14rem" }} gap="2rem">
+          <Row key={`row-${index}`} style={{ height: "24rem" }} gap="1rem">
             {row.map((source, i) => {
               return (
-                <Column key={`column-${i}`} span={6} style={{ height: "100%" }}>
+                <Column
+                  key={`column-${i}`}
+                  span={6}
+                  style={{ height: "100%" }}
+                  ref={
+                    index + 1 === gridRows.length && i + 1 === row.length && lastRef
+                      ? lastRef as unknown as RefObject<HTMLDivElement | null>
+                      : undefined
+                  }
+                >
                   <SubscriptionGridItem
                     source={source.source}
                     userSubscription={source.subscription}

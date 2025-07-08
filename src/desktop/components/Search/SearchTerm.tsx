@@ -21,7 +21,7 @@ interface SearchTermProps {
   handleToggle: () => void
 }
 
-const TermBackground: React.FC<{
+export const TermBackground: React.FC<{
   term: string
   children: React.ReactNode
   relatedTerms?: SearchMenuItemFragment[]
@@ -100,7 +100,7 @@ const renderSearchTerm = (term: SearchMenuItemFragment | undefined): string => {
   )
 }
 
-const SearchTerm: React.FC<SearchTermProps> = ({
+export const SearchTerm: React.FC<SearchTermProps> = ({
   term,
   search,
   handleToggle,

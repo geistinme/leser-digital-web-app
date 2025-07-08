@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
 import { Flex, Spacing } from "@sampled-ui/base"
+
 import {
   ArticleGridFragment,
   SearchTermDocument,

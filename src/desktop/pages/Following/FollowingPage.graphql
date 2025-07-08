@@ -1,11 +1,11 @@
-query sources {
-  sources {
+query sources($pagination: PaginationInput) {
+  sources(pagination: $pagination) {
     ...SourceGrid
   }
 }
 
-query topics {
-  topics {
+query topics($pagination: PaginationInput) {
+  topics(pagination: $pagination) {
     ...TopicGrid
   }
 }
@@ -62,9 +62,11 @@ fragment UserSubscription on Subscription {
     term
     source {
       id
+      name
     }
     topic {
       id
+      name
     }
   }
   createdAt

@@ -1,57 +1,63 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 
-import { Flex, Typography } from "@sampled-ui/base";
-import classNames from "classnames";
-import { toKebabCase } from "js-convert-case";
-import { CheckIcon, PlusIcon } from "lucide-react";
-import { Vibrant } from "node-vibrant/browser";
-import { useNavigate } from "react-router";
+import { Flex, Spacing, Typography } from "@sampled-ui/base"
+import classNames from "classnames"
+import { toKebabCase } from "js-convert-case"
+import { CheckIcon, PlusIcon } from "lucide-react"
+import { Vibrant } from "node-vibrant/browser"
+import { useNavigate } from "react-router"
 
 import {
+  SearchDocument,
   SourceGridFragment,
+  SubscriptionsDocument,
   TopicGridFragment,
   UserSubscriptionFragment,
-} from "../../../../generated/graphql";
-import PreloadImage from "../../../shared/components/PreloadImage";
-import { useToggleSubscription } from "../../../shared/hooks/Subscription/toggleSubscription";
+} from "../../../../generated/graphql"
+import PreloadImage from "../../../shared/components/PreloadImage"
+import { useToggleSubscription } from "../../../shared/hooks/Subscription/toggleSubscription"
 
-import styles from "./Subscription.module.scss";
+import styles from "./Subscription.module.scss"
 
 interface SubscriptionItemProps {
-  source: SourceGridFragment | TopicGridFragment;
-  userSubscription?: UserSubscriptionFragment;
+  term?: UserSubscriptionFragment["searchTerm"]
+  source?: SourceGridFragment | TopicGridFragment
+  userSubscription?: UserSubscriptionFragment
 }
 
 export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
+  term,
   source,
   userSubscription,
 }) => {
   const [backgroundColor, setBackgroundColor] = useState<string | undefined>(
     undefined
-  );
-  const navigate = useNavigate();
+  )
+  const navigate = useNavigate()
 
   useEffect(() => {
-    Vibrant.from((source as SourceGridFragment).logo ?? source.banner)
+    Vibrant.from((source as SourceGridFragment)?.logo ?? source?.banner)
       .getPalette()
       .then((palette) => {
-        if ("logo" in source) {
-          const hex = palette.Vibrant?.hex;
-          setBackgroundColor(hex);
+        if (source && "logo" in source) {
+          const hex = palette.Vibrant?.hex
+          setBackgroundColor(hex)
         }
       })
       .catch((error) => {
-        console.error("Error fetching palette:", error);
-      });
-  }, [source]);
+        console.error("Error fetching palette:", error)
+      })
+  }, [source])
 
   const { handleToggle } = useToggleSubscription({
-    createVariables:
-      source.__typename === "Source"
-        ? { sourceId: source.id }
-        : { topicId: source.id },
+    createVariables: term?.id
+      ? { termId: term.id }
+      : source?.__typename === "Source"
+      ? { sourceId: source?.id }
+      : { topicId: source?.id },
     subscription: userSubscription,
-  });
+    refetchQueries: [SearchDocument, SubscriptionsDocument],
+  })
 
   return (
     <div className={styles.item} title={source?.name}>
@@ -59,40 +65,85 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
         direction="column"
         style={{ height: "100%", width: "100%", backgroundColor }}
       >
-        <PreloadImage
-          src={source?.banner}
-          className={styles.banner}
-          width="100%"
-          height="100%"
-          backgroundPosition="center 30%"
-          backgroundSize="cover"
-          onClick={() => {
-            if (source.__typename === "Source") {
-              navigate(`/${source?.key}`);
-            } else if (source.__typename === "Topic") {
-              navigate(`/t/${toKebabCase(source?.category)}`);
-            }
-          }}
-        />
+        {source?.banner ? (
+          <PreloadImage
+            src={source?.banner}
+            className={styles.banner}
+            width="100%"
+            height="100%"
+            backgroundPosition="center 30%"
+            backgroundSize="cover"
+            onClick={() => {
+              if (term?.term) {
+                navigate(`/search/?term=${term.id}`)
+              } else {
+                if (source?.__typename === "Source") {
+                  navigate(`/${source?.key}`)
+                } else if (source?.__typename === "Topic") {
+                  navigate(`/t/${toKebabCase(source?.category)}`)
+                }
+              }
+            }}
+          />
+        ) : null}
+        {term?.term ? (
+          <Flex
+            direction="column"
+            justify="center"
+            style={{ height: "100%" }}
+            className={styles.term}
+            onClick={() => {
+              if (term?.term) {
+                navigate(`/search/?term=${term.id}`)
+              } else {
+                if (source?.__typename === "Source") {
+                  navigate(`/${source?.key}`)
+                } else if (source?.__typename === "Topic") {
+                  navigate(`/t/${toKebabCase(source?.category)}`)
+                }
+              }
+            }}
+          >
+            <Typography.Heading level={3}>{term.term}</Typography.Heading>
+          </Flex>
+        ) : null}
         <Flex
           align="center"
           justify="center"
           className={classNames({
-            [styles.logo]: "logo" in source,
-            [styles.name]: !("logo" in source),
+            [styles.logo]: source && "logo" in source,
+            [styles.name]: !source || !("logo" in source),
           })}
           onClick={() => {
-            if (source.__typename === "Source") {
-              navigate(`/${source?.key}`);
-            } else if (source.__typename === "Topic") {
-              navigate(`/t/${toKebabCase(source?.category)}`);
+            if (term?.term) {
+              navigate(`/search/?term=${term.id}`)
+            } else {
+              if (source?.__typename === "Source") {
+                navigate(`/${source?.key}`)
+              } else if (source?.__typename === "Topic") {
+                navigate(`/t/${toKebabCase(source?.category)}`)
+              }
             }
           }}
         >
-          {"logo" in source ? (
+          {source && "logo" in source ? (
             <img src={source?.logo} />
           ) : (
-            <Typography.Text size="lg">{source?.name}</Typography.Text>
+            <Flex>
+              {term?.term && source?.name ? (
+                <Spacing gap="sm">
+                  <Flex direction="column">
+                    <Typography.Text size="lg">
+                      {term?.term} ({source.name})
+                    </Typography.Text>
+                  </Flex>
+                </Spacing>
+              ) : (
+                <Typography.Text size="lg">
+                  {term?.term ?? source?.name}
+                </Typography.Text>
+              )}
+            </Flex>
           )}
         </Flex>
         <div
@@ -105,7 +156,7 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
         </div>
       </Flex>
     </div>
-  );
-};
+  )
+}
 
-export default SubscriptionItem;
+export default SubscriptionItem

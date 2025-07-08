@@ -1,6 +1,8 @@
 import React, { useMemo } from "react"
 
-import { Flex, Spacing, Typography } from "@sampled-ui/base"
+import { Button, Flex, Spacing } from "@sampled-ui/base"
+import { Rss } from "lucide-react"
+import { Link } from "react-router"
 
 import {
   useSourcesQuery,
@@ -8,12 +10,17 @@ import {
   useTopicsQuery,
 } from "../../../../generated/graphql"
 import SubscriptionGrid from "../../components/Subscription/SubscriptionGrid"
+import TermSubscriptionsGrid from "../../components/Subscription/TermSubscriptionsGrid"
 
 interface FollowingPageProps {}
 
 export const FollowingPage: React.FC<FollowingPageProps> = () => {
-  const { data: sourcesQueryData } = useSourcesQuery()
-  const { data: topicsQueryData } = useTopicsQuery()
+  const { data: sourcesQueryData } = useSourcesQuery({
+    variables: { pagination: { limit: 8 } },
+  })
+  const { data: topicsQueryData } = useTopicsQuery({
+    variables: { pagination: { limit: 8 } },
+  })
   const { data: userSubscriptionsQueryData } = useSubscriptionsQuery()
 
   const sourcesGrid = useMemo(() => {
@@ -40,16 +47,42 @@ export const FollowingPage: React.FC<FollowingPageProps> = () => {
       <Flex
         direction="column"
         align="start"
-        gap="lg"
-        style={{ maxWidth: "56rem", margin: "auto" }}
+        gap="md"
+        style={{ maxWidth: "64rem", margin: "auto" }}
       >
-        <Typography.Text variant="secondary" size="lg">
-          Folge deinen Favoriten
-        </Typography.Text>
+        {userSubscriptionsQueryData?.subscriptions?.length ? (
+          <TermSubscriptionsGrid
+            subscriptions={userSubscriptionsQueryData?.subscriptions.filter(
+              (sub) => {
+                return (
+                  (sub.searchTerm.source || sub.searchTerm.topic)?.name !==
+                  sub.searchTerm.term
+                )
+              }
+            )}
+          />
+        ) : null}
+        <Link to="/following/sources" style={{ all: "unset" }}>
+          <Flex gap="sm" direction="column" align="start">
+            <Button size="lg" ghost>
+              <Flex gap="sm">
+                <Rss size={20} />
+                Alle Quellen
+              </Flex>
+            </Button>
+          </Flex>
+        </Link>
         {sourcesGrid}
-        <Typography.Text variant="secondary" size="lg">
-          Folge deinen Interessen
-        </Typography.Text>
+        <Link to="/following/topics" style={{ all: "unset" }}>
+          <Flex gap="sm" direction="column" align="start">
+            <Button size="lg" ghost>
+              <Flex gap="sm">
+                <Rss size={20} />
+                Alle Kategorien
+              </Flex>
+            </Button>
+          </Flex>
+        </Link>
         {topicGrid}
       </Flex>
     </Spacing>
