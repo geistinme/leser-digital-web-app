@@ -22,10 +22,10 @@ export const ArticleCompact: React.FC<{
   const navigate = useNavigate()
 
   return (
-    <Flex direction="column" className={styles.grid}>
+    <Flex direction="column" gap="xs" className={styles.grid}>
       <ArticleImage
         article={article}
-        height="12rem"
+        height="14rem"
         width="100%"
         style={{ borderRadius: "var(--border-radius-md)" }}
         onClick={onViewArticle}
@@ -71,13 +71,7 @@ export const ArticleCompact: React.FC<{
           </Spacing>
         </a>
       ) : null}
-      <Spacing
-        gap="sm"
-        style={{
-          width: "calc(100% - 1rem)",
-          height: "100%",
-        }}
-      >
+      <Spacing gap="sm" className={styles.header}>
         <Flex
           direction="column"
           gap="sm"
@@ -103,15 +97,34 @@ export const ArticleCompact: React.FC<{
               {decodeHtmlEntities(article.title)}
             </Typography.Text>
           </a>
-          <Typography.Text
-            title={new Date(article.uploadedAt).toLocaleString()}
-            size="xs"
-            bold
-            disabled
-            style={{ justifySelf: "end" }}
-          >
-            {moment(article.uploadedAt).fromNow()}
-          </Typography.Text>
+          <Flex gap="sm" style={{ width: "100%" }}>
+            <Typography.Text
+              title={new Date(article.uploadedAt).toLocaleString()}
+              size="xs"
+              bold
+              disabled
+              style={{ justifySelf: "end" }}
+            >
+              {moment(article.uploadedAt).fromNow()}
+            </Typography.Text>
+            {(article as ArticleFeedFragment).keywords?.length ? (
+              <Flex align="center" gap="sm" className={styles.keywords}>
+                {(article as ArticleFeedFragment).keywords
+                  ?.slice(0, 3)
+                  .map((keyword) => (
+                    <Typography.Text
+                      size="xs"
+                      className={styles.keyword}
+                      onClick={() => {
+                        navigate(`/search?search=${keyword}`)
+                      }}
+                    >
+                      {keyword}
+                    </Typography.Text>
+                  ))}
+              </Flex>
+            ) : null}
+          </Flex>
         </Flex>
       </Spacing>
     </Flex>

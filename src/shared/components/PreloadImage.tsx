@@ -65,7 +65,7 @@ const PreloadImage: React.FC<PreloadImageProps> = ({
           key="skeleton"
           width={width}
           height={height}
-          style={{ borderRadius: "initial" }}
+          style={{borderRadius: "var(--border-radius-sm)"}} 
         />,
       ];
 };

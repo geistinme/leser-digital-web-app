@@ -148,14 +148,15 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
           {(article as ArticleFeedFragment).keywords?.length ? (
             <Flex gap="sm">
               {(article as ArticleFeedFragment).keywords?.map((keyword) => (
-                <Tag
-                  color="gainsboro"
-                  label={keyword}
+                <Typography.Text
+                  size="xs"
                   className={styles.keyword}
                   onClick={() => {
                     navigate(`/search?search=${keyword}`)
                   }}
-                />
+                >
+                  {keyword}
+                </Typography.Text>
               ))}
             </Flex>
           ) : null}

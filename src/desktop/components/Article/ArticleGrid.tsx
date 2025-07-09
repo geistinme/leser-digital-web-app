@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 
-import { Column, Flex, Row, Typography } from "@sampled-ui/base"
+import { Column, Flex, Row, Skeleton, Typography } from "@sampled-ui/base"
 
 import {
   ArticleFeedFragment,
@@ -69,7 +69,7 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
           }
           gap={"1rem"}
         >
-          {row[0] && (
+          {row[0] ? (
             <Column span={8}>
               <ArticleCompact
                 compact={compact}
@@ -77,8 +77,15 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
                 onViewArticle={() => handleViewArticle({ article: row[0] })}
               />
             </Column>
-          )}
-          {row[1] && (
+          ) : (loadingArticles) ? (
+            <Column span={8}>
+              <Skeleton
+                width="100%"
+                height="20rem"
+              />
+            </Column>
+          ) : null}
+          {row[1] ? (
             <Column span={8}>
               <ArticleCompact
                 compact={compact}
@@ -86,8 +93,15 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
                 onViewArticle={() => handleViewArticle({ article: row[1] })}
               />
             </Column>
-          )}
-          {row[2] && (
+          ) : (loadingArticles) ? (
+            <Column span={8}>
+              <Skeleton
+                width="100%"
+                height="20rem"
+              />
+            </Column>
+          ) : null}
+          {row[2] ? (
             <Column span={8}>
               <ArticleCompact
                 compact={compact}
@@ -95,7 +109,14 @@ const ArticleGrid: React.FC<ArticleGridProps> = ({
                 onViewArticle={() => handleViewArticle({ article: row[2] })}
               />
             </Column>
-          )}
+          ) : (loadingArticles) ? (
+            <Column span={8}>
+              <Skeleton
+                width="100%"
+                height="20rem"
+              />
+            </Column>
+          ) : null}
         </Row>
       ))}
     </Flex>

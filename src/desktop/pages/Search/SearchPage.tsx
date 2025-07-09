@@ -84,8 +84,9 @@ export const SearchPage: React.FC<SearchPageProps> = () => {
   ])
 
   const searchResults = useMemo(() => {
-    return (searchParam || termParam) && !loading ? (
+    return (searchParam || termParam) ? (
       <SearchResults
+        loading={loading}
         articles={searchData?.search?.articles}
         sources={searchData?.search?.sources}
         topics={searchData?.search?.topics}

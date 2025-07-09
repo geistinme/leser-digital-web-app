@@ -18,6 +18,7 @@ interface SearchResultsProps {
   topics?: TopicGridFragment[] | null
   loadMore: () => void
   hasMore: boolean
+  loading: boolean,
 }
 
 const SearchResults: React.FC<SearchResultsProps> = ({
@@ -25,6 +26,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({
   sources,
   topics,
   hasMore,
+  loading,
   loadMore,
 }) => {
   const { ref, inView } = useInView()
@@ -36,11 +38,11 @@ const SearchResults: React.FC<SearchResultsProps> = ({
 
   const articleSearchGrid = useMemo(() => {
     if (articles?.length) {
-      return <ArticleGrid articles={articles} lastRef={ref} />
+      return <ArticleGrid articles={articles} loading={loading} lastRef={ref} />
     } else {
       return null
     }
-  }, [articles, ref])
+  }, [articles, loading, ref])
 
   const { data: userSubscriptionsData } = useSubscriptionsQuery()
 
