@@ -60,7 +60,21 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
   })
 
   return (
-    <div className={styles.item} title={source?.name}>
+    <div
+      className={styles.item}
+      title={source?.name}
+      onClick={() => {
+        if (term?.term) {
+          navigate(`/search/?term=${term.id}`)
+        } else {
+          if (source?.__typename === "Source") {
+            navigate(`/${source?.key}`)
+          } else if (source?.__typename === "Topic") {
+            navigate(`/t/${toKebabCase(source?.category)}`)
+          }
+        }
+      }}
+    >
       <Flex
         direction="column"
         style={{ height: "100%", width: "100%", backgroundColor }}
@@ -92,17 +106,6 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
             justify="center"
             style={{ height: "100%" }}
             className={styles.term}
-            onClick={() => {
-              if (term?.term) {
-                navigate(`/search/?term=${term.id}`)
-              } else {
-                if (source?.__typename === "Source") {
-                  navigate(`/${source?.key}`)
-                } else if (source?.__typename === "Topic") {
-                  navigate(`/t/${toKebabCase(source?.category)}`)
-                }
-              }
-            }}
           >
             <Typography.Heading level={3}>{term.term}</Typography.Heading>
           </Flex>
@@ -130,18 +133,16 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
             <img src={source?.logo} />
           ) : (
             <Flex>
-              {term?.term && source?.name ? (
+              {source?.name ? (
                 <Spacing gap="sm">
                   <Flex direction="column">
                     <Typography.Text size="lg">
-                      {term?.term} ({source.name})
+                      in {source.name}
                     </Typography.Text>
                   </Flex>
                 </Spacing>
               ) : (
-                <Typography.Text size="lg">
-                  {term?.term ?? source?.name}
-                </Typography.Text>
+                <Typography.Text size="lg">in Suche</Typography.Text>
               )}
             </Flex>
           )}
