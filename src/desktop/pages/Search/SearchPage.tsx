@@ -41,9 +41,10 @@ export const SearchPage: React.FC<SearchPageProps> = () => {
     if (hasMoreResults) {
       fetchMore({
         variables: {
-          query: searchParam,
+          query: searchParam ?? "",
+          term: termParam ?? "",
           pagination: {
-            offset: searchData?.search?.articles?.length,
+            offset: searchData?.search?.articles?.length ?? 0,
             limit: 10,
           },
         },
@@ -84,7 +85,7 @@ export const SearchPage: React.FC<SearchPageProps> = () => {
   ])
 
   const searchResults = useMemo(() => {
-    return (searchParam || termParam) ? (
+    return searchParam || termParam ? (
       <SearchResults
         loading={loading}
         articles={searchData?.search?.articles}
