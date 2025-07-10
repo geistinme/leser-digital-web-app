@@ -60,21 +60,7 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
   })
 
   return (
-    <div
-      className={styles.item}
-      title={source?.name}
-      onClick={() => {
-        if (term?.term) {
-          navigate(`/search/?term=${term.id}`)
-        } else {
-          if (source?.__typename === "Source") {
-            navigate(`/${source?.key}`)
-          } else if (source?.__typename === "Topic") {
-            navigate(`/t/${toKebabCase(source?.category)}`)
-          }
-        }
-      }}
-    >
+    <div className={styles.item} title={source?.name}>
       <Flex
         direction="column"
         style={{ height: "100%", width: "100%", backgroundColor }}
@@ -106,6 +92,17 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
             justify="center"
             style={{ height: "100%" }}
             className={styles.term}
+            onClick={() => {
+              if (term?.term) {
+                navigate(`/search/?term=${term.id}`)
+              } else {
+                if (source?.__typename === "Source") {
+                  navigate(`/${source?.key}`)
+                } else if (source?.__typename === "Topic") {
+                  navigate(`/t/${toKebabCase(source?.category)}`)
+                }
+              }
+            }}
           >
             <Typography.Heading level={3}>{term.term}</Typography.Heading>
           </Flex>
@@ -137,7 +134,7 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
                 <Spacing gap="sm">
                   <Flex direction="column">
                     <Typography.Text size="lg">
-                      in {source.name}
+                      {term?.term ? `${term} in ${source.name}` : source.name}
                     </Typography.Text>
                   </Flex>
                 </Spacing>

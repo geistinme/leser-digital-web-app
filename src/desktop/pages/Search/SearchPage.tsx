@@ -81,6 +81,7 @@ export const SearchPage: React.FC<SearchPageProps> = () => {
     hasMoreResults,
     fetchMore,
     searchParam,
+    termParam,
     searchData?.search?.articles?.length,
   ])
 

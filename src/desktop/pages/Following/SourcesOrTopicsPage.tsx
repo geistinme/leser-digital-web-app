@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
-import { useLocation } from "react-router"
-
 import { Flex, Spacing } from "@sampled-ui/base"
 import { useInView } from "react-intersection-observer"
+import { useLocation } from "react-router"
+
 import {
   SourcesQuery,
   TopicsQuery,
@@ -28,9 +28,9 @@ const SourcesOrTopicsPage: React.FC<SourcesOrTopicsPageProps> = () => {
 
   useEffect(() => {
     if (location.pathname.endsWith("/sources")) {
-      sourcesQuery()
+      sourcesQuery({ variables: { pagination: { offset: 0, limit: 10 } } })
     } else if (location.pathname.endsWith("/topics")) {
-      topicsQuery()
+      topicsQuery({ variables: { pagination: { offset: 0, limit: 10 } } })
     }
   }, [location.pathname, sourcesQuery, topicsQuery])
 
@@ -109,7 +109,13 @@ const SourcesOrTopicsPage: React.FC<SourcesOrTopicsPageProps> = () => {
         loadMoreResults()
       }
     }
-  }, [hasMoreResults, inView, loadMoreResults, sourcesQueryData?.sources, topicsQueryData?.topics])
+  }, [
+    hasMoreResults,
+    inView,
+    loadMoreResults,
+    sourcesQueryData?.sources,
+    topicsQueryData?.topics,
+  ])
 
   const sourcesGrid = useMemo(() => {
     return sourcesQueryData?.sources ? (
