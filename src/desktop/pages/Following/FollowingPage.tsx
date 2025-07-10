@@ -54,10 +54,7 @@ export const FollowingPage: React.FC<FollowingPageProps> = () => {
           <TermSubscriptionsGrid
             subscriptions={userSubscriptionsQueryData?.subscriptions.filter(
               (sub) => {
-                return (
-                  (sub.searchTerm.source || sub.searchTerm.topic)?.name !==
-                  sub.searchTerm.term
-                )
+                return sub.searchTerm.term
               }
             )}
           />

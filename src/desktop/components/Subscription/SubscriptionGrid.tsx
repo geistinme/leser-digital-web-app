@@ -34,9 +34,10 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
           row.push({
             source: allSources[index + i],
             subscription: userSubscriptions?.find((s) => {
+              const source = allSources[index + i]
               return (
-                s.searchTerm.source?.id === allSources[index + i].id ||
-                s.searchTerm.topic?.id === allSources[index + i].id
+                (s.searchTerm.source?.id === source.id && !s.searchTerm.term) ||
+                (s.searchTerm.topic?.id === source.id && !s.searchTerm.term)
               )
             }) as UserSubscriptionFragment | undefined,
           })
@@ -65,8 +66,10 @@ const SubscriptionGrid: React.FC<SubscriptionGridProps> = ({
                   span={6}
                   style={{ height: "100%" }}
                   ref={
-                    index + 1 === gridRows.length && i + 1 === row.length && lastRef
-                      ? lastRef as unknown as RefObject<HTMLDivElement | null>
+                    index + 1 === gridRows.length &&
+                    i + 1 === row.length &&
+                    lastRef
+                      ? (lastRef as unknown as RefObject<HTMLDivElement | null>)
                       : undefined
                   }
                 >

@@ -134,7 +134,7 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
                 <Spacing gap="sm">
                   <Flex direction="column">
                     <Typography.Text size="lg">
-                      {term?.term ? `${term} in ${source.name}` : source.name}
+                      {term?.term ? `${term.term} in ${source.name}` : source.name}
                     </Typography.Text>
                   </Flex>
                 </Spacing>
