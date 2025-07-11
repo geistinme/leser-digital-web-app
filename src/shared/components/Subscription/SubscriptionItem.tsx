@@ -100,20 +100,8 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
               textAlign: "left",
             }}
             onClick={() => {
-              if (term.source || term.topic) {
-                if (term.source) {
-                  navigate(`/${term?.source.key}`)
-                } else if (term.topic) {
-                  navigate(`/t/${toKebabCase(term.topic.category)}`)
-                }
-              } else if (term?.term) {
+              if (term?.term) {
                 navigate(`/search/?term=${term.id}`)
-              } else {
-                if (source?.__typename === "Source") {
-                  navigate(`/${source?.key}`)
-                } else if (source?.__typename === "Topic") {
-                  navigate(`/t/${toKebabCase(source?.category)}`)
-                }
               }
             }}
           >
