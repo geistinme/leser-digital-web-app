@@ -93,7 +93,13 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
             style={{ height: "100%" }}
             className={styles.term}
             onClick={() => {
-              if (term?.term) {
+              if (term.source || term.topic) {
+                if (term.source) {
+                  navigate(`/${term?.source.key}`)
+                } else if (term.topic) {
+                  navigate(`/t/${toKebabCase(term.topic.category)}`)
+                }
+              } else if (term?.term) {
                 navigate(`/search/?term=${term.id}`)
               } else {
                 if (source?.__typename === "Source") {
@@ -134,7 +140,9 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
                 <Spacing gap="sm">
                   <Flex direction="column">
                     <Typography.Text size="lg">
-                      {term?.term ? `${term.term} in ${source.name}` : source.name}
+                      {term?.term
+                        ? `${term.term} in ${source.name}`
+                        : source.name}
                     </Typography.Text>
                   </Flex>
                 </Spacing>

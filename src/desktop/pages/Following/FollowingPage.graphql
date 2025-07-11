@@ -63,10 +63,15 @@ fragment UserSubscription on Subscription {
     source {
       id
       name
+      key
+      logo
+      banner
     }
     topic {
       id
       name
+      category
+      banner
     }
   }
   createdAt

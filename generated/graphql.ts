@@ -522,7 +522,7 @@ export type TopicsQuery = { __typename?: 'Query', topics?: Array<{ __typename: '
 export type SubscriptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SubscriptionsQuery = { __typename?: 'Query', subscriptions?: Array<{ __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, name: string } | null } }> | null };
+export type SubscriptionsQuery = { __typename?: 'Query', subscriptions?: Array<{ __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string, name: string, key: string, logo: string, banner: string } | null, topic?: { __typename?: 'Topic', id: string, name: string, category: ArticleCategory, banner: string } | null } }> | null };
 
 export type CreateSubscriptionMutationVariables = Exact<{
   sourceId?: InputMaybe<Scalars['String']['input']>;
@@ -531,7 +531,7 @@ export type CreateSubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, name: string } | null } } | null };
+export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string, name: string, key: string, logo: string, banner: string } | null, topic?: { __typename?: 'Topic', id: string, name: string, category: ArticleCategory, banner: string } | null } } | null };
 
 export type DeleteSubscriptionMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -544,7 +544,7 @@ export type SourceGridFragment = { __typename: 'Source', id: string, key: string
 
 export type TopicGridFragment = { __typename: 'Topic', id: string, name: string, category: ArticleCategory, banner: string, isSubscribed?: { __typename?: 'Subscription', id: string } | null };
 
-export type UserSubscriptionFragment = { __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string, name: string } | null, topic?: { __typename?: 'Topic', id: string, name: string } | null } };
+export type UserSubscriptionFragment = { __typename?: 'Subscription', id: string, createdAt: any, searchTerm: { __typename?: 'SearchTerm', id: string, term?: string | null, source?: { __typename?: 'Source', id: string, name: string, key: string, logo: string, banner: string } | null, topic?: { __typename?: 'Topic', id: string, name: string, category: ArticleCategory, banner: string } | null } };
 
 export type FeedQueryVariables = Exact<{
   pagination: PaginationInput;
@@ -757,10 +757,15 @@ export const UserSubscriptionFragmentDoc = gql`
     source {
       id
       name
+      key
+      logo
+      banner
     }
     topic {
       id
       name
+      category
+      banner
     }
   }
   createdAt
