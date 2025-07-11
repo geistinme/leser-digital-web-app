@@ -91,7 +91,7 @@ export const HomePage: React.FC = () => {
         updateQuery: (prev, { fetchMoreResult }) => {
           if (
             ((
-              ((fetchMoreResult as FeedQueryType).feed) ||
+              (fetchMoreResult as FeedQueryType).feed ||
               (fetchMoreResult as MostInterestingArticlesQuery)
                 .mostInterestingArticles
             )?.length ?? 0) < 10
@@ -102,9 +102,10 @@ export const HomePage: React.FC = () => {
             (prev as FeedQueryType).feed ||
             (prev as MostInterestingArticlesQuery)?.mostInterestingArticles
           const newFeed =
-            (((fetchMoreResult as FeedQueryType).feed) ||
-            (fetchMoreResult as MostInterestingArticlesQuery)
-              .mostInterestingArticles) ?? []
+            ((fetchMoreResult as FeedQueryType).feed ||
+              (fetchMoreResult as MostInterestingArticlesQuery)
+                .mostInterestingArticles) ??
+            []
           if (
             prevFeed &&
             (fetchMoreResult as FeedQueryType).feed &&
@@ -137,8 +138,13 @@ export const HomePage: React.FC = () => {
 
   const empty = useMemo(() => {
     if (
-      (!feedQueryData?.feed || feedQueryData.feed.length === 0) &&
-      !loadingArticles
+      ((!feedQueryData?.feed || feedQueryData.feed.length === 0) &&
+        loggedInQueryData?.loggedIn &&
+        !loadingArticles) ||
+      ((!mostInterestingArticlesData?.mostInterestingArticles ||
+        mostInterestingArticlesData?.mostInterestingArticles.length === 0) &&
+        !loggedInQueryData?.loggedIn &&
+        !loadingInterestingArticles)
     ) {
       return (
         <Typography.Text disabled bold style={{ textAlign: "center" }}>
@@ -148,7 +154,13 @@ export const HomePage: React.FC = () => {
     } else {
       return null
     }
-  }, [feedQueryData?.feed, loadingArticles])
+  }, [
+    feedQueryData?.feed,
+    loadingArticles,
+    loadingInterestingArticles,
+    loggedInQueryData?.loggedIn,
+    mostInterestingArticlesData?.mostInterestingArticles,
+  ])
 
   const loading = useMemo(() => {
     if (loadingArticles) {

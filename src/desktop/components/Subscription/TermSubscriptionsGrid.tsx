@@ -28,23 +28,12 @@ const TermSubscriptionsGrid: React.FC<TermSubscriptionsGridProps> = ({
         const row = []
         const columns = 4
         for (let i = 0; i < columns; i++) {
-            const subscription = allSubscriptions[index + i]
-          if (
-            subscription &&
-            (subscription?.searchTerm.source ||
-              subscription?.searchTerm.topic)
-          ) {
+          const subscription = allSubscriptions[index + i]
+          if (subscription) {
             row.push({
               term: subscription.searchTerm,
               source:
-                subscription.searchTerm.source ??
-                subscription.searchTerm.topic,
-              subscription,
-            } as SubscriptionGridItem)
-          } else if (subscription) {
-            row.push({
-              term: subscription.searchTerm,
-              source: undefined,
+                subscription.searchTerm.source ?? subscription.searchTerm.topic,
               subscription,
             } as SubscriptionGridItem)
           }
