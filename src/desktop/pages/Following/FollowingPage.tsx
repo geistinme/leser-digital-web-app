@@ -7,7 +7,7 @@ import { Link } from "react-router"
 import {
   useSourcesQuery,
   useSubscriptionsQuery,
-  useTopicsQuery
+  useTopicsQuery,
 } from "../../../../generated/graphql"
 import SubscriptionGrid from "../../components/Subscription/SubscriptionGrid"
 import TermSubscriptionsGrid from "../../components/Subscription/TermSubscriptionsGrid"
@@ -57,8 +57,9 @@ export const FollowingPage: React.FC<FollowingPageProps> = () => {
                 if (
                   !sub.searchTerm.term &&
                   (sub.searchTerm.source || sub.searchTerm.topic)
-                )
+                ) {
                   return true
+                }
                 return !!sub.searchTerm.term
               }
             )}

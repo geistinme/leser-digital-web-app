@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 
-import { Flex, Spacing, Typography } from "@sampled-ui/base"
+import { Flex, Typography } from "@sampled-ui/base"
 import classNames from "classnames"
 import { toKebabCase } from "js-convert-case"
 import { CheckIcon, PlusIcon } from "lucide-react"
@@ -60,12 +60,15 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
   })
 
   return (
-    <div className={styles.item} title={source?.name}>
+    <div
+      className={classNames(styles.item, { [styles.term]: !!term?.term })}
+      title={source?.name}
+    >
       <Flex
         direction="column"
         style={{ height: "100%", width: "100%", backgroundColor }}
       >
-        {source?.banner ? (
+        {source?.banner && !term?.term ? (
           <PreloadImage
             src={source?.banner}
             className={styles.banner}
@@ -90,8 +93,12 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
           <Flex
             direction="column"
             justify="center"
-            style={{ height: "100%" }}
-            className={styles.term}
+            align="start"
+            style={{
+              height: "100%",
+              width: "calc(100% - 2rem)",
+              textAlign: "left",
+            }}
             onClick={() => {
               if (term.source || term.topic) {
                 if (term.source) {
@@ -110,15 +117,17 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
               }
             }}
           >
-            <Typography.Heading level={3}>{term.term}</Typography.Heading>
+            <Typography.Heading level={3} className={styles.word}>
+              {term.term}
+            </Typography.Heading>
           </Flex>
         ) : null}
         <Flex
           align="center"
           justify="center"
           className={classNames({
-            [styles.logo]: source && "logo" in source,
-            [styles.name]: !source || !("logo" in source),
+            [styles.logo]: source && "logo" in source && !term?.term,
+            [styles.name]: !source || !("logo" in source) || term?.term,
           })}
           onClick={() => {
             if (term?.term) {
@@ -132,24 +141,14 @@ export const SubscriptionItem: React.FC<SubscriptionItemProps> = ({
             }
           }}
         >
-          {source && "logo" in source ? (
+          {source && "logo" in source && !term?.term ? (
             <img src={source?.logo} />
+          ) : source?.name ? (
+            <Typography.Text size="lg">
+              {term?.term ? `in ${source.name}` : source.name}
+            </Typography.Text>
           ) : (
-            <Flex>
-              {source?.name ? (
-                <Spacing gap="sm">
-                  <Flex direction="column">
-                    <Typography.Text size="lg">
-                      {term?.term
-                        ? `${term.term} in ${source.name}`
-                        : source.name}
-                    </Typography.Text>
-                  </Flex>
-                </Spacing>
-              ) : (
-                <Typography.Text size="lg">in Suche</Typography.Text>
-              )}
-            </Flex>
+            <Typography.Text size="lg">in Suche</Typography.Text>
           )}
         </Flex>
         <div

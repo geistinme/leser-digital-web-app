@@ -50,8 +50,14 @@ export const router = createBrowserRouter([
       { path: "/me", element: <Private page={<AccountPage />} /> },
       { path: "/collection", element: <Private page={<CollectionPage />} /> },
       { path: "/following", element: <Private page={<FollowingPage />} /> },
-      { path: "/following/sources", element: <Private page={<SourcesOrTopicsPage />} /> },
-      { path: "/following/topics", element: <Private page={<SourcesOrTopicsPage />} /> },
+      {
+        path: "/following/sources",
+        element: <Private page={<SourcesOrTopicsPage />} />,
+      },
+      {
+        path: "/following/topics",
+        element: <Private page={<SourcesOrTopicsPage />} />,
+      },
       {
         path: "/explore",
         element: (
@@ -69,7 +75,7 @@ export const router = createBrowserRouter([
         ),
       },
       { path: "/about", element: <AboutPage /> },
-      { path: "/admin", element: <AdminPage /> },
+      { path: "/admin", element: <Private page={<AdminPage />} /> },
     ],
   },
   {
