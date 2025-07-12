@@ -59,13 +59,14 @@ export const HomePage: React.FC = () => {
             : undefined,
       },
     }
-    if (loggedInQueryData?.loggedIn) {
+    if (loggedInQueryData?.loggedIn && !feedQueryData?.feed) {
       feedQuery({
         variables: initialQueryVariables,
         fetchPolicy: "network-only",
       })
       setHasMore(true)
-    } else {
+    }
+    if (!feedQueryData?.feed?.length) {
       mostInterestingArticles({
         variables: {
           pagination: { offset: 0, limit: 10 },
@@ -73,18 +74,28 @@ export const HomePage: React.FC = () => {
       })
       setHasMore(true)
     }
-  }, [feedQuery, loggedInQueryData, mostInterestingArticles, selectedTab])
+  }, [
+    feedQuery,
+    feedQueryData?.feed,
+    loggedInQueryData,
+    mostInterestingArticles,
+    selectedTab,
+  ])
 
   const [hasMore, setHasMore] = useState(true)
   const loadMore = useCallback(() => {
-    const fetchMore = loggedInQueryData?.loggedIn
-      ? fetchMoreFeed
-      : fetchMoreMostInterestingArticles
+    const fetchMore =
+      loggedInQueryData?.loggedIn || !feedQueryData?.feed?.length
+        ? fetchMoreFeed
+        : fetchMoreMostInterestingArticles
     if (hasMore && !loadingArticles && !loadingInterestingArticles) {
       fetchMore({
         variables: {
           pagination: {
-            offset: feedQueryData?.feed?.length,
+            offset:
+              feedQueryData?.feed?.length ||
+              mostInterestingArticlesData?.mostInterestingArticles?.length ||
+              0,
             limit: 10,
           },
         },
@@ -115,6 +126,20 @@ export const HomePage: React.FC = () => {
               feed: [...prevFeed, ...newFeed] as ArticleFeedFragment[],
             })
           }
+          if (
+            prevFeed &&
+            (fetchMoreResult as MostInterestingArticlesQuery)
+              .mostInterestingArticles &&
+            ((fetchMoreResult as MostInterestingArticlesQuery)
+              .mostInterestingArticles?.length ?? 0) > 0
+          ) {
+            return Object.assign({}, prev, {
+              mostInterestingArticles: [
+                ...prevFeed,
+                ...newFeed,
+              ] as ArticleFeedFragment[],
+            })
+          }
           return prev
         },
       })
@@ -127,6 +152,7 @@ export const HomePage: React.FC = () => {
     loadingArticles,
     loadingInterestingArticles,
     loggedInQueryData?.loggedIn,
+    mostInterestingArticlesData?.mostInterestingArticles?.length,
   ])
 
   const { ref, inView } = useInView()
@@ -138,13 +164,13 @@ export const HomePage: React.FC = () => {
 
   const empty = useMemo(() => {
     if (
-      ((!feedQueryData?.feed || feedQueryData.feed.length === 0) &&
-        loggedInQueryData?.loggedIn &&
-        !loadingArticles) ||
-      ((!mostInterestingArticlesData?.mostInterestingArticles ||
-        mostInterestingArticlesData?.mostInterestingArticles.length === 0) &&
-        !loggedInQueryData?.loggedIn &&
-        !loadingInterestingArticles)
+      !(feedQueryData?.feed || feedQueryData?.feed?.length) &&
+      !(
+        mostInterestingArticlesData?.mostInterestingArticles ||
+        mostInterestingArticlesData?.mostInterestingArticles?.length
+      ) &&
+      !loadingArticles &&
+      !loadingInterestingArticles
     ) {
       return (
         <Typography.Text disabled bold style={{ textAlign: "center" }}>
@@ -158,23 +184,22 @@ export const HomePage: React.FC = () => {
     feedQueryData?.feed,
     loadingArticles,
     loadingInterestingArticles,
-    loggedInQueryData?.loggedIn,
     mostInterestingArticlesData?.mostInterestingArticles,
   ])
 
   const loading = useMemo(() => {
-    if (loadingArticles) {
+    if (loadingArticles || loadingInterestingArticles) {
       return <LoadingArticleFeed />
     } else {
       return null
     }
-  }, [loadingArticles])
+  }, [loadingArticles, loadingInterestingArticles])
 
   const feed = useMemo(() => {
     if (feedQueryData?.feed?.length) {
       return <ArticleFeed articles={feedQueryData.feed} lastRef={ref} />
     } else if (
-      !loggedInQueryData?.loggedIn &&
+      (!loggedInQueryData?.loggedIn || !feedQueryData?.feed?.length) &&
       mostInterestingArticlesData?.mostInterestingArticles?.length
     ) {
       return (

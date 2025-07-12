@@ -150,6 +150,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
               {(article as ArticleFeedFragment).keywords?.map((keyword) => (
                 <Typography.Text
                   size="xs"
+                  key={keyword}
                   className={styles.keyword}
                   onClick={() => {
                     navigate(`/search?search=${keyword}`)
