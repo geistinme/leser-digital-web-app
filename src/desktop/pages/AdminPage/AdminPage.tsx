@@ -34,7 +34,7 @@ const AdminPage: React.FC<AdminPageProps> = () => {
       <Row>
         <Column span={12}>
           <Flex direction="column" gap="md" align="start">
-            <Typography.Text variant="secondary">Terms</Typography.Text>
+            <Typography.Text variant="secondary">Learned Terms</Typography.Text>
             <Flex gap="md">
               <Statistic
                 label="Total"
@@ -64,7 +64,7 @@ const AdminPage: React.FC<AdminPageProps> = () => {
         </Column>
         <Column span={12}>
           <Flex direction="column" gap="md" align="start">
-            <Typography.Text variant="secondary">Articles</Typography.Text>
+            <Typography.Text variant="secondary">Learned Articles</Typography.Text>
             <Flex gap="md">
               <Statistic
                 label="Total"

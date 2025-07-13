@@ -59,7 +59,7 @@ export const HomePage: React.FC = () => {
             : undefined,
       },
     }
-    if (loggedInQueryData?.loggedIn && !feedQueryData?.feed) {
+    if (loggedInQueryData?.loggedIn || !feedQueryData?.feed) {
       feedQuery({
         variables: initialQueryVariables,
         fetchPolicy: "network-only",
