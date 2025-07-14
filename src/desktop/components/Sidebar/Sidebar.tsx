@@ -106,7 +106,7 @@ export const Sidebar: React.FC = () => {
   const selected = useGetSelectedNavItem(items, location)
 
   return (
-    <SidebarComponent style={{ width: "18rem", height: "100%" }}>
+    <SidebarComponent style={{ width: "18rem", height: "100%", border: "initial" }}>
       <Spacing
         gap="lg"
         style={{
@@ -116,7 +116,7 @@ export const Sidebar: React.FC = () => {
         }}
       >
         <Flex align="center" gap="sm" style={{ width: "100%" }}>
-          <SvgWordmarkLogo width="70%" height="100%" viewBox="0 0 586 160" />
+          <SvgWordmarkLogo width="80%" height="100%" viewBox="0 0 586 160" />
         </Flex>
       </Spacing>
       <Flex

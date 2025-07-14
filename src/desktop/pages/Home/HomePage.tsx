@@ -66,7 +66,7 @@ export const HomePage: React.FC = () => {
       })
       setHasMore(true)
     }
-    if (!feedQueryData?.feed?.length) {
+    if (!loggedInQueryData?.loggedIn || !feedQueryData?.feed?.length) {
       mostInterestingArticles({
         variables: {
           pagination: { offset: 0, limit: 10 },
@@ -84,10 +84,9 @@ export const HomePage: React.FC = () => {
 
   const [hasMore, setHasMore] = useState(true)
   const loadMore = useCallback(() => {
-    const fetchMore =
-      loggedInQueryData?.loggedIn || !feedQueryData?.feed?.length
-        ? fetchMoreFeed
-        : fetchMoreMostInterestingArticles
+    const fetchMore = loggedInQueryData?.loggedIn
+      ? fetchMoreFeed
+      : fetchMoreMostInterestingArticles
     if (hasMore && !loadingArticles && !loadingInterestingArticles) {
       fetchMore({
         variables: {
