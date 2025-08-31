@@ -38,7 +38,7 @@ const LoggedOutCallToAction: React.FC<LoggedOutCallToActionProps> = () => {
           </Typography.Paragraph>
           <Button onClick={handleClick}>Jetzt anmelden</Button>
           <Typography.Text size="xs" disabled>
-            {new Date().getFullYear()} Leser Digital
+            © {new Date().getFullYear()} LESER DIGITAL
           </Typography.Text>
         </Flex>
       </Spacing>
