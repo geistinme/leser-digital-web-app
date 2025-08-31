@@ -95,7 +95,7 @@ export const ArticleCompact: React.FC<{
               style={{ all: "unset" }}
               onClick={onViewArticle}
             >
-              <Typography.Text bold size="sm" className={styles.title}>
+              <Typography.Text bold size="sm" className={styles.title} title={decodeHtmlEntities(article.title)}>
                 {decodeHtmlEntities(article.title)}
               </Typography.Text>
             </a>
