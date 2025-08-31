@@ -24,12 +24,14 @@ interface ArticlePostProps {
   article: ArticleFeedFragment | ArticleListFragment
   list?: boolean
   loggedIn?: boolean
+  compact?: boolean
   ref?: (node: HTMLDivElement | null) => void
 }
 
 export const ArticlePost: React.FC<ArticlePostProps> = ({
   article,
   list,
+  compact,
   loggedIn,
   ref,
 }) => {
@@ -42,27 +44,38 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
     <Flex
       gap="sm"
       justify="between"
-      className={classNames(styles.header, { [styles.list]: list })}
+      className={classNames(styles.header, {
+        [styles.list]: list,
+      })}
     >
-      <Flex gap="sm">
-        <div className={styles.sourceLogo}>
+      <Flex gap="sm" align="start">
+        <div
+          className={classNames(styles.sourceLogo, {
+            [styles.compact]: compact,
+          })}
+        >
           <img
             src={article.source.logo}
             onClick={() => navigate("/" + article.source.key)}
           />
         </div>
         {(article as ArticleFeedFragment).topic?.category !==
-          ArticleCategory.Unknown && list ? (
-          <Typography.Text disabled>{article.topic.name}</Typography.Text>
+          ArticleCategory.Unknown &&
+        list &&
+        !compact ? (
+          <Typography.Text disabled size="sm">
+            {article.topic.name}
+          </Typography.Text>
         ) : null}
-        {article.premium && !list ? (
+        {article.premium && !list && !compact ? (
           <Typography.Text size="xs" variant="warning" bold>
             Premium
           </Typography.Text>
         ) : null}
       </Flex>
-      {loggedIn ? (
+      {loggedIn && !compact ? (
         <ArticleMenu
+          recommended={Boolean(article.recommended)}
           activity={article.activity}
           id={article.id}
           url={article.url}
@@ -72,7 +85,7 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
   )
 
   const imageDimensions = useMemo(() => {
-    if (isMobile && list) {
+    if (isMobile && list && !compact) {
       return {
         width: "8rem",
         height: "8rem",
@@ -82,21 +95,29 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
         // For mobile, we want the image height to be 4:3 and adjust with the width
         height: "calc(100vw * 0.75)",
       }
-    } else if (list) {
+    } else if (list && compact) {
+      return {
+        width: "4rem",
+        height: "4rem",
+      }
+    } else if (list && !compact) {
       return {
         width: "10rem",
         height: "10rem",
       }
     }
-  }, [list, isMobile])
+  }, [isMobile, list, compact])
 
   return (
     <Flex
       direction={list ? "row" : "column"}
       align="start"
-      gap={isMobile && list ? "xs" : "sm"}
+      gap={(isMobile && list) || (list && compact) ? "xs" : "sm"}
       key={article.id}
-      className={classNames(styles.article, { [styles.list]: list })}
+      className={classNames(styles.article, {
+        [styles.list]: list,
+        [styles.compact]: compact,
+      })}
       ref={ref as unknown as React.RefObject<HTMLDivElement>}
     >
       <ArticleImage
@@ -105,30 +126,32 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
         width={imageDimensions?.width}
         onClick={() => handleViewArticle({ article })}
       />
-      <Flex gap="sm" className={styles.tags}>
-        {article.activity?.find(
-          (a) => a.type === ArticleActivityType.ViewArticle
-        ) && !list ? (
-          <Tag
-            size="sm"
-            variant="filled"
-            color="var(--color-accent)"
-            label="Gelesen"
-            className={classNames(styles.category)}
-          />
-        ) : (article as ArticleFeedFragment).topic?.category !==
-            ArticleCategory.Unknown && !list ? (
-          <Tag
-            size="sm"
-            variant="filled"
-            color="transparent"
-            label={(article as ArticleFeedFragment).topic?.name}
-            className={classNames(styles.category)}
-          />
-        ) : null}
-      </Flex>
+      {!compact ? (
+        <Flex gap="sm" className={styles.tags}>
+          {article.activity?.find(
+            (a) => a.type === ArticleActivityType.ViewArticle
+          ) && !list ? (
+            <Tag
+              size="sm"
+              variant="filled"
+              color="var(--color-accent)"
+              label="Gelesen"
+              className={classNames(styles.category)}
+            />
+          ) : (article as ArticleFeedFragment).topic?.category !==
+              ArticleCategory.Unknown && !list ? (
+            <Tag
+              size="sm"
+              variant="filled"
+              color="transparent"
+              label={(article as ArticleFeedFragment).topic?.name}
+              className={classNames(styles.category)}
+            />
+          ) : null}
+        </Flex>
+      ) : null}
       <Spacing gap="sm" className={styles.content}>
-        <Flex direction="column" align="start" gap="sm">
+        <Flex direction="column" align="start" gap={compact ? "xs" : "sm"}>
           {header}
           <a
             href={article.url}
@@ -136,7 +159,11 @@ export const ArticlePost: React.FC<ArticlePostProps> = ({
             style={{ all: "unset" }}
             onClick={() => handleViewArticle({ article })}
           >
-            <Typography.Text bold size="md" className={styles.title}>
+            <Typography.Text
+              bold
+              size={compact ? "sm" : "md"}
+              className={styles.title}
+            >
               {decodeHtmlEntities(article.title)}
             </Typography.Text>
             {article.description && !list ? (

@@ -18,7 +18,7 @@ import {
   MostInterestingArticlesQuery,
   useFeedLazyQuery,
   useLoggedInQuery,
-  useMostInterestingArticlesLazyQuery,
+  useMostInterestingArticlesLazyQuery
 } from "../../../../generated/graphql"
 import { breakpoints, useIsDevice } from "../../../shared/hooks/isDevice"
 import ArticleFeed from "../../components/Article/ArticleFeed"
@@ -73,6 +73,10 @@ export const HomePage: React.FC = () => {
         },
       })
       setHasMore(true)
+    } else {
+      mostInterestingArticles({
+        variables: { pagination: { offset: 0, limit: 4 } },
+      })
     }
   }, [
     feedQuery,
@@ -257,11 +261,13 @@ export const HomePage: React.FC = () => {
         </Column>
         {isTablet ? null : (
           <Column span={7}>
-            {loggedInQueryData ? (
-              <ExploreCallToAction />
-            ) : (
-              <LoggedOutCallToAction />
-            )}
+            <Flex direction="column" align="stretch" gap="md">
+              {loggedInQueryData ? (
+                <ExploreCallToAction />
+              ) : (
+                <LoggedOutCallToAction />
+              )}
+            </Flex>
           </Column>
         )}
       </Row>

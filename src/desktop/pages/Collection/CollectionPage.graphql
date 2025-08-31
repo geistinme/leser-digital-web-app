@@ -31,6 +31,7 @@ fragment ArticleList on Article {
   image
   url
   premium
+  recommended
   uploadedAt
   topic {
     name

@@ -16,6 +16,13 @@ query recommendedArticles {
   }
 }
 
+mutation toggleRecommendArticle($id: String!) {
+  toggleRecommendArticle(id: $id) {
+    id
+    recommended
+  }
+}
+
 fragment ArticleFeed on Article {
   id
   title
@@ -23,6 +30,7 @@ fragment ArticleFeed on Article {
   image
   url
   premium
+  recommended
   topic {
     id
     category
@@ -47,10 +55,20 @@ fragment RecommendedArticle on Article {
   id
   title
   url
+  image
   source {
     id
     name
+    key
+    logo
   }
+  topic {
+    id
+    name
+    category
+  }
+  premium
+  uploadedAt
   activity {
     id
     type

@@ -9,13 +9,12 @@ import {
 import { ArticlePost } from "../../../shared/components"
 import { useIsDevice } from "../../../shared/hooks/isDevice"
 
-
 interface ArticleListProps {
   articles: ArticleListFragment[]
-  noLogo?: boolean
+  compact?: boolean
 }
 
-const ArticleList: React.FC<ArticleListProps> = ({ articles }) => {
+const ArticleList: React.FC<ArticleListProps> = ({ articles, compact }) => {
   const { data: loggedInQueryData } = useLoggedInQuery()
   const { isExtraLargeDesktop } = useIsDevice()
 
@@ -24,9 +23,9 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles }) => {
       direction="column"
       gap="lg"
       style={{
-        maxWidth: isExtraLargeDesktop ? "80%" : "100%",
+        maxWidth: isExtraLargeDesktop && !compact ? "80%" : "100%",
         width: "100%",
-        margin: "auto",
+        margin: compact ? undefined : "auto",
       }}
     >
       {articles?.map((article) => (
@@ -34,6 +33,7 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles }) => {
           article={article}
           key={article.id}
           loggedIn={!!loggedInQueryData?.loggedIn}
+          compact={compact}
           list
         />
       ))}

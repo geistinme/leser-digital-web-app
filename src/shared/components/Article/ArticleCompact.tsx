@@ -13,6 +13,7 @@ import { decodeHtmlEntities } from "../../helpers"
 
 import styles from "./Article.module.scss"
 import { ArticleImage } from "./ArticleImage"
+import { ArticleMenu } from "./ArticleMenu"
 
 export const ArticleCompact: React.FC<{
   article: ArticleGridFragment | ArticleFeedFragment
@@ -72,59 +73,68 @@ export const ArticleCompact: React.FC<{
         </a>
       ) : null}
       <Spacing gap="sm" className={styles.header}>
-        <Flex
-          direction="column"
-          gap="sm"
-          align="start"
-          style={{ height: "100%" }}
-        >
-          {!compact && (article as ArticleFeedFragment).source.logo ? (
-            <img
-              src={(article as ArticleFeedFragment).source.logo}
-              onClick={() =>
-                navigate("/" + (article as ArticleFeedFragment).source.key)
-              }
-              className={styles.sourceLogo}
-            />
-          ) : null}
-          <a
-            href={article.url}
-            target="_blank"
-            style={{ all: "unset" }}
-            onClick={onViewArticle}
+        <Flex align="start">
+          <Flex
+            direction="column"
+            gap="sm"
+            align="start"
+            style={{ height: "100%", flex: 1 }}
           >
-            <Typography.Text bold size="sm" className={styles.title}>
-              {decodeHtmlEntities(article.title)}
-            </Typography.Text>
-          </a>
-          <Flex gap="sm" style={{ width: "100%" }}>
-            <Typography.Text
-              title={new Date(article.uploadedAt).toLocaleString()}
-              size="xs"
-              bold
-              disabled
-              style={{ justifySelf: "end" }}
-            >
-              {moment(article.uploadedAt).fromNow()}
-            </Typography.Text>
-            {(article as ArticleFeedFragment).keywords?.length ? (
-              <Flex align="center" gap="sm" className={styles.keywords}>
-                {(article as ArticleFeedFragment).keywords
-                  ?.slice(0, 3)
-                  .map((keyword) => (
-                    <Typography.Text
-                      size="xs"
-                      className={styles.keyword}
-                      onClick={() => {
-                        navigate(`/search?search=${keyword}`)
-                      }}
-                    >
-                      {keyword}
-                    </Typography.Text>
-                  ))}
-              </Flex>
+            {!compact && (article as ArticleFeedFragment).source.logo ? (
+              <img
+                src={(article as ArticleFeedFragment).source.logo}
+                onClick={() =>
+                  navigate("/" + (article as ArticleFeedFragment).source.key)
+                }
+                className={styles.sourceLogo}
+              />
             ) : null}
+            <a
+              href={article.url}
+              target="_blank"
+              style={{ all: "unset" }}
+              onClick={onViewArticle}
+            >
+              <Typography.Text bold size="sm" className={styles.title}>
+                {decodeHtmlEntities(article.title)}
+              </Typography.Text>
+            </a>
+            <Flex gap="sm" style={{ width: "100%" }}>
+              <Typography.Text
+                title={new Date(article.uploadedAt).toLocaleString()}
+                size="xs"
+                bold
+                disabled
+                style={{ justifySelf: "end" }}
+              >
+                {moment(article.uploadedAt).fromNow()}
+              </Typography.Text>
+              {(article as ArticleFeedFragment).keywords?.length ? (
+                <Flex align="center" gap="sm" className={styles.keywords}>
+                  {(article as ArticleFeedFragment).keywords
+                    ?.slice(0, 3)
+                    .map((keyword) => (
+                      <Typography.Text
+                        size="xs"
+                        className={styles.keyword}
+                        onClick={() => {
+                          navigate(`/search?search=${keyword}`)
+                        }}
+                      >
+                        {keyword}
+                      </Typography.Text>
+                    ))}
+                </Flex>
+              ) : null}
+            </Flex>
           </Flex>
+          <ArticleMenu
+            compact
+            recommended={Boolean(article.recommended)}
+            id={article.id}
+            url={article.url}
+            activity={article.activity}
+          />
         </Flex>
       </Spacing>
     </Flex>

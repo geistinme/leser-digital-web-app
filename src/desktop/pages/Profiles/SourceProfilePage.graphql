@@ -23,6 +23,7 @@ fragment ArticleGrid on Article {
   uploadedAt
   image
   url
+  recommended
   activity {
     id
     type

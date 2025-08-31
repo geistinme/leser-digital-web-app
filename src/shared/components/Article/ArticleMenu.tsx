@@ -1,29 +1,37 @@
 import React from "react"
 
 import { Flex, useToast } from "@sampled-ui/base"
-import { Bookmark, Link, Trash } from "lucide-react"
+import { Bookmark, Link, Star, Trash } from "lucide-react"
 import { useLocation } from "react-router"
 
 import {
   ArticleActivityType,
   ArticleFeedFragment,
+  RecommendedArticlesDocument,
+  Role,
   useCreateArticleActivityMutation,
   useDeleteArticleActivityMutation,
+  useLoggedInQuery,
+  useToggleRecommendArticleMutation,
 } from "../../../../generated/graphql"
 import { useColorScheme } from "../../../shared/hooks/colorScheme"
 
 import styles from "./Article.module.scss"
 
 interface ArticleMenuProps {
+  recommended: boolean
   activity?: ArticleFeedFragment["activity"] | null
   id: string
   url: string
+  compact?: boolean
 }
 
 export const ArticleMenu: React.FC<ArticleMenuProps> = ({
   activity,
   id,
   url,
+  recommended,
+  compact,
 }) => {
   const location = useLocation()
   const search = new URLSearchParams(location.search)
@@ -52,6 +60,35 @@ export const ArticleMenu: React.FC<ArticleMenuProps> = ({
     }
   })
 
+  const { data: loggedInQueryData } = useLoggedInQuery()
+  const [toggleRecommendArticle] = useToggleRecommendArticleMutation({
+    onCompleted: () =>
+      toast({
+        message: "Empfehlung geändert",
+        type: "success",
+      }),
+    onError: () =>
+      toast({
+        message: "Fehler beim Ändern der Empfehlung",
+      }),
+    refetchQueries: [RecommendedArticlesDocument],
+    update: (cache, { data }) => {
+      if (!data?.toggleRecommendArticle) {
+        return
+      }
+      cache.modify({
+        id: cache.identify({
+          __typename: "Article",
+          id,
+        }),
+        fields: {
+          recommended() {
+            return data.toggleRecommendArticle.recommended
+          },
+        },
+      })
+    },
+  })
   const [createArticleActivity] = useCreateArticleActivityMutation({
     onCompleted: () =>
       toast({
@@ -138,8 +175,21 @@ export const ArticleMenu: React.FC<ArticleMenuProps> = ({
 
   return (
     <Flex gap="sm">
+      {loggedInQueryData?.loggedIn.role === Role.Admin ? (
+        <Star
+          size={compact ? 16 : 20}
+          className={styles.action}
+          fill={
+            recommended ? "gold" : colorScheme === "dark" ? "black" : "white"
+          }
+          color={recommended ? "gold" : undefined}
+          onClick={() => {
+            toggleRecommendArticle({ variables: { id } })
+          }}
+        />
+      ) : null}
       <Bookmark
-        size={20}
+        size={compact ? 16 : 20}
         className={styles.action}
         fill={
           activity?.find(
@@ -159,12 +209,16 @@ export const ArticleMenu: React.FC<ArticleMenuProps> = ({
         }
         onClick={handleSaveArticle}
       />
-      <Link size={20} className={styles.action} onClick={handleCopyLink} />
+      <Link
+        size={compact ? 16 : 20}
+        className={styles.action}
+        onClick={handleCopyLink}
+      />
       {tab === "viewed" && existingActivity ? (
         <Trash
           className={styles.action}
           color="var(--color-error)"
-          size={20}
+          size={compact ? 16 : 20}
           onClick={() => {
             deleteArticleActivity({
               variables: {
