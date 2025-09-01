@@ -18,7 +18,7 @@ import {
   MostInterestingArticlesQuery,
   useFeedLazyQuery,
   useLoggedInQuery,
-  useMostInterestingArticlesLazyQuery
+  useMostInterestingArticlesLazyQuery,
 } from "../../../../generated/graphql"
 import { breakpoints, useIsDevice } from "../../../shared/hooks/isDevice"
 import ArticleFeed from "../../components/Article/ArticleFeed"
@@ -59,20 +59,21 @@ export const HomePage: React.FC = () => {
             : undefined,
       },
     }
-    if (loggedInQueryData?.loggedIn || !feedQueryData?.feed) {
+    if (loggedInQueryData?.loggedIn && feedQueryData?.subscriptions?.length) {
       feedQuery({
         variables: initialQueryVariables,
         fetchPolicy: "network-only",
       })
       setHasMore(true)
-    }
-    if (!loggedInQueryData?.loggedIn || !feedQueryData?.feed?.length) {
+    } else if (
+      !loggedInQueryData?.loggedIn ||
+      !feedQueryData?.subscriptions?.length
+    ) {
       mostInterestingArticles({
         variables: {
           pagination: { offset: 0, limit: 10 },
         },
       })
-      setHasMore(true)
     } else {
       mostInterestingArticles({
         variables: { pagination: { offset: 0, limit: 4 } },
@@ -81,6 +82,7 @@ export const HomePage: React.FC = () => {
   }, [
     feedQuery,
     feedQueryData?.feed,
+    feedQueryData?.subscriptions?.length,
     loggedInQueryData,
     mostInterestingArticles,
     selectedTab,
@@ -88,17 +90,17 @@ export const HomePage: React.FC = () => {
 
   const [hasMore, setHasMore] = useState(true)
   const loadMore = useCallback(() => {
-    const fetchMore = loggedInQueryData?.loggedIn
+    const fetchMore = loggedInQueryData?.loggedIn && feedQueryData?.subscriptions?.length
       ? fetchMoreFeed
       : fetchMoreMostInterestingArticles
     if (hasMore && !loadingArticles && !loadingInterestingArticles) {
       fetchMore({
         variables: {
           pagination: {
-            offset:
-              feedQueryData?.feed?.length ||
-              mostInterestingArticlesData?.mostInterestingArticles?.length ||
-              0,
+            offset: feedQueryData?.subscriptions?.length
+              ? feedQueryData?.feed?.length
+              : mostInterestingArticlesData?.mostInterestingArticles?.length ??
+                0,
             limit: 10,
           },
         },
@@ -149,6 +151,7 @@ export const HomePage: React.FC = () => {
     }
   }, [
     feedQueryData?.feed?.length,
+    feedQueryData?.subscriptions?.length,
     fetchMoreFeed,
     fetchMoreMostInterestingArticles,
     hasMore,
@@ -165,6 +168,7 @@ export const HomePage: React.FC = () => {
     }
   }, [hasMore, inView, loadMore])
 
+  // Should actually never happen because empty state is handled above
   const empty = useMemo(() => {
     if (
       !(feedQueryData?.feed || feedQueryData?.feed?.length) &&

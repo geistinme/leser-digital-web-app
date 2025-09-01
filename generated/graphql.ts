@@ -559,7 +559,7 @@ export type FeedQueryVariables = Exact<{
 }>;
 
 
-export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, recommended?: boolean | null, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null };
+export type FeedQuery = { __typename?: 'Query', feed?: Array<{ __typename?: 'Article', id: string, title: string, description?: string | null, image?: string | null, url: string, premium: boolean, recommended?: boolean | null, uploadedAt: any, keywords?: Array<string> | null, views?: number | null, topic: { __typename?: 'Topic', id: string, category: ArticleCategory, name: string }, source: { __typename?: 'Source', id: string, name: string, logo: string, key: string }, activity?: Array<{ __typename?: 'ArticleActivity', id: string, type: ArticleActivityType }> | null }> | null, subscriptions?: Array<{ __typename?: 'Subscription', id: string }> | null };
 
 export type ArticlesQueryVariables = Exact<{
   pagination: PaginationInput;
@@ -1601,6 +1601,9 @@ export const FeedDocument = gql`
     query feed($pagination: PaginationInput!, $filter: ArticleQueryFilter) {
   feed(pagination: $pagination, filter: $filter) {
     ...ArticleFeed
+  }
+  subscriptions {
+    id
   }
 }
     ${ArticleFeedFragmentDoc}`;

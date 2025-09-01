@@ -2,6 +2,9 @@ query feed($pagination: PaginationInput!, $filter: ArticleQueryFilter) {
   feed(pagination: $pagination, filter: $filter) {
     ...ArticleFeed
   }
+  subscriptions {
+    id
+  }
 }
 
 query articles($pagination: PaginationInput!, $filter: ArticleQueryFilter) {
